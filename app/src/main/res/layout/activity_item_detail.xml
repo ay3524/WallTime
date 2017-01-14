@@ -8,6 +8,7 @@
     tools:ignore="MergeRootFrame">
 
     <android.support.design.widget.AppBarLayout
+
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="300dp"
@@ -41,10 +42,17 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
-        android:id="@+id/item_detail_container"
+        android:id="@+id/scrolling_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <TextView
+            android:padding="10dp"
+            android:textSize="30sp"
+            android:text="Hello World"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </android.support.v4.widget.NestedScrollView>
 

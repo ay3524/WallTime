@@ -11,7 +11,8 @@
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="0dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -20,29 +21,31 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-       <!-- <android.support.design.widget.TabLayout
+        <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabIndicatorColor="@android:color/white"
-            app:tabIndicatorHeight="4dp" />-->
+            app:tabIndicatorHeight="4dp" />
         <!-- app:tabMode="fixed"-->
 
     </android.support.design.widget.AppBarLayout>
-    <!--   <android.support.v4.view.ViewPager
-           android:background="#e0e0e0"
-           android:id="@+id/viewpager"
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           app:layout_behavior="@string/appbar_scrolling_view_behavior"  />-->
 
-       <FrameLayout
-            android:id="@+id/frameLayout"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#e0e0e0"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/item_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-            <include layout="@layout/item_list" />
-        </FrameLayout>
+            app:layoutManager="GridLayoutManager"
+            tools:context="ay3524.com.wallpapertime.ui.ItemListActivity"
+            tools:listitem="@layout/single_wallpaper" />
+    </android.support.v4.view.ViewPager>
 
     <!--  <android.support.design.widget.FloatingActionButton
           android:id="@+id/fab"

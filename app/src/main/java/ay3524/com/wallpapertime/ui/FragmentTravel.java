@@ -62,15 +62,6 @@ public class FragmentTravel extends Fragment implements WallpaperAdapter.ListIte
             getListOfWallpapers();
         }
 
-
-        if (rootView.findViewById(R.id.item_detail_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
-            mTwoPane = true;
-        }
-
         return rootView;
 
     }
@@ -113,33 +104,6 @@ public class FragmentTravel extends Fragment implements WallpaperAdapter.ListIte
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
-        if (mTwoPane) {
-            Bundle arguments = new Bundle();
-            arguments.putString(Constants.PREVIEW_HEIGHT, wallpapersList.get(clickedItemIndex).getPreviewHeight());
-            arguments.putString(Constants.PREVIEW_WIDTH, wallpapersList.get(clickedItemIndex).getPreviewWidth());
-            arguments.putString(Constants.WEB_FORMAT_HEIGHT, wallpapersList.get(clickedItemIndex).getWebformatHeight());
-            arguments.putString(Constants.WEB_FORMAT_WIDTH, wallpapersList.get(clickedItemIndex).getWebformatWidth());
-            arguments.putString(Constants.IMAGE_HEIGHT, wallpapersList.get(clickedItemIndex).getImageHeight());
-            arguments.putString(Constants.IMAGE_WIDTH, wallpapersList.get(clickedItemIndex).getImageWidth());
-
-            arguments.putString(Constants.LARGE_IMAGE_URL, wallpapersList.get(clickedItemIndex).getLargeImageURL());
-            arguments.putString(Constants.FULL_HD_URL, wallpapersList.get(clickedItemIndex).getFullHDURL());
-            arguments.putString(Constants.PREVIEW_URL, wallpapersList.get(clickedItemIndex).getPreviewURL());
-            arguments.putString(Constants.IMAGE_URL, wallpapersList.get(clickedItemIndex).getImageURL());
-            arguments.putString(Constants.USER_IMAGE_URL, wallpapersList.get(clickedItemIndex).getUserImageURL());
-            arguments.putString(Constants.WEB_FORMAT_URL, wallpapersList.get(clickedItemIndex).getWebformatURL());
-
-            arguments.putString(Constants.USER_ID, wallpapersList.get(clickedItemIndex).getUser_id());
-            arguments.putString(Constants.ID_HASH, wallpapersList.get(clickedItemIndex).getId_hash());
-            arguments.putString(Constants.TYPE, wallpapersList.get(clickedItemIndex).getType());
-            arguments.putString(Constants.USER, wallpapersList.get(clickedItemIndex).getUser());
-            ItemDetailFragment fragment = new ItemDetailFragment();
-            fragment.setArguments(arguments);
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.item_detail_container, fragment)
-                    .commit();
-        } else {
-
             Intent intent = new Intent(getActivity(), ItemDetailActivity.class);
             intent.putExtra(Constants.PREVIEW_HEIGHT, wallpapersList.get(clickedItemIndex).getPreviewHeight());
             intent.putExtra(Constants.PREVIEW_HEIGHT, wallpapersList.get(clickedItemIndex).getPreviewHeight());
@@ -164,5 +128,4 @@ public class FragmentTravel extends Fragment implements WallpaperAdapter.ListIte
             startActivity(intent);
         }
     }
-}
 

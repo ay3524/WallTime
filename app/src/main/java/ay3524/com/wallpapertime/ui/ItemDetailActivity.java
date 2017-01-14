@@ -56,50 +56,6 @@ public class ItemDetailActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // savedInstanceState is non-null when there is fragment state
-        // saved from previous configurations of this activity
-        // (e.g. when rotating the screen from portrait to landscape).
-        // In this case, the fragment will automatically be re-added
-        // to its container so we don't need to manually add it.
-        // For more information, see the Fragments API guide at:
-        //
-        // http://developer.android.com/guide/components/fragments.html
-        //
-        if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-            Bundle arguments = new Bundle();
-
-            arguments.putString(Constants.PREVIEW_HEIGHT, getIntent().getStringExtra(Constants.PREVIEW_HEIGHT));
-            arguments.putString(Constants.PREVIEW_WIDTH, getIntent().getStringExtra(Constants.PREVIEW_WIDTH));
-            arguments.putString(Constants.WEB_FORMAT_HEIGHT, getIntent().getStringExtra(Constants.WEB_FORMAT_HEIGHT));
-            arguments.putString(Constants.WEB_FORMAT_WIDTH, getIntent().getStringExtra(Constants.WEB_FORMAT_WIDTH));
-            arguments.putString(Constants.IMAGE_HEIGHT, getIntent().getStringExtra(Constants.IMAGE_HEIGHT));
-            arguments.putString(Constants.IMAGE_WIDTH, getIntent().getStringExtra(Constants.IMAGE_WIDTH));
-
-            arguments.putString(Constants.LARGE_IMAGE_URL, getIntent().getStringExtra(Constants.LARGE_IMAGE_URL));
-            arguments.putString(Constants.FULL_HD_URL, getIntent().getStringExtra(Constants.FULL_HD_URL));
-            arguments.putString(Constants.PREVIEW_URL, getIntent().getStringExtra(Constants.PREVIEW_URL));
-            arguments.putString(Constants.IMAGE_URL, getIntent().getStringExtra(Constants.IMAGE_URL));
-            arguments.putString(Constants.USER_IMAGE_URL, getIntent().getStringExtra(Constants.USER_IMAGE_URL));
-            arguments.putString(Constants.WEB_FORMAT_URL, getIntent().getStringExtra(Constants.WEB_FORMAT_URL));
-
-            arguments.putString(Constants.USER_ID, getIntent().getStringExtra(Constants.USER_ID));
-            arguments.putString(Constants.ID_HASH, getIntent().getStringExtra(Constants.ID_HASH));
-            String hash = getIntent().getStringExtra(Constants.ID_HASH);
-            arguments.putString(Constants.TYPE, getIntent().getStringExtra(Constants.TYPE));
-            arguments.putString(Constants.USER, getIntent().getStringExtra(Constants.USER));
-
-            //boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
-
-                ItemDetailFragment fragment = new ItemDetailFragment();
-                fragment.setArguments(arguments);
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.item_detail_container, fragment)
-                        .commit();
-        }
-
-
         final ImageView image = (ImageView)findViewById(R.id.image);
         Picasso.with(getApplicationContext()).load(getIntent().getStringExtra(Constants.WEB_FORMAT_URL)).into(image, new Callback.EmptyCallback() {
             @Override
