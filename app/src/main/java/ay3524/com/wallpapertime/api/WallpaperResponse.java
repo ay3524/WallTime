@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-import ay3524.com.wallpapertime.ui.Wallpapers;
+import ay3524.com.wallpapertime.model.Wallpapers;
 
 /**
  * Created by Ashish on 29-12-2016.

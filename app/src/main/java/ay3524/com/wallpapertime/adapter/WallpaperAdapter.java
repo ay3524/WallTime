@@ -1,4 +1,4 @@
-package ay3524.com.wallpapertime.ui;
+package ay3524.com.wallpapertime.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,11 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
 import ay3524.com.wallpapertime.R;
+import ay3524.com.wallpapertime.model.Wallpapers;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -24,6 +25,7 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.Wall
     private ArrayList<Wallpapers> wallpaper;
     private Context context;
     private ListItemClickListener clickListener;
+    private final static int FADE_DURATION = 1000;
 
     public interface ListItemClickListener{
         void onListItemClick(int clickedItemIndex);
@@ -56,7 +58,7 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.Wall
         //Cache cache = AppController.getInstance().getRequestQueue().getCache();
         //Cache.Entry entry = cache.get(wallpaper.get(position).getWebformatURL());*/
 
-        Picasso.with(context).load(wallpaper.get(position).getWebformatURL()).into(holder.wallpaperPoster);
+        Glide.with(context).load(wallpaper.get(position).getWebformatURL()).into(holder.wallpaperPoster);
     }
 
     @Override

@@ -16,9 +16,11 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import ay3524.com.wallpapertime.R;
+import ay3524.com.wallpapertime.adapter.WallpaperAdapter;
 import ay3524.com.wallpapertime.api.ApiClient;
 import ay3524.com.wallpapertime.api.ApiInterface;
 import ay3524.com.wallpapertime.api.WallpaperResponse;
+import ay3524.com.wallpapertime.model.Wallpapers;
 import ay3524.com.wallpapertime.utils.Constants;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,7 +35,6 @@ public class FragmentNature extends Fragment implements WallpaperAdapter.ListIte
     private RecyclerView recyclerView;
     private ArrayList<Wallpapers> wallpapersList = new ArrayList<>();
     private WallpaperAdapter adapter;
-    private boolean mTwoPane;
 
     @Nullable
     @Override
@@ -63,6 +64,7 @@ public class FragmentNature extends Fragment implements WallpaperAdapter.ListIte
         }else{
             getListOfWallpapers();
         }
+
 
         return rootView;
 

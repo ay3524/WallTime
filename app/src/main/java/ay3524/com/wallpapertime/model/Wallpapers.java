@@ -1,4 +1,4 @@
-package ay3524.com.wallpapertime.ui;
+package ay3524.com.wallpapertime.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

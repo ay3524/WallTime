@@ -12,8 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.utils.Constants;
@@ -57,10 +56,10 @@ public class ItemDetailActivity extends AppCompatActivity {
         }
 
         final ImageView image = (ImageView)findViewById(R.id.image);
-        Picasso.with(getApplicationContext()).load(getIntent().getStringExtra(Constants.WEB_FORMAT_URL)).into(image, new Callback.EmptyCallback() {
-            @Override
+        Glide.with(getApplicationContext()).load(getIntent().getStringExtra(Constants.WEB_FORMAT_URL)).into(image);
+            /*@Override
             public void onSuccess() {
-                /*Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
+                Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
                 Palette.from(bitmap).generate(
                         new Palette.PaletteAsyncListener() {
                             @Override
@@ -79,14 +78,14 @@ public class ItemDetailActivity extends AppCompatActivity {
 
                                 }
                             }
-                        });*/
+                        });
             }
 
             @Override
             public void onError() {
 
             }
-        });
+        });*/
 
         getDetailsOfCurrentWallpaper(hash);
     }
