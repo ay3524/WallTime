@@ -121,7 +121,6 @@ public class ItemListActivity extends AppCompatActivity {
     // So using runnable, the fragment is loaded with cross fade effect
     // This effect can be seen in GMail app
 
-
     private void loadNavHeader() {
         // name, website
         txtName.setText("Ashish Yadav");

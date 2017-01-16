@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 
@@ -25,13 +26,12 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.Wall
     private ArrayList<Wallpapers> wallpaper;
     private Context context;
     private ListItemClickListener clickListener;
-    private final static int FADE_DURATION = 1000;
 
-    public interface ListItemClickListener{
+    public interface ListItemClickListener {
         void onListItemClick(int clickedItemIndex);
     }
 
-    public WallpaperAdapter(ArrayList<Wallpapers> wallpaperses,ListItemClickListener listener) {
+    public WallpaperAdapter(ArrayList<Wallpapers> wallpaperses, ListItemClickListener listener) {
         wallpaper = wallpaperses;
         clickListener = listener;
     }
@@ -42,7 +42,7 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.Wall
         LayoutInflater inflater = LayoutInflater.from(context);
         boolean shouldAttachToParentImmediately = false;
 
-        View view = inflater.inflate(R.layout.single_wallpaper,parent,shouldAttachToParentImmediately);
+        View view = inflater.inflate(R.layout.single_wallpaper, parent, shouldAttachToParentImmediately);
         return new WallpaperViewHolder(view);
     }
 
@@ -58,7 +58,8 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.Wall
         //Cache cache = AppController.getInstance().getRequestQueue().getCache();
         //Cache.Entry entry = cache.get(wallpaper.get(position).getWebformatURL());*/
 
-        Glide.with(context).load(wallpaper.get(position).getWebformatURL()).into(holder.wallpaperPoster);
+        Glide.with(context).load(wallpaper.get(position).getWebformatURL()).crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.wallpaperPoster);
     }
 
     @Override
@@ -66,7 +67,7 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.Wall
         return wallpaper.size();
     }
 
-    class WallpaperViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class WallpaperViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.wallpaperPoster)
         ImageView wallpaperPoster;
 
