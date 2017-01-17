@@ -13,7 +13,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.ArrayList;
 
 import ay3524.com.wallpapertime.R;
-import ay3524.com.wallpapertime.model.Wallpapers;
+import ay3524.com.wallpapertime.model.WallpaperWithInfo;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 
 public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.WallpaperViewHolder> {
 
-    private ArrayList<Wallpapers> wallpaper;
+    private ArrayList<WallpaperWithInfo> wallpaper;
     private Context context;
     private ListItemClickListener clickListener;
 
@@ -31,7 +31,7 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.Wall
         void onListItemClick(int clickedItemIndex);
     }
 
-    public WallpaperAdapter(ArrayList<Wallpapers> wallpaperses, ListItemClickListener listener) {
+    public WallpaperAdapter(ArrayList<WallpaperWithInfo> wallpaperses, ListItemClickListener listener) {
         wallpaper = wallpaperses;
         clickListener = listener;
     }

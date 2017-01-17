@@ -17,6 +17,13 @@ public interface ApiInterface {
                                          @Query("order")String order,
                                          @Query("pretty")String prettyBooleanValue);
     @GET("/api")
+    Call<WallpaperWithInfoResponse> getWallpaperPopularOrLatest(@Query("key")String apiKey,
+                                         @Query("response_group")String highResResponse,
+                                         @Query("editors_choice")String booleanEditorChoice,
+                                         @Query("order")String order,
+                                         @Query("pretty")String prettyBooleanValue,
+                                         @Query("image_type")String image_type);
+    @GET("/api")
     Call<WallpaperByIdResponse> getWallpaperById(@Query("key")String apiKey,
                                          @Query("response_group")String highResResponse,
                                          @Query("category")String query,
