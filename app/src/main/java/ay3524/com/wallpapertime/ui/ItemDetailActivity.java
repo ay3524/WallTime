@@ -142,7 +142,10 @@ public class ItemDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 File file = new File(Environment.getExternalStorageDirectory().toString() + fileName);
                 if(file.exists()){
-                    Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().toString() + fileName);
+                    File sd = Environment.getExternalStorageDirectory();
+                    File image = new File(sd+fileName, fileName);
+                    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                    Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(),bmOptions);
                     WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
                     try {
                         wallpaperManager.setBitmap(bitmap);
