@@ -4,6 +4,11 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="u00a9_all_rights_reserved">© All Rights Reserved</string>
+    <string name="download">Download</string>
+    <string name="set_it">Set It</string>
+    <string name="uploaded_by">Uploaded By :</string>
+    <string name="tags">TAGS</string>
 
     <string-array name="nav_item_activity_titles">
         <item>Automation</item>

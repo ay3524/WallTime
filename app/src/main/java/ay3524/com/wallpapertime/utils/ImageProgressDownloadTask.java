@@ -5,4 +5,5 @@ package ay3524.com.wallpapertime.utils;
  */
 
 public class ImageProgressDownloadTask {
+
 }
