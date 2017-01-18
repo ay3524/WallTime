@@ -45,7 +45,7 @@ import ay3524.com.wallpapertime.utils.SingleMediaScanner;
 public class ItemDetailActivity extends AppCompatActivity {
 
     CollapsingToolbarLayout collapsingToolbarLayout;
-    String image_title, user_image_url, tags, user_profile_pixabay_link, image_pixabay_link, user, web_format_url;
+    String image_title, user_image_url, tags, user_profile_pixabay_link, image_pixabay_link, user, web_format_url,preview_url;
     int id, download_count, view_count, like_count;
     TextView title, downloads, views, likes, user_name;
     ImageView userImage;
@@ -81,9 +81,11 @@ public class ItemDetailActivity extends AppCompatActivity {
             user_image_url = getIntent().getStringExtra(Constants.USER_IMAGE_URL);
             user = getIntent().getStringExtra(Constants.USER);
             web_format_url = getIntent().getStringExtra(Constants.WEB_FORMAT_URL);
-            String splitted[] = web_format_url.split("/");
+            preview_url = getIntent().getStringExtra(Constants.PREVIEW_URL);
+            String splitted[] = preview_url.split("/");
             fileName = splitted[splitted.length - 1];
-            Toast.makeText(this, fileName, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, fileName, Toast.LENGTH_SHORT).show();
+
         }
         title.setText(image_title);
         downloads.setText(String.valueOf(download_count));
@@ -133,7 +135,11 @@ public class ItemDetailActivity extends AppCompatActivity {
         dwnld.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DownloadFileFromURL(getApplicationContext()).execute(web_format_url);
+                if (!(new File(Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName).exists())) {
+                    new DownloadFileFromURL(getApplicationContext()).execute(web_format_url);
+                } else {
+                    Toast.makeText(ItemDetailActivity.this, "Image Already Downloaded", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -210,12 +216,9 @@ public class ItemDetailActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... sUrl) {
-            File extStore = Environment.getExternalStorageDirectory();
-            File myFile = new File(extStore.getAbsolutePath() + "/WallTime/"+fileName);
+            //File extStore = Environment.getExternalStorageDirectory();
 
-            if(myFile.exists()){
-                return "Image Already Downloaded";
-            }
+
             InputStream input = null;
             OutputStream output = null;
             HttpURLConnection connection = null;
