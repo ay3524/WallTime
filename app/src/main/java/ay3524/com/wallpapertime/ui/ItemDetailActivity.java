@@ -43,9 +43,11 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
     int id, download_count, view_count, like_count;
     TextView title, downloads, views, likes, user_name;
     ImageView userImage;
-    //private ProgressDialog pDialog;
     Button dwnld, set;
     String fileName, image_path_with_folder;
+    String tagsList[];
+    TextView firstTag,secondTag,thirdTag;
+
     //private Window window;
 
     @Override
@@ -61,6 +63,9 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         likes = (TextView) findViewById(R.id.likes);
         user_name = (TextView) findViewById(R.id.user_name);
         userImage = (ImageView) findViewById(R.id.userImage);
+        firstTag = (TextView) findViewById(R.id.firstTag);
+        secondTag = (TextView) findViewById(R.id.secondTag);
+        thirdTag = (TextView) findViewById(R.id.thirdTag);
 
         if (getIntent().getExtras() != null) {
             id = getIntent().getIntExtra(Constants.IMAGE_ID, 0);
@@ -69,7 +74,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
             like_count = getIntent().getIntExtra(Constants.LIKES, 0);
 
             tags = getIntent().getStringExtra(Constants.TAGS);
-            String[] tagsList = tags.split(",");
+            tagsList = tags.split(",");
             image_title = tagsList[0];
             image_pixabay_link = getIntent().getStringExtra(Constants.PIXABAY_PAGE_URL);
             user_image_url = getIntent().getStringExtra(Constants.USER_IMAGE_URL);
@@ -79,15 +84,16 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
             String splitted[] = preview_url.split("/");
             fileName = splitted[splitted.length - 1];
             image_path_with_folder = Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName;
-            //Toast.makeText(this, fileName, Toast.LENGTH_SHORT).show();
             image_720p_link = buildHDURL();
-
         }
         title.setText(image_title);
         downloads.setText(String.valueOf(download_count));
         views.setText(String.valueOf(view_count));
         likes.setText(String.valueOf(like_count));
         user_name.setText(user);
+        firstTag.setText("#"+tagsList[0].trim());
+        secondTag.setText("#"+tagsList[1].trim());
+        thirdTag.setText("#"+tagsList[2].trim());
         dwnld = (Button) findViewById(R.id.dwnld);
         dwnld.setOnClickListener(this);
         set = (Button) findViewById(R.id.set_as_wallpaper);
@@ -134,7 +140,6 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         myName.setCharAt(preview_url.length() - 6, '2');
         myName.setCharAt(preview_url.length() - 5, '8');
         myName.insert(preview_url.length() - 4, '0');
-        //Toast.makeText(this, myName.toString(), Toast.LENGTH_LONG).show();
         return myName.toString();
     }
 
