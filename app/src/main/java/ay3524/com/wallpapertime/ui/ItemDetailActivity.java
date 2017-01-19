@@ -36,7 +36,7 @@ import ay3524.com.wallpapertime.utils.ImageDownloadTask;
  * item details are presented side-by-side with a list of items
  * in a {@link ItemListActivity}.
  */
-public class ItemDetailActivity extends AppCompatActivity {
+public class ItemDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
     CollapsingToolbarLayout collapsingToolbarLayout;
     String image_title, user_image_url, tags, user_profile_pixabay_link, image_pixabay_link, user, web_format_url, preview_url, image_720p_link;
@@ -45,7 +45,7 @@ public class ItemDetailActivity extends AppCompatActivity {
     ImageView userImage;
     //private ProgressDialog pDialog;
     Button dwnld, set;
-    String fileName;
+    String fileName, image_path_with_folder;
     //private Window window;
 
     @Override
@@ -78,6 +78,7 @@ public class ItemDetailActivity extends AppCompatActivity {
             preview_url = getIntent().getStringExtra(Constants.PREVIEW_URL);
             String splitted[] = preview_url.split("/");
             fileName = splitted[splitted.length - 1];
+            image_path_with_folder = Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName;
             //Toast.makeText(this, fileName, Toast.LENGTH_SHORT).show();
             image_720p_link = buildHDURL();
 
@@ -88,7 +89,9 @@ public class ItemDetailActivity extends AppCompatActivity {
         likes.setText(String.valueOf(like_count));
         user_name.setText(user);
         dwnld = (Button) findViewById(R.id.dwnld);
+        dwnld.setOnClickListener(this);
         set = (Button) findViewById(R.id.set_as_wallpaper);
+        set.setOnClickListener(this);
         Glide.with(this).load(user_image_url)
                 .crossFade()
                 .thumbnail(0.5f)
@@ -98,20 +101,11 @@ public class ItemDetailActivity extends AppCompatActivity {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(userImage);
 
-        //window = getWindow();
-
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(this);
 
-        // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -120,36 +114,10 @@ public class ItemDetailActivity extends AppCompatActivity {
         final ImageView image = (ImageView) findViewById(R.id.image);
         Glide.with(getApplicationContext()).load(getIntent().getStringExtra(Constants.WEB_FORMAT_URL)).crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
-
-        dwnld.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!(new File(Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName).exists())) {
-                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(image_720p_link);
-                } else {
-                    Toast.makeText(ItemDetailActivity.this, "Image Already Downloaded", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        set.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!(new File(Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName).exists())) {
-                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(image_720p_link);
-                    setAsWallpaper();
-
-                } else {
-                    setAsWallpaper();
-                    Toast.makeText(ItemDetailActivity.this, "Setting wallpaper successfull", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
     }
 
     private void setAsWallpaper() {
-        File image_file = new File(Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName);
+        File image_file = new File(image_path_with_folder);
         Bitmap bitmap = BitmapFactory.decodeFile(image_file.getAbsolutePath());
         WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
         try {
@@ -166,7 +134,7 @@ public class ItemDetailActivity extends AppCompatActivity {
         myName.setCharAt(preview_url.length() - 6, '2');
         myName.setCharAt(preview_url.length() - 5, '8');
         myName.insert(preview_url.length() - 4, '0');
-        Toast.makeText(this, myName.toString(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, myName.toString(), Toast.LENGTH_LONG).show();
         return myName.toString();
     }
 
@@ -180,5 +148,32 @@ public class ItemDetailActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab:
+                Snackbar.make(v, "Replace with your own detail action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                break;
+            case R.id.dwnld:
+                if (!(new File(image_path_with_folder).exists())) {
+                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(image_720p_link);
+                } else {
+                    Toast.makeText(ItemDetailActivity.this, "Image Already Downloaded", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.set_as_wallpaper:
+                if (!(new File(image_path_with_folder).exists())) {
+                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(image_720p_link);
+                    setAsWallpaper();
+
+                } else {
+                    setAsWallpaper();
+                    Toast.makeText(ItemDetailActivity.this, "Setting wallpaper successfull", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
     }
 }
