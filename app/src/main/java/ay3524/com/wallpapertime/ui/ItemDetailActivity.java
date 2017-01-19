@@ -174,14 +174,17 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void setAsWallpaper() {
-        File image_file = new File(image_path_with_folder);
-        Bitmap bitmap = BitmapFactory.decodeFile(image_file.getAbsolutePath());
-        WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
         try {
-            wallpaperManager.setBitmap(bitmap);
-        } catch (IOException e) {
-            Toast.makeText(ItemDetailActivity.this, "Error While Image Setting", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
+            File image_file = new File(image_path_with_folder);
+            Bitmap bitmap = BitmapFactory.decodeFile(image_file.getAbsolutePath());
+            WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
+            try {
+                wallpaperManager.setBitmap(bitmap);
+            } catch (IOException e) {
+                Toast.makeText(ItemDetailActivity.this, "Error While Image Setting", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+        } catch (NullPointerException ignored) {
         }
     }
 
