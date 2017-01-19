@@ -35,8 +35,6 @@ public class FragmentPopular extends Fragment implements WallpaperAdapter.ListIt
     private RecyclerView recyclerView;
     private ArrayList<WallpaperWithInfo> wallpapersList = new ArrayList<>();
     private WallpaperAdapter adapter;
-    private boolean mTwoPane;
-    private GridLayoutManager gridLayoutManager;
 
     @Nullable
     @Override
@@ -49,6 +47,7 @@ public class FragmentPopular extends Fragment implements WallpaperAdapter.ListIt
         //GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         //recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setHasFixedSize(true);
+        GridLayoutManager gridLayoutManager;
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             gridLayoutManager = new GridLayoutManager(getActivity(), 2);
             recyclerView.setLayoutManager(gridLayoutManager);

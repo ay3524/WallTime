@@ -105,7 +105,7 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
-        Toast.makeText(getActivity(), "Phone", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "Phone", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), ItemDetailActivity.class);
 
         intent.putExtra(Constants.PREVIEW_HEIGHT, wallpapersList.get(clickedItemIndex).getPreviewHeight());

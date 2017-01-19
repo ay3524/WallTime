@@ -35,7 +35,7 @@ import ay3524.com.wallpapertime.utils.ImageDownloadTask;
 public class ItemDetailActivity extends AppCompatActivity {
 
     CollapsingToolbarLayout collapsingToolbarLayout;
-    String image_title, user_image_url, tags, user_profile_pixabay_link, image_pixabay_link, user, web_format_url,preview_url;
+    String image_title, user_image_url, tags, user_profile_pixabay_link, image_pixabay_link, user, web_format_url,preview_url,image_720p_link;
     int id, download_count, view_count, like_count;
     TextView title, downloads, views, likes, user_name;
     ImageView userImage;
@@ -75,6 +75,7 @@ public class ItemDetailActivity extends AppCompatActivity {
             String splitted[] = preview_url.split("/");
             fileName = splitted[splitted.length - 1];
             //Toast.makeText(this, fileName, Toast.LENGTH_SHORT).show();
+            image_720p_link = buildHDURL();
 
         }
         title.setText(image_title);
@@ -120,7 +121,7 @@ public class ItemDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!(new File(Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName).exists())) {
-                    new ImageDownloadTask(ItemDetailActivity.this,fileName).execute(web_format_url);
+                    new ImageDownloadTask(ItemDetailActivity.this,fileName).execute(image_720p_link);
                 } else {
                     Toast.makeText(ItemDetailActivity.this, "Image Already Downloaded", Toast.LENGTH_SHORT).show();
                 }
@@ -151,16 +152,20 @@ public class ItemDetailActivity extends AppCompatActivity {
 
     }
 
+    private String buildHDURL() {
+        StringBuilder myName = new StringBuilder(preview_url);
+        myName.setCharAt(preview_url.length()-7, '1');
+        myName.setCharAt(preview_url.length()-6, '2');
+        myName.setCharAt(preview_url.length()-5, '8');
+        myName.insert(preview_url.length()-4, '0');
+        Toast.makeText(this, myName.toString(), Toast.LENGTH_LONG).show();
+        return myName.toString();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            // This ID represents the Home or Up button. In the case of this
-            // activity, the Up button is shown. For
-            // more details, see the Navigation pattern on Android Design:
-            //
-            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-            //
             Intent intent = new Intent(this, ItemListActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             navigateUpTo(intent);
