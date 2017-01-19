@@ -1,6 +1,9 @@
 package ay3524.com.wallpapertime.ui;
 
+import android.app.WallpaperManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -20,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.io.File;
+import java.io.IOException;
 
 import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.utils.CircleTransform;
@@ -35,7 +39,7 @@ import ay3524.com.wallpapertime.utils.ImageDownloadTask;
 public class ItemDetailActivity extends AppCompatActivity {
 
     CollapsingToolbarLayout collapsingToolbarLayout;
-    String image_title, user_image_url, tags, user_profile_pixabay_link, image_pixabay_link, user, web_format_url,preview_url,image_720p_link;
+    String image_title, user_image_url, tags, user_profile_pixabay_link, image_pixabay_link, user, web_format_url, preview_url, image_720p_link;
     int id, download_count, view_count, like_count;
     TextView title, downloads, views, likes, user_name;
     ImageView userImage;
@@ -121,43 +125,47 @@ public class ItemDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!(new File(Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName).exists())) {
-                    new ImageDownloadTask(ItemDetailActivity.this,fileName).execute(image_720p_link);
+                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(image_720p_link);
                 } else {
                     Toast.makeText(ItemDetailActivity.this, "Image Already Downloaded", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        /*set.setOnClickListener(new View.OnClickListener() {
+        set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File file = new File(Environment.getExternalStorageDirectory().toString() + fileName);
-                if(file.exists()){
-                    File sd = Environment.getExternalStorageDirectory();
-                    File image = new File(sd+fileName, fileName);
-                    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-                    Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(),bmOptions);
-                    WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
-                    try {
-                        wallpaperManager.setBitmap(bitmap);
-                    } catch (IOException e) {
-                        Toast.makeText(ItemDetailActivity.this, "IOException While Image Setting", Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
-                    }
-                }else{
-                    new DownloadFileFromURL().execute(user_image_url);
+                if (!(new File(Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName).exists())) {
+                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(image_720p_link);
+                    setAsWallpaper();
+
+                } else {
+                    setAsWallpaper();
+                    Toast.makeText(ItemDetailActivity.this, "Setting wallpaper successfull", Toast.LENGTH_SHORT).show();
                 }
             }
-        });*/
+        });
 
+    }
+
+    private void setAsWallpaper() {
+        File image_file = new File(Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName);
+        Bitmap bitmap = BitmapFactory.decodeFile(image_file.getAbsolutePath());
+        WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
+        try {
+            wallpaperManager.setBitmap(bitmap);
+        } catch (IOException e) {
+            Toast.makeText(ItemDetailActivity.this, "Error While Image Setting", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
     }
 
     private String buildHDURL() {
         StringBuilder myName = new StringBuilder(preview_url);
-        myName.setCharAt(preview_url.length()-7, '1');
-        myName.setCharAt(preview_url.length()-6, '2');
-        myName.setCharAt(preview_url.length()-5, '8');
-        myName.insert(preview_url.length()-4, '0');
+        myName.setCharAt(preview_url.length() - 7, '1');
+        myName.setCharAt(preview_url.length() - 6, '2');
+        myName.setCharAt(preview_url.length() - 5, '8');
+        myName.insert(preview_url.length() - 4, '0');
         Toast.makeText(this, myName.toString(), Toast.LENGTH_LONG).show();
         return myName.toString();
     }
