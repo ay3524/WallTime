@@ -1,14 +1,20 @@
 package ay3524.com.wallpapertime.ui;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.WallpaperManager;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -46,14 +52,16 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
     Button dwnld, set;
     String fileName, image_path_with_folder;
     String tagsList[];
-    TextView firstTag,secondTag,thirdTag;
-
-    //private Window window;
+    TextView firstTag, secondTag, thirdTag;
+    String hash = "#";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
+
+        checkPermissionForMarshmallowAndAbove();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
@@ -91,9 +99,9 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         views.setText(String.valueOf(view_count));
         likes.setText(String.valueOf(like_count));
         user_name.setText(user);
-        firstTag.setText("#"+tagsList[0].trim());
-        secondTag.setText("#"+tagsList[1].trim());
-        thirdTag.setText("#"+tagsList[2].trim());
+        firstTag.setText(hash.concat(tagsList[0].trim()));
+        secondTag.setText(hash.concat(tagsList[1].trim()));
+        thirdTag.setText(hash.concat(tagsList[2].trim()));
         dwnld = (Button) findViewById(R.id.dwnld);
         dwnld.setOnClickListener(this);
         set = (Button) findViewById(R.id.set_as_wallpaper);
@@ -120,6 +128,49 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         final ImageView image = (ImageView) findViewById(R.id.image);
         Glide.with(getApplicationContext()).load(getIntent().getStringExtra(Constants.WEB_FORMAT_URL)).crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
+    }
+
+    private void checkPermissionForMarshmallowAndAbove() {
+        final int MY_PERMISSIONS_REQUEST_STORAGE = 1;
+        final String[] storage_permissions =
+                {
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                };
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        && ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                            && ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setMessage("To get storage access you have to allow us access to your sd card content.");
+                        builder.setTitle("Storage");
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ActivityCompat.requestPermissions(ItemDetailActivity.this, storage_permissions, 0);
+                            }
+                        });
+
+                        builder.show();
+                    } else {
+                        ActivityCompat.requestPermissions(this, storage_permissions, 0);
+                    }
+                } else {
+                    ActivityCompat.requestPermissions(ItemDetailActivity.this,
+                            storage_permissions,
+                            MY_PERMISSIONS_REQUEST_STORAGE);
+                }
+
+            }
+        }
     }
 
     private void setAsWallpaper() {
@@ -163,13 +214,16 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
                         .setAction("Action", null).show();
                 break;
             case R.id.dwnld:
+
                 if (!(new File(image_path_with_folder).exists())) {
+
                     new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(image_720p_link);
                 } else {
                     Toast.makeText(ItemDetailActivity.this, "Image Already Downloaded", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.set_as_wallpaper:
+
                 if (!(new File(image_path_with_folder).exists())) {
                     new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(image_720p_link);
                     setAsWallpaper();

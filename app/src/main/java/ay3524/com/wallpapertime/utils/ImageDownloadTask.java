@@ -26,7 +26,7 @@ public class ImageDownloadTask extends AsyncTask<String, Integer, String> {
     private ProgressDialog pDialog;
     private String fileName;
 
-    public ImageDownloadTask(Context cxt,String file_name) {
+    public ImageDownloadTask(Context cxt, String file_name) {
         context = cxt;
         fileName = file_name;
         pDialog = new ProgressDialog(context);
@@ -52,7 +52,6 @@ public class ImageDownloadTask extends AsyncTask<String, Integer, String> {
     @Override
     protected String doInBackground(String... sUrl) {
         //File extStore = Environment.getExternalStorageDirectory();
-
 
         InputStream input = null;
         OutputStream output = null;
@@ -144,6 +143,7 @@ public class ImageDownloadTask extends AsyncTask<String, Integer, String> {
 
         }
     }
+
     public boolean dir_exists(String dir_path) {
         boolean ret = false;
         File dir = new File(dir_path);
@@ -151,4 +151,5 @@ public class ImageDownloadTask extends AsyncTask<String, Integer, String> {
             ret = true;
         return ret;
     }
+
 }
