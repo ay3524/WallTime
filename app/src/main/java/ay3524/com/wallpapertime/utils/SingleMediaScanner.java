@@ -10,11 +10,11 @@ import java.io.File;
  * Created by Ashish on 19-01-2017.
  */
 
-public class SingleMediaScanner implements MediaScannerConnection.MediaScannerConnectionClient{
+class SingleMediaScanner implements MediaScannerConnection.MediaScannerConnectionClient{
     private MediaScannerConnection mMs;
     private File mFile;
     //Context context1;
-    public SingleMediaScanner(Context context, File f) {
+    SingleMediaScanner(Context context, File f) {
         mFile = f;
         //context1 = context;
         mMs = new MediaScannerConnection(context, this);

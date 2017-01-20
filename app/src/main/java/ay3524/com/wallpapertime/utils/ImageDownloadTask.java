@@ -140,16 +140,14 @@ public class ImageDownloadTask extends AsyncTask<String, Integer, String> {
             for (File allFile : allFiles) {
                 new SingleMediaScanner(context, allFile);
             }
-
         }
     }
 
-    public boolean dir_exists(String dir_path) {
+    private boolean dir_exists(String dir_path) {
         boolean ret = false;
         File dir = new File(dir_path);
         if (dir.exists() && dir.isDirectory())
             ret = true;
         return ret;
     }
-
 }
