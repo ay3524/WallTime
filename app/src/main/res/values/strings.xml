@@ -9,6 +9,8 @@
     <string name="set_it">Set It</string>
     <string name="uploaded_by">Uploaded By :</string>
     <string name="tags">TAGS</string>
+    <string name="wallpaper">wallpaper</string>
+    <string name="set_as_wallpaper">SET AS WALLPAPER</string>
 
     <string-array name="nav_item_activity_titles">
         <item>Automation</item>
