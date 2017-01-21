@@ -6,7 +6,6 @@
     android:fitsSystemWindows="true"
     tools:context="ay3524.com.wallpapertime.ui.ItemDetailActivity"
     tools:ignore="MergeRootFrame">
-
     <android.support.design.widget.AppBarLayout
 
         android:id="@+id/app_bar"
@@ -30,7 +29,8 @@
                 android:id="@+id/image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/wallpaper" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/detail_toolbar"

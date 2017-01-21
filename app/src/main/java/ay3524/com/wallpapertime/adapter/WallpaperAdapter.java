@@ -58,8 +58,19 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.Wall
         //Cache cache = AppController.getInstance().getRequestQueue().getCache();
         //Cache.Entry entry = cache.get(wallpaper.get(position).getWebformatURL());*/
 
-        Glide.with(context).load(wallpaper.get(position).getWebformatURL()).crossFade()
+        String buildSingleListImageUrl = buildSingleListImageUrl(wallpaper.get(position).getWebformatURL());
+
+        Glide.with(context).load(buildSingleListImageUrl).crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.wallpaperPoster);
+    }
+
+    private String buildSingleListImageUrl(String url) {
+        StringBuilder myName = new StringBuilder(url);
+        myName.setCharAt(url.length() - 7, '3');
+        myName.setCharAt(url.length() - 6, '4');
+        myName.setCharAt(url.length() - 5, '0');
+       // myName.insert(url.length() - 4, '0');
+        return myName.toString();
     }
 
     @Override
