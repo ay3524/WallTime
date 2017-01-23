@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
@@ -29,8 +30,6 @@ import java.io.File;
 import java.io.IOException;
 
 import ay3524.com.wallpapertime.R;
-import ay3524.com.wallpapertime.utils.CircleTransform;
-import ay3524.com.wallpapertime.utils.Constants;
 
 /**
  * An activity representing a single Item detail screen. This
@@ -47,6 +46,10 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
     String tagsList[];
     TextView firstTag, secondTag, thirdTag;
     String hash = "#";
+    private String urls_raw;
+    private String urls_full;
+    private String urls_small;
+    private String urls_thumnail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,37 +62,28 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         setSupportActionBar(toolbar);
 
         if (getIntent().getExtras() != null) {
-            /*id = getIntent().getIntExtra(Constants.IMAGE_ID, 0);
-            download_count = getIntent().getIntExtra(Constants.DOWNLOADS, 0);
-            view_count = getIntent().getIntExtra(Constants.VIEWS, 0);
-            like_count = getIntent().getIntExtra(Constants.LIKES, 0);
-
-            tags = getIntent().getStringExtra(Constants.TAGS);
-            tagsList = tags.split(",");
-            image_title = tagsList[0];
-            image_pixabay_link = getIntent().getStringExtra(Constants.PIXABAY_PAGE_URL);
-            user_image_url = getIntent().getStringExtra(Constants.USER_IMAGE_URL);
-            user = getIntent().getStringExtra(Constants.USER);
-            web_format_url = getIntent().getStringExtra(Constants.WEB_FORMAT_URL);
-            preview_url = getIntent().getStringExtra(Constants.PREVIEW_URL);
-            String splitted[] = preview_url.split("/");
+            urls_raw = getIntent().getStringExtra("urls_raw");
+            urls_full = getIntent().getStringExtra("urls_full");
+            //urls_regular = getIntent().getStringExtra(Constants.USER);
+            urls_small = getIntent().getStringExtra("urls_small");
+            urls_thumnail = getIntent().getStringExtra("urls_thumnail");
+            String splitted[] = urls_raw.split("/");
             fileName = splitted[splitted.length - 1];
             image_path_with_folder = Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName;
-            image_720p_link = buildHDURL();*/
         }
 
         dwnld = (Button) findViewById(R.id.dwnld);
         dwnld.setOnClickListener(this);
         set = (Button) findViewById(R.id.set_as_wallpaper);
         set.setOnClickListener(this);
-        Glide.with(this).load(getIntent().getStringExtra("urls_thumb"))
+        /*Glide.with(this).load(getIntent().getStringExtra())
                 .crossFade()
                 .thumbnail(0.5f)
                 .placeholder(R.mipmap.ic_launcher)
                 .error(R.mipmap.ic_launcher)
                 .bitmapTransform(new CircleTransform(this))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(userImage);
+                .into(userImage);*/
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
 
@@ -102,7 +96,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         }
 
         final ImageView image = (ImageView) findViewById(R.id.image);
-        Glide.with(getApplicationContext()).load(getIntent().getStringExtra(Constants.WEB_FORMAT_URL)).crossFade()
+        Glide.with(getApplicationContext()).load(getIntent().getStringExtra("urls_small")).crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
     }
 

@@ -11,9 +11,18 @@ public class WallpaperUnsplash implements Parcelable {
 
     String id,height,width,color,likes;
     String user_id,username,name,first_name,last_name,profile_image_large,profile_image_medium,profile_image_small;
-    String urls_raw,urls_full,urls_thumb,urls_small;
+    String urls_raw,urls_full,urls_thumb,urls_small,urls_regular;
     String category_id,category_title,photo_count,category_link,photo_link;
     String link_self,link_html,link_download_link,download_location;
+
+
+    public String getUrls_regular() {
+        return urls_regular;
+    }
+
+    public void setUrls_regular(String urls_regular) {
+        this.urls_regular = urls_regular;
+    }
 
     public String getId() {
         return id;
@@ -223,6 +232,9 @@ public class WallpaperUnsplash implements Parcelable {
         this.download_location = download_location;
     }
 
+    public WallpaperUnsplash() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -247,6 +259,7 @@ public class WallpaperUnsplash implements Parcelable {
         dest.writeString(this.urls_full);
         dest.writeString(this.urls_thumb);
         dest.writeString(this.urls_small);
+        dest.writeString(this.urls_regular);
         dest.writeString(this.category_id);
         dest.writeString(this.category_title);
         dest.writeString(this.photo_count);
@@ -256,9 +269,6 @@ public class WallpaperUnsplash implements Parcelable {
         dest.writeString(this.link_html);
         dest.writeString(this.link_download_link);
         dest.writeString(this.download_location);
-    }
-
-    public WallpaperUnsplash() {
     }
 
     protected WallpaperUnsplash(Parcel in) {
@@ -279,6 +289,7 @@ public class WallpaperUnsplash implements Parcelable {
         this.urls_full = in.readString();
         this.urls_thumb = in.readString();
         this.urls_small = in.readString();
+        this.urls_regular = in.readString();
         this.category_id = in.readString();
         this.category_title = in.readString();
         this.photo_count = in.readString();
@@ -290,7 +301,7 @@ public class WallpaperUnsplash implements Parcelable {
         this.download_location = in.readString();
     }
 
-    public static final Parcelable.Creator<WallpaperUnsplash> CREATOR = new Parcelable.Creator<WallpaperUnsplash>() {
+    public static final Creator<WallpaperUnsplash> CREATOR = new Creator<WallpaperUnsplash>() {
         @Override
         public WallpaperUnsplash createFromParcel(Parcel source) {
             return new WallpaperUnsplash(source);
