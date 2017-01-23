@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 
 import ay3524.com.wallpapertime.R;
+import ay3524.com.wallpapertime.utils.ImageDownloadTask;
 
 /**
  * An activity representing a single Item detail screen. This
@@ -49,7 +50,8 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
     private String urls_raw;
     private String urls_full;
     private String urls_small;
-    private String urls_thumnail;
+    private String urls_regular;
+    private String urls_thum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +66,11 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         if (getIntent().getExtras() != null) {
             urls_raw = getIntent().getStringExtra("urls_raw");
             urls_full = getIntent().getStringExtra("urls_full");
-            //urls_regular = getIntent().getStringExtra(Constants.USER);
+            urls_regular = getIntent().getStringExtra("urls_regular");
             urls_small = getIntent().getStringExtra("urls_small");
-            urls_thumnail = getIntent().getStringExtra("urls_thumnail");
+            urls_thum = getIntent().getStringExtra("urls_thumb");
             String splitted[] = urls_raw.split("/");
-            fileName = splitted[splitted.length - 1];
+            fileName = splitted[splitted.length - 1]+".jpg";
             image_path_with_folder = Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName;
         }
 
@@ -177,11 +179,11 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
                 Snackbar.make(v, "Replace with your own detail action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 break;*/
-            /*case R.id.dwnld:
+            case R.id.dwnld:
 
                 if (!(new File(image_path_with_folder).exists())) {
 
-                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(image_720p_link);
+                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(urls_regular);
                 } else {
                     Toast.makeText(ItemDetailActivity.this, "Image Already Downloaded", Toast.LENGTH_SHORT).show();
                 }
@@ -189,14 +191,14 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
             case R.id.set_as_wallpaper:
 
                 if (!(new File(image_path_with_folder).exists())) {
-                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(image_720p_link);
+                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(urls_regular);
                     setAsWallpaper();
 
                 } else {
                     setAsWallpaper();
                     Toast.makeText(ItemDetailActivity.this, "Setting wallpaper successfull", Toast.LENGTH_SHORT).show();
                 }
-                break;*/
+                break;
         }
     }
 }

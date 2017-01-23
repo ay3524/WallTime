@@ -15,15 +15,6 @@ public class WallpaperUnsplash implements Parcelable {
     String category_id,category_title,photo_count,category_link,photo_link;
     String link_self,link_html,link_download_link,download_location;
 
-
-    public String getUrls_regular() {
-        return urls_regular;
-    }
-
-    public void setUrls_regular(String urls_regular) {
-        this.urls_regular = urls_regular;
-    }
-
     public String getId() {
         return id;
     }
@@ -160,6 +151,14 @@ public class WallpaperUnsplash implements Parcelable {
         this.urls_small = urls_small;
     }
 
+    public String getUrls_regular() {
+        return urls_regular;
+    }
+
+    public void setUrls_regular(String urls_regular) {
+        this.urls_regular = urls_regular;
+    }
+
     public String getCategory_id() {
         return category_id;
     }
@@ -232,9 +231,6 @@ public class WallpaperUnsplash implements Parcelable {
         this.download_location = download_location;
     }
 
-    public WallpaperUnsplash() {
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -271,6 +267,9 @@ public class WallpaperUnsplash implements Parcelable {
         dest.writeString(this.download_location);
     }
 
+    public WallpaperUnsplash() {
+    }
+
     protected WallpaperUnsplash(Parcel in) {
         this.id = in.readString();
         this.height = in.readString();
@@ -301,7 +300,7 @@ public class WallpaperUnsplash implements Parcelable {
         this.download_location = in.readString();
     }
 
-    public static final Creator<WallpaperUnsplash> CREATOR = new Creator<WallpaperUnsplash>() {
+    public static final Parcelable.Creator<WallpaperUnsplash> CREATOR = new Parcelable.Creator<WallpaperUnsplash>() {
         @Override
         public WallpaperUnsplash createFromParcel(Parcel source) {
             return new WallpaperUnsplash(source);
