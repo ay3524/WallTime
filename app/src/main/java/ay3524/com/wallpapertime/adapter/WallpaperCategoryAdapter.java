@@ -5,4 +5,5 @@ package ay3524.com.wallpapertime.adapter;
  */
 
 public class WallpaperCategoryAdapter {
+
 }

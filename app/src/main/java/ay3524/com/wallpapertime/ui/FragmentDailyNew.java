@@ -11,20 +11,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.adapter.WallpaperAdapter;
-import ay3524.com.wallpapertime.api.ApiClient;
-import ay3524.com.wallpapertime.api.ApiInterface;
-import ay3524.com.wallpapertime.api.WallpaperWithInfoResponse;
+import ay3524.com.wallpapertime.app.AppController;
 import ay3524.com.wallpapertime.model.WallpaperWithInfo;
 import ay3524.com.wallpapertime.utils.Constants;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Ashish on 31-12-2016.
@@ -36,6 +39,7 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
     private ArrayList<WallpaperWithInfo> wallpapersList = new ArrayList<>();
     private WallpaperAdapter adapter;
     private GridLayoutManager gridLayoutManager;
+    private String tag_json_arry = "TAG_JSON_ARRAY";
 
     @Nullable
     @Override
@@ -68,7 +72,51 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
     }
 
     private void getListOfWallpapers() {
-        ApiInterface apiService =
+
+        JsonArrayRequest req = new JsonArrayRequest("https://api.unsplash.com/collections/491510/photos?client_id=1d6adf7ef9a462a70dca375dd1f8faf911481ea8e2715bf2666984671dbc4d39",
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d("TAG", response.toString());
+
+                        //TextView textView = (TextView) findViewById(R.id.title);
+
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                /*JSONObject jsonObject = response.getJSONObject(i);
+                                String id = jsonObject.getString("id");*/
+
+                                /*JSONObject jsonObject = response.getJSONObject(i);
+                                JSONObject jsonObject1 = jsonObject.getJSONObject("user");
+                                String id = jsonObject1.getString("id");*/
+                                JSONObject jsonObject = response.getJSONObject(i);
+                                JSONObject jsonObject1 = jsonObject.getJSONObject("user");
+                                String id = jsonObject1.getString("id");
+                                JSONObject jsonObject2 = jsonObject1.getJSONObject("profile_image");
+                                String url = jsonObject2.getString("small");
+                                //textView.append(url + "\n");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        //textView.setText(response.toString());
+
+
+                        //msgResponse.setText(response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("TAG", "Error: " + error.getMessage());
+            }
+        });
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(req,
+                tag_json_arry);
+
+        /*ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
 
         Call<WallpaperWithInfoResponse> call = apiService.getWallpaperPopularOrLatest(Constants.api_key,
@@ -93,7 +141,7 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
                 // Log error here since request failed
                 Log.e("TAG", t.toString());
             }
-        });
+        });*/
     }
 
     @Override
