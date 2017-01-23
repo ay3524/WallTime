@@ -13,7 +13,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.ArrayList;
 
 import ay3524.com.wallpapertime.R;
-import ay3524.com.wallpapertime.model.WallpaperWithInfo;
+import ay3524.com.wallpapertime.model.WallpaperUnsplash;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 
 public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.WallpaperViewHolder> {
 
-    private ArrayList<WallpaperWithInfo> wallpaper;
+    private ArrayList<WallpaperUnsplash> wallpaper;
     private Context context;
     private ListItemClickListener clickListener;
 
@@ -31,7 +31,7 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.Wall
         void onListItemClick(int clickedItemIndex);
     }
 
-    public WallpaperAdapter(ArrayList<WallpaperWithInfo> wallpaperses, ListItemClickListener listener) {
+    public WallpaperAdapter(ArrayList<WallpaperUnsplash> wallpaperses, ListItemClickListener listener) {
         wallpaper = wallpaperses;
         clickListener = listener;
     }
@@ -58,19 +58,10 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.Wall
         //Cache cache = AppController.getInstance().getRequestQueue().getCache();
         //Cache.Entry entry = cache.get(wallpaper.get(position).getWebformatURL());*/
 
-        String buildSingleListImageUrl = buildSingleListImageUrl(wallpaper.get(position).getWebformatURL());
+        String buildSingleListImageUrl = wallpaper.get(position).getUrls_small();
 
         Glide.with(context).load(buildSingleListImageUrl).crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.wallpaperPoster);
-    }
-
-    private String buildSingleListImageUrl(String url) {
-        StringBuilder myName = new StringBuilder(url);
-        myName.setCharAt(url.length() - 7, '3');
-        myName.setCharAt(url.length() - 6, '4');
-        myName.setCharAt(url.length() - 5, '0');
-       // myName.insert(url.length() - 4, '0');
-        return myName.toString();
     }
 
     @Override

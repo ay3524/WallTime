@@ -57,8 +57,8 @@ public class FragmentPopular extends Fragment implements WallpaperAdapter.ListIt
         }
         if (savedInstanceState != null) {
             wallpapersList = savedInstanceState.getParcelableArrayList(STATE_WALLPAPERS);
-            adapter = new WallpaperAdapter(wallpapersList, FragmentPopular.this);
-            recyclerView.setAdapter(adapter);
+            //adapter = new WallpaperAdapter(wallpapersList, FragmentPopular.this);
+           // recyclerView.setAdapter(adapter);
         } else {
             getListOfWallpapers();
         }
@@ -80,8 +80,8 @@ public class FragmentPopular extends Fragment implements WallpaperAdapter.ListIt
                 try {
                     if (response != null) {
                         wallpapersList = response.body().getHits();
-                        adapter = new WallpaperAdapter(wallpapersList, FragmentPopular.this);
-                        recyclerView.setAdapter(adapter);
+                       // adapter = new WallpaperAdapter(wallpapersList, FragmentPopular.this);
+                       // recyclerView.setAdapter(adapter);
                     }
                 } catch (NullPointerException ignored) {
                     Toast.makeText(getActivity(), "NPE Again", Toast.LENGTH_SHORT).show();

@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +25,7 @@ import java.util.ArrayList;
 import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.adapter.WallpaperAdapter;
 import ay3524.com.wallpapertime.app.AppController;
-import ay3524.com.wallpapertime.model.WallpaperWithInfo;
-import ay3524.com.wallpapertime.utils.Constants;
+import ay3524.com.wallpapertime.model.WallpaperUnsplash;
 
 /**
  * Created by Ashish on 31-12-2016.
@@ -36,7 +34,7 @@ import ay3524.com.wallpapertime.utils.Constants;
 public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListItemClickListener {
     private static final String STATE_WALLPAPERS = "state";
     private RecyclerView recyclerView;
-    private ArrayList<WallpaperWithInfo> wallpapersList = new ArrayList<>();
+    private ArrayList<WallpaperUnsplash> wallpapersList = new ArrayList<>();
     private WallpaperAdapter adapter;
     private GridLayoutManager gridLayoutManager;
     private String tag_json_arry = "TAG_JSON_ARRAY";
@@ -73,37 +71,45 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
 
     private void getListOfWallpapers() {
 
-        JsonArrayRequest req = new JsonArrayRequest("https://api.unsplash.com/collections/491510/photos?client_id=1d6adf7ef9a462a70dca375dd1f8faf911481ea8e2715bf2666984671dbc4d39",
+        JsonArrayRequest req = new JsonArrayRequest("https://api.unsplash.com/photos?client_id=1d6adf7ef9a462a70dca375dd1f8faf911481ea8e2715bf2666984671dbc4d39&order_by=latest",
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.d("TAG", response.toString());
-
-                        //TextView textView = (TextView) findViewById(R.id.title);
+                        //Log.d("TAG", response.toString());
 
                         for (int i = 0; i < response.length(); i++) {
                             try {
-                                /*JSONObject jsonObject = response.getJSONObject(i);
-                                String id = jsonObject.getString("id");*/
-
-                                /*JSONObject jsonObject = response.getJSONObject(i);
-                                JSONObject jsonObject1 = jsonObject.getJSONObject("user");
-                                String id = jsonObject1.getString("id");*/
+                                WallpaperUnsplash wallpaperUnsplash = new WallpaperUnsplash();
                                 JSONObject jsonObject = response.getJSONObject(i);
-                                JSONObject jsonObject1 = jsonObject.getJSONObject("user");
-                                String id = jsonObject1.getString("id");
-                                JSONObject jsonObject2 = jsonObject1.getJSONObject("profile_image");
-                                String url = jsonObject2.getString("small");
-                                //textView.append(url + "\n");
+                                wallpaperUnsplash.setId(jsonObject.getString("id"));
+                                wallpaperUnsplash.setWidth(jsonObject.getString("width"));
+                                wallpaperUnsplash.setHeight(jsonObject.getString("height"));
+                                wallpaperUnsplash.setColor(jsonObject.getString("color"));
+                                wallpaperUnsplash.setLikes(jsonObject.getString("likes"));
+
+                                JSONObject jsonObject2 = jsonObject.getJSONObject("user");
+                                wallpaperUnsplash.setUser_id(jsonObject2.getString("id"));
+                                JSONObject jsonObject3 = jsonObject2.getJSONObject("profile_image");
+                                wallpaperUnsplash.setProfile_image_small(jsonObject3.getString("small"));
+                                wallpaperUnsplash.setProfile_image_medium(jsonObject3.getString("medium"));
+                                wallpaperUnsplash.setProfile_image_large(jsonObject3.getString("large"));
+
+                                JSONObject jsonObject4 = jsonObject.getJSONObject("urls");
+                                wallpaperUnsplash.setUrls_raw(jsonObject4.getString("raw"));
+                                wallpaperUnsplash.setUrls_full(jsonObject4.getString("full"));
+                                //wallpaperUnsplash.setUrls_regular(jsonObject2.getString("regular"));
+                                wallpaperUnsplash.setUrls_small(jsonObject4.getString("small"));
+                                wallpaperUnsplash.setUrls_thumb(jsonObject4.getString("thumb"));
+
+                                wallpapersList.add(wallpaperUnsplash);
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+
                         }
-
-                        //textView.setText(response.toString());
-
-
-                        //msgResponse.setText(response.toString());
+                        adapter = new WallpaperAdapter(wallpapersList, FragmentDailyNew.this);
+                        recyclerView.setAdapter(adapter);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -115,33 +121,6 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(req,
                 tag_json_arry);
-
-        /*ApiInterface apiService =
-                ApiClient.getClient().create(ApiInterface.class);
-
-        Call<WallpaperWithInfoResponse> call = apiService.getWallpaperPopularOrLatest(Constants.api_key,
-                Constants.response_group_img_details, Constants.booleanImagesWithoutEditorsCoice,
-                Constants.orderLatest, Constants.prettyBooleanValue, "photo");
-        call.enqueue(new Callback<WallpaperWithInfoResponse>() {
-            @Override
-            public void onResponse(Call<WallpaperWithInfoResponse> call, Response<WallpaperWithInfoResponse> response) {
-                try {
-                    if (response != null) {
-                        wallpapersList = response.body().getHits();
-                        adapter = new WallpaperAdapter(wallpapersList, FragmentDailyNew.this);
-                        recyclerView.setAdapter(adapter);
-                    }
-                } catch (NullPointerException ignored) {
-                    Toast.makeText(getActivity(), "NPE Again", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<WallpaperWithInfoResponse> call, Throwable t) {
-                // Log error here since request failed
-                Log.e("TAG", t.toString());
-            }
-        });*/
     }
 
     @Override
@@ -155,6 +134,27 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
     public void onListItemClick(int clickedItemIndex) {
         //Toast.makeText(getActivity(), "Phone", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), ItemDetailActivity.class);
+
+        intent.putExtra("id", wallpapersList.get(clickedItemIndex).getId());
+        intent.putExtra("width", wallpapersList.get(clickedItemIndex).getWidth());
+        intent.putExtra("height", wallpapersList.get(clickedItemIndex).getHeight());
+        intent.putExtra("color", wallpapersList.get(clickedItemIndex).getColor());
+        intent.putExtra("likes", wallpapersList.get(clickedItemIndex).getLikes());
+        intent.putExtra("user_id", wallpapersList.get(clickedItemIndex).getUser_id());
+        intent.putExtra("username", wallpapersList.get(clickedItemIndex).getUsername());
+        intent.putExtra("name", wallpapersList.get(clickedItemIndex).getName());
+        intent.putExtra("first_name", wallpapersList.get(clickedItemIndex).getFirst_name());
+        intent.putExtra("profile_image_small", wallpapersList.get(clickedItemIndex).getProfile_image_small());
+        intent.putExtra("profile_image_medium", wallpapersList.get(clickedItemIndex).getProfile_image_medium());
+        intent.putExtra("profile_image_large", wallpapersList.get(clickedItemIndex).getProfile_image_large());
+        intent.putExtra("urls_raw", wallpapersList.get(clickedItemIndex).getUrls_raw());
+        intent.putExtra("urls_full", wallpapersList.get(clickedItemIndex).getUrls_full());
+        //intent.putExtra("urls_regular", wallpapersList.get(clickedItemIndex).getUrls_Regular);
+        intent.putExtra("urls_small", wallpapersList.get(clickedItemIndex).getUrls_small());
+        intent.putExtra("urls_thumb", wallpapersList.get(clickedItemIndex).getUrls_thumb());
+
+        startActivity(intent);
+        /*Intent intent = new Intent(getActivity(), ItemDetailActivity.class);
 
         intent.putExtra(Constants.PREVIEW_HEIGHT, wallpapersList.get(clickedItemIndex).getPreviewHeight());
         intent.putExtra(Constants.PREVIEW_WIDTH, wallpapersList.get(clickedItemIndex).getPreviewWidth());
@@ -180,6 +180,6 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
         intent.putExtra(Constants.TYPE, wallpapersList.get(clickedItemIndex).getType());
         intent.putExtra(Constants.USER, wallpapersList.get(clickedItemIndex).getUser());
 
-        startActivity(intent);
+        startActivity(intent);*/
     }
 }

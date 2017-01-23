@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
@@ -32,7 +31,6 @@ import java.io.IOException;
 import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.utils.CircleTransform;
 import ay3524.com.wallpapertime.utils.Constants;
-import ay3524.com.wallpapertime.utils.ImageDownloadTask;
 
 /**
  * An activity representing a single Item detail screen. This
@@ -43,9 +41,6 @@ import ay3524.com.wallpapertime.utils.ImageDownloadTask;
 public class ItemDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
     CollapsingToolbarLayout collapsingToolbarLayout;
-    String image_title, user_image_url, tags, user_profile_pixabay_link, image_pixabay_link, user, web_format_url, preview_url, image_720p_link;
-    int id, download_count, view_count, like_count;
-    TextView title, downloads, views, likes, user_name;
     ImageView userImage;
     Button dwnld, set;
     String fileName, image_path_with_folder;
@@ -63,18 +58,8 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        title = (TextView) findViewById(R.id.imageTitle);
-        downloads = (TextView) findViewById(R.id.downloads);
-        views = (TextView) findViewById(R.id.views);
-        likes = (TextView) findViewById(R.id.likes);
-        user_name = (TextView) findViewById(R.id.user_name);
-        userImage = (ImageView) findViewById(R.id.userImage);
-        firstTag = (TextView) findViewById(R.id.firstTag);
-        secondTag = (TextView) findViewById(R.id.secondTag);
-        thirdTag = (TextView) findViewById(R.id.thirdTag);
-
         if (getIntent().getExtras() != null) {
-            id = getIntent().getIntExtra(Constants.IMAGE_ID, 0);
+            /*id = getIntent().getIntExtra(Constants.IMAGE_ID, 0);
             download_count = getIntent().getIntExtra(Constants.DOWNLOADS, 0);
             view_count = getIntent().getIntExtra(Constants.VIEWS, 0);
             like_count = getIntent().getIntExtra(Constants.LIKES, 0);
@@ -90,21 +75,14 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
             String splitted[] = preview_url.split("/");
             fileName = splitted[splitted.length - 1];
             image_path_with_folder = Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName;
-            image_720p_link = buildHDURL();
+            image_720p_link = buildHDURL();*/
         }
-        title.setText(image_title);
-        downloads.setText(String.valueOf(download_count));
-        views.setText(String.valueOf(view_count));
-        likes.setText(String.valueOf(like_count));
-        user_name.setText(user);
-        firstTag.setText(hash.concat(tagsList[0].trim()));
-        secondTag.setText(hash.concat(tagsList[1].trim()));
-        thirdTag.setText(hash.concat(tagsList[2].trim()));
+
         dwnld = (Button) findViewById(R.id.dwnld);
         dwnld.setOnClickListener(this);
         set = (Button) findViewById(R.id.set_as_wallpaper);
         set.setOnClickListener(this);
-        Glide.with(this).load(user_image_url)
+        Glide.with(this).load(getIntent().getStringExtra("urls_thumb"))
                 .crossFade()
                 .thumbnail(0.5f)
                 .placeholder(R.mipmap.ic_launcher)
@@ -186,15 +164,6 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private String buildHDURL() {
-        StringBuilder myName = new StringBuilder(preview_url);
-        myName.setCharAt(preview_url.length() - 7, '1');
-        myName.setCharAt(preview_url.length() - 6, '2');
-        myName.setCharAt(preview_url.length() - 5, '8');
-        myName.insert(preview_url.length() - 4, '0');
-        return myName.toString();
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -214,7 +183,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
                 Snackbar.make(v, "Replace with your own detail action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 break;*/
-            case R.id.dwnld:
+            /*case R.id.dwnld:
 
                 if (!(new File(image_path_with_folder).exists())) {
 
@@ -233,7 +202,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
                     setAsWallpaper();
                     Toast.makeText(ItemDetailActivity.this, "Setting wallpaper successfull", Toast.LENGTH_SHORT).show();
                 }
-                break;
+                break;*/
         }
     }
 }
