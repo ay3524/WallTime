@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="300dp">
 
-</LinearLayout>
+    <TextView
+        android:textSize="25sp"
+        android:layout_margin="15dp"
+        android:id="@+id/collection_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/collection_cover"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:contentDescription="@string/collection_cover" />
+
+</FrameLayout>
