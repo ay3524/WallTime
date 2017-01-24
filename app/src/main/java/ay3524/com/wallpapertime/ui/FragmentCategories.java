@@ -64,8 +64,6 @@ public class FragmentCategories extends Fragment implements WallpaperCategoryAda
             getListOfCollections();
         }
 
-        getListOfCollections();
-
         return rootView;
 
     }
