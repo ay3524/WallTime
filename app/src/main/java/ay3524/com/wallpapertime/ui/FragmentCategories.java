@@ -1,8 +1,10 @@
 package ay3524.com.wallpapertime.ui;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,10 +33,12 @@ import ay3524.com.wallpapertime.model.WallpaperCollection;
 public class FragmentCategories extends Fragment implements WallpaperCategoryAdapter.ListItemClickListener{
 
 
+    private static final String STATE_WALLPAPERS = "state";
     RecyclerView recyclerView;
     WallpaperCategoryAdapter adapter;
-    ArrayList<WallpaperCollection> wallpapersList;
+    ArrayList<WallpaperCollection> wallpapersList = new ArrayList<>();
     private String tag_json_arry = "TAG_JSON_ARRAY";
+    private GridLayoutManager gridLayoutManager;
 
     @Nullable
     @Override
@@ -42,7 +46,25 @@ public class FragmentCategories extends Fragment implements WallpaperCategoryAda
 
         View rootView = inflater.inflate(R.layout.single_tab_layout, container, false);
 
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.item_list);
 
+        recyclerView.setHasFixedSize(true);
+        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+            recyclerView.setLayoutManager(gridLayoutManager);
+        } else {
+            gridLayoutManager = new GridLayoutManager(getActivity(), 4);
+            recyclerView.setLayoutManager(gridLayoutManager);
+        }
+        if (savedInstanceState != null) {
+            wallpapersList = savedInstanceState.getParcelableArrayList(STATE_WALLPAPERS);
+            adapter = new WallpaperCategoryAdapter(wallpapersList, FragmentCategories.this);
+            recyclerView.setAdapter(adapter);
+        } else {
+            getListOfCollections();
+        }
+
+        getListOfCollections();
 
         return rootView;
 
@@ -63,6 +85,15 @@ public class FragmentCategories extends Fragment implements WallpaperCategoryAda
                                 wallpaperUnsplash.setId(jsonObject.getString("id"));
                                 wallpaperUnsplash.setTitle(jsonObject.getString("title"));
                                 wallpaperUnsplash.setTotal_photos(jsonObject.getString("total_photos"));
+
+                                JSONObject jsonObject3 = jsonObject.getJSONObject("cover_photo");
+                                JSONObject jsonObject4 = jsonObject3.getJSONObject("urls");
+                                wallpaperUnsplash.setUrls_raw(jsonObject4.getString("raw"));
+                                wallpaperUnsplash.setUrls_full(jsonObject4.getString("full"));
+                                wallpaperUnsplash.setUrls_regular(jsonObject4.getString("regular"));
+                                wallpaperUnsplash.setUrls_small(jsonObject4.getString("small"));
+                                wallpaperUnsplash.setUrls_thumb(jsonObject4.getString("thumb"));
+
                                 /*wallpaperUnsplash.setId(jsonObject.getString("id"));
                                 wallpaperUnsplash.setWidth(jsonObject.getString("width"));
                                 wallpaperUnsplash.setHeight(jsonObject.getString("height"));
@@ -107,6 +138,12 @@ public class FragmentCategories extends Fragment implements WallpaperCategoryAda
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
+
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(STATE_WALLPAPERS, wallpapersList);
 
     }
 }

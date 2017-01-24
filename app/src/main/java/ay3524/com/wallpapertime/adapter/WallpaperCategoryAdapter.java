@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import java.util.ArrayList;
 
 import ay3524.com.wallpapertime.R;
@@ -29,8 +32,8 @@ public class WallpaperCategoryAdapter  extends RecyclerView.Adapter<WallpaperCat
         void onListItemClick(int clickedItemIndex);
     }
 
-    public WallpaperCategoryAdapter(ArrayList<WallpaperCollection> wallpaperses, ListItemClickListener listener) {
-        wallpaper = wallpaperses;
+    public WallpaperCategoryAdapter(ArrayList<WallpaperCollection> wallpaperes, ListItemClickListener listener) {
+        wallpaper = wallpaperes;
         clickListener = listener;
     }
 
@@ -46,11 +49,10 @@ public class WallpaperCategoryAdapter  extends RecyclerView.Adapter<WallpaperCat
 
     @Override
     public void onBindViewHolder(WallpaperCategoryAdapter.WallpaperViewHolder holder, int position) {
-/*
         String buildSingleListImageUrl = wallpaper.get(position).getUrls_small();
 
         Glide.with(context).load(buildSingleListImageUrl).crossFade()
-                .diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.collection_cover);*/
+                .diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.collection_cover);
     }
 
     @Override
