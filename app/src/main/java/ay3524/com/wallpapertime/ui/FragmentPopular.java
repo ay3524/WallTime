@@ -1,30 +1,30 @@
 package ay3524.com.wallpapertime.ui;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.adapter.WallpaperAdapter;
-import ay3524.com.wallpapertime.api.ApiClient;
-import ay3524.com.wallpapertime.api.ApiInterface;
-import ay3524.com.wallpapertime.api.WallpaperWithInfoResponse;
-import ay3524.com.wallpapertime.model.WallpaperWithInfo;
-import ay3524.com.wallpapertime.utils.Constants;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import ay3524.com.wallpapertime.app.AppController;
+import ay3524.com.wallpapertime.model.WallpaperUnsplash;
 
 /**
  * Created by Ashish on 31-12-2016.
@@ -33,8 +33,9 @@ import retrofit2.Response;
 public class FragmentPopular extends Fragment implements WallpaperAdapter.ListItemClickListener {
     private static final String STATE_WALLPAPERS = "state";
     private RecyclerView recyclerView;
-    private ArrayList<WallpaperWithInfo> wallpapersList = new ArrayList<>();
+    private ArrayList<WallpaperUnsplash> wallpapersList = new ArrayList<>();
     private WallpaperAdapter adapter;
+    private String tag_json_arry = "TAG_JSON_ARRAY";
 
     @Nullable
     @Override
@@ -44,8 +45,6 @@ public class FragmentPopular extends Fragment implements WallpaperAdapter.ListIt
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.item_list);
 
-        //GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        //recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setHasFixedSize(true);
         GridLayoutManager gridLayoutManager;
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -68,7 +67,60 @@ public class FragmentPopular extends Fragment implements WallpaperAdapter.ListIt
     }
 
     private void getListOfWallpapers() {
-        ApiInterface apiService =
+
+
+        JsonArrayRequest req = new JsonArrayRequest("https://api.unsplash.com/photos?client_id=1d6adf7ef9a462a70dca375dd1f8faf911481ea8e2715bf2666984671dbc4d39&order_by=popular&per_page=30",
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        //Log.d("TAG", response.toString());
+
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                WallpaperUnsplash wallpaperUnsplash = new WallpaperUnsplash();
+                                JSONObject jsonObject = response.getJSONObject(i);
+                                wallpaperUnsplash.setId(jsonObject.getString("id"));
+                                wallpaperUnsplash.setWidth(jsonObject.getString("width"));
+                                wallpaperUnsplash.setHeight(jsonObject.getString("height"));
+                                wallpaperUnsplash.setColor(jsonObject.getString("color"));
+                                wallpaperUnsplash.setLikes(jsonObject.getString("likes"));
+
+                                JSONObject jsonObject2 = jsonObject.getJSONObject("user");
+                                wallpaperUnsplash.setUser_id(jsonObject2.getString("id"));
+                                JSONObject jsonObject3 = jsonObject2.getJSONObject("profile_image");
+                                wallpaperUnsplash.setProfile_image_small(jsonObject3.getString("small"));
+                                wallpaperUnsplash.setProfile_image_medium(jsonObject3.getString("medium"));
+                                wallpaperUnsplash.setProfile_image_large(jsonObject3.getString("large"));
+
+                                JSONObject jsonObject4 = jsonObject.getJSONObject("urls");
+                                wallpaperUnsplash.setUrls_raw(jsonObject4.getString("raw"));
+                                wallpaperUnsplash.setUrls_full(jsonObject4.getString("full"));
+                                wallpaperUnsplash.setUrls_regular(jsonObject4.getString("regular"));
+                                wallpaperUnsplash.setUrls_small(jsonObject4.getString("small"));
+                                wallpaperUnsplash.setUrls_thumb(jsonObject4.getString("thumb"));
+
+                                wallpapersList.add(wallpaperUnsplash);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        adapter = new WallpaperAdapter(wallpapersList, FragmentPopular.this);
+                        recyclerView.setAdapter(adapter);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d("TAG", "Error: " + error.getMessage());
+            }
+        });
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(req,
+                tag_json_arry);
+
+        /*ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
 
         Call<WallpaperWithInfoResponse> call = apiService.getWallpaperPopularOrLatest(Constants.api_key,
@@ -93,7 +145,7 @@ public class FragmentPopular extends Fragment implements WallpaperAdapter.ListIt
                 // Log error here since request failed
                 Log.e("TAG", t.toString());
             }
-        });
+        });*/
     }
 
     @Override
@@ -105,33 +157,7 @@ public class FragmentPopular extends Fragment implements WallpaperAdapter.ListIt
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
-        Intent intent = new Intent(getActivity(), ItemDetailActivity.class);
 
-        intent.putExtra(Constants.PREVIEW_HEIGHT, wallpapersList.get(clickedItemIndex).getPreviewHeight());
-        intent.putExtra(Constants.PREVIEW_WIDTH, wallpapersList.get(clickedItemIndex).getPreviewWidth());
-        intent.putExtra(Constants.WEB_FORMAT_HEIGHT, wallpapersList.get(clickedItemIndex).getWebformatHeight());
-        intent.putExtra(Constants.WEB_FORMAT_WIDTH, wallpapersList.get(clickedItemIndex).getWebformatWidth());
-        intent.putExtra(Constants.IMAGE_HEIGHT, wallpapersList.get(clickedItemIndex).getImageHeight());
-        intent.putExtra(Constants.IMAGE_WIDTH, wallpapersList.get(clickedItemIndex).getImageWidth());
-
-        intent.putExtra(Constants.LIKES, wallpapersList.get(clickedItemIndex).getLikes());
-        intent.putExtra(Constants.FAVORITES, wallpapersList.get(clickedItemIndex).getFavorites());
-        intent.putExtra(Constants.VIEWS, wallpapersList.get(clickedItemIndex).getViews());
-        intent.putExtra(Constants.COMMENTS, wallpapersList.get(clickedItemIndex).getComments());
-        intent.putExtra(Constants.DOWNLOADS, wallpapersList.get(clickedItemIndex).getDownloads());
-        intent.putExtra(Constants.TAGS, wallpapersList.get(clickedItemIndex).getTags());
-
-        intent.putExtra(Constants.PIXABAY_PAGE_URL, wallpapersList.get(clickedItemIndex).getPageURL());
-        intent.putExtra(Constants.PREVIEW_URL, wallpapersList.get(clickedItemIndex).getPreviewURL());
-        intent.putExtra(Constants.USER_IMAGE_URL, wallpapersList.get(clickedItemIndex).getUserImageURL());
-        intent.putExtra(Constants.WEB_FORMAT_URL, wallpapersList.get(clickedItemIndex).getWebformatURL());
-
-        intent.putExtra(Constants.USER_ID, wallpapersList.get(clickedItemIndex).getUserId());
-        intent.putExtra(Constants.IMAGE_ID, wallpapersList.get(clickedItemIndex).getId());
-        intent.putExtra(Constants.TYPE, wallpapersList.get(clickedItemIndex).getType());
-        intent.putExtra(Constants.USER, wallpapersList.get(clickedItemIndex).getUser());
-
-        startActivity(intent);
     }
 }
 

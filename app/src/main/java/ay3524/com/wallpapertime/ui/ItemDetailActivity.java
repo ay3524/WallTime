@@ -98,7 +98,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         }
 
         final ImageView image = (ImageView) findViewById(R.id.image);
-        Glide.with(getApplicationContext()).load(getIntent().getStringExtra("urls_small")).crossFade()
+        Glide.with(getApplicationContext()).load(getIntent().getStringExtra("urls_regular")).crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
     }
 
@@ -183,7 +183,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
 
                 if (!(new File(image_path_with_folder).exists())) {
 
-                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(urls_regular);
+                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(urls_full);
                 } else {
                     Toast.makeText(ItemDetailActivity.this, "Image Already Downloaded", Toast.LENGTH_SHORT).show();
                 }
@@ -191,7 +191,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
             case R.id.set_as_wallpaper:
 
                 if (!(new File(image_path_with_folder).exists())) {
-                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(urls_regular);
+                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(urls_full);
                     setAsWallpaper();
 
                 } else {
