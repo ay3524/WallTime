@@ -142,7 +142,6 @@ public class FragmentCategories extends Fragment implements WallpaperCategoryAda
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(STATE_WALLPAPERS, wallpapersList);
-
     }
 }
 

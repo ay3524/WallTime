@@ -53,6 +53,7 @@ public class WallpaperCategoryAdapter  extends RecyclerView.Adapter<WallpaperCat
 
         Glide.with(context).load(buildSingleListImageUrl).crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.collection_cover);
+        holder.collection_name.setText(wallpaper.get(position).getTitle());
     }
 
     @Override
