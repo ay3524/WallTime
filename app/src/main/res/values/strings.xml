@@ -18,5 +18,6 @@
         <item>Photo of the day</item>
         <item>Settings</item>
     </string-array>
+    <string name="title_activity_collection">CollectionActivity</string>
 
 </resources>

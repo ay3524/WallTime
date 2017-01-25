@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -40,12 +38,12 @@ import ay3524.com.wallpapertime.utils.ImageDownloadTask;
  */
 public class ItemDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
-    CollapsingToolbarLayout collapsingToolbarLayout;
+    //CollapsingToolbarLayout collapsingToolbarLayout;
     ImageView userImage;
     Button dwnld, set;
     String fileName, image_path_with_folder;
-    String tagsList[];
-    TextView firstTag, secondTag, thirdTag;
+    //String tagsList[];
+    //TextView firstTag, secondTag, thirdTag;
     String hash = "#";
     private String urls_raw;
     private String urls_full;
@@ -56,7 +54,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_item_detail);
+        setContentView(R.layout.item_detail2);
 
         checkPermissionForMarshmallowAndAbove();
 
@@ -87,7 +85,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(userImage);*/
 
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        //collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
 
         //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         //fab.setOnClickListener(this);
@@ -97,7 +95,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        final ImageView image = (ImageView) findViewById(R.id.image);
+        final ImageView image = (ImageView) findViewById(R.id.background);
         Glide.with(getApplicationContext()).load(getIntent().getStringExtra("urls_regular")).crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
     }

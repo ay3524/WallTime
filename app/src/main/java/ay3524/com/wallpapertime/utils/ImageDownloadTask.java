@@ -27,6 +27,7 @@ public class ImageDownloadTask extends AsyncTask<String, Integer, String> {
     private ProgressDialog pDialog;
     private String fileName;
     private volatile boolean running = true;
+    int fileLength;
 
     public ImageDownloadTask(Context cxt, String file_name) {
         context = cxt;
@@ -61,14 +62,16 @@ public class ImageDownloadTask extends AsyncTask<String, Integer, String> {
 
     @Override
     protected void onCancelled() {
-        super.onCancelled();
+        String dir_path = Environment.getExternalStorageDirectory() + "/WallTime";
+        File file = new File(dir_path + "/" + fileName);
+        if(file.delete()){
+            Toast.makeText(context, "Download Cancelled", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     protected String doInBackground(String... sUrl) {
         //File extStore = Environment.getExternalStorageDirectory();
-
-        while (running) {
 
             InputStream input = null;
             OutputStream output = null;
@@ -87,7 +90,7 @@ public class ImageDownloadTask extends AsyncTask<String, Integer, String> {
 
                 // this will be useful to display download percentage
                 // might be -1: server did not report the length
-                int fileLength = connection.getContentLength();
+                fileLength = connection.getContentLength();
 
                 // download the file
                 input = connection.getInputStream();
@@ -115,6 +118,7 @@ public class ImageDownloadTask extends AsyncTask<String, Integer, String> {
                         publishProgress((int) (total * 100 / fileLength));
                     output.write(data, 0, count);
                 }
+
             } catch (Exception e) {
                 return e.toString();
             } finally {
@@ -129,7 +133,7 @@ public class ImageDownloadTask extends AsyncTask<String, Integer, String> {
                 if (connection != null)
                     connection.disconnect();
             }
-        }
+
         return null;
     }
     /**
