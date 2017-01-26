@@ -40,8 +40,9 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
 
     private Button dwnld, set;
     private String fileName, image_path_with_folder;
-    private String urls_raw,urls_full,urls_small,urls_regular,urls_thumb;
+    private String urls_raw, urls_full, urls_small, urls_regular, urls_thumb;
     private String activityOrFragment;
+    ImageView image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
             urls_small = getIntent().getStringExtra("urls_small");
             urls_thumb = getIntent().getStringExtra("urls_thumb");
             String splitted[] = urls_raw.split("/");
-            fileName = splitted[splitted.length - 1]+".jpg";
+            fileName = splitted[splitted.length - 1] + ".jpg";
             image_path_with_folder = Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName;
         }
 
@@ -83,9 +84,18 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        final ImageView image = (ImageView) findViewById(R.id.background);
-        Glide.with(getApplicationContext()).load(getIntent().getStringExtra("urls_regular")).crossFade()
+        image = (ImageView) findViewById(R.id.background);
+        String url = buildUrl(fileName,"800");
+        Glide.with(getApplicationContext()).load(url).crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
+    }
+
+    private String buildUrl(String fileName,String size) {
+        StringBuilder stringBuilder = new StringBuilder(fileName);
+        stringBuilder.delete(fileName.length() - 4, fileName.length());
+        //Toast.makeText(getApplicationContext(),stringBuilder.toString(),Toast.LENGTH_LONG).show();
+        String url = "https://images.unsplash.com/"+stringBuilder.toString()+"?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w="+size+"&fit=max&s=c9cabfb90c6a844b59176db42be9ec0c";
+        return url;
     }
 
     private void checkPermissionForMarshmallowAndAbove() {
@@ -150,12 +160,12 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            if(activityOrFragment.equalsIgnoreCase("Fragment")){
+            if (activityOrFragment.equalsIgnoreCase("Fragment")) {
                 Intent intent = new Intent(this, ItemListActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 navigateUpTo(intent);
                 return true;
-            }else {
+            } else {
                 Intent intent = new Intent(this, CollectionActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 navigateUpTo(intent);
@@ -169,15 +179,11 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            /*case R.id.fab:
-                Snackbar.make(v, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                break;*/
             case R.id.dwnld:
 
                 if (!(new File(image_path_with_folder).exists())) {
 
-                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(urls_full);
+                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(buildUrl(fileName,"1100"));
                 } else {
                     Toast.makeText(ItemDetailActivity.this, "Image Already Downloaded", Toast.LENGTH_SHORT).show();
                 }
@@ -185,7 +191,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
             case R.id.set_as_wallpaper:
 
                 if (!(new File(image_path_with_folder).exists())) {
-                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(urls_full);
+                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(buildUrl(fileName,"1100"));
                     setAsWallpaper();
 
                 } else {
