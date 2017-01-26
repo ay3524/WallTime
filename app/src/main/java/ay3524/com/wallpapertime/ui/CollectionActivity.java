@@ -65,7 +65,7 @@ public class CollectionActivity extends AppCompatActivity implements WallpaperAd
             urls_regular = getIntent().getStringExtra("urls_regular");
             urls_small = getIntent().getStringExtra("urls_small");
             urls_thumb = getIntent().getStringExtra("urls_thumb");
-            urls_collection_list = "https://api.unsplash.com/collections/curated/"+id+"/photos?client_id=1d6adf7ef9a462a70dca375dd1f8faf911481ea8e2715bf2666984671dbc4d39";
+            urls_collection_list = "https://api.unsplash.com/collections/curated/" + id + "/photos?client_id=1d6adf7ef9a462a70dca375dd1f8faf911481ea8e2715bf2666984671dbc4d39";
             //String splitted[] = urls_raw.split("/");
             //fileName = splitted[splitted.length - 1]+".jpg";
             //image_path_with_folder = Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName;
@@ -161,8 +161,10 @@ public class CollectionActivity extends AppCompatActivity implements WallpaperAd
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
+
         Intent intent = new Intent(getApplicationContext(), ItemDetailActivity.class);
-        intent.putExtra("class","Activity");
+
+        intent.putExtra("class", "Activity");
         intent.putExtra("id", wallpapersList.get(clickedItemIndex).getId());
         intent.putExtra("width", wallpapersList.get(clickedItemIndex).getWidth());
         intent.putExtra("height", wallpapersList.get(clickedItemIndex).getHeight());

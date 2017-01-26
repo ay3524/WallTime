@@ -8,6 +8,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="ay3524.com.wallpapertime.ui.CollectionActivity"
     tools:showIn="@layout/activity_collection">
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/item_list"
         android:layout_width="match_parent"
@@ -16,5 +17,41 @@
         tools:context="ay3524.com.wallpapertime.ui.ItemListActivity"
         tools:listitem="@layout/single_wallpaper">
     </android.support.v7.widget.RecyclerView>
+
+    <RelativeLayout
+        android:id="@+id/empty_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <ImageView
+            android:id="@+id/empty_shelter_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/error_image"
+            android:src="@drawable/ic_empty_shelter" />
+
+        <TextView
+            android:id="@+id/empty_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/empty_shelter_image"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/its_a_bit_lonely_here"
+            android:textAppearance="?android:textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/empty_subtitle_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/empty_title_text"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="sans-serif"
+            android:text="@string/there_might_be_some_problem_with_internet_connection"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="#000" />
+    </RelativeLayout>
 
 </RelativeLayout>
