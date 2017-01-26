@@ -1,5 +1,6 @@
 package ay3524.com.wallpapertime.ui;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -136,8 +137,20 @@ public class FragmentCategories extends Fragment implements WallpaperCategoryAda
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
+        Intent intent = new Intent(getActivity(), CollectionActivity.class);
 
+        intent.putExtra("id", wallpapersList.get(clickedItemIndex).getId());
+        intent.putExtra("title", wallpapersList.get(clickedItemIndex).getTitle());
+        intent.putExtra("total_photos", wallpapersList.get(clickedItemIndex).getTotal_photos());
+        intent.putExtra("raw", wallpapersList.get(clickedItemIndex).getUrls_raw());
+        intent.putExtra("full", wallpapersList.get(clickedItemIndex).getUrls_full());
+        intent.putExtra("regular", wallpapersList.get(clickedItemIndex).getUrls_regular());
+        intent.putExtra("small", wallpapersList.get(clickedItemIndex).getUrls_small());
+        intent.putExtra("thumb", wallpapersList.get(clickedItemIndex).getUrls_thumb());
+
+        startActivity(intent);
     }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

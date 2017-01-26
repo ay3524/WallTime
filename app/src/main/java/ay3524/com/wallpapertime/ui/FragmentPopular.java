@@ -1,5 +1,6 @@
 package ay3524.com.wallpapertime.ui;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -35,6 +36,7 @@ public class FragmentPopular extends Fragment implements WallpaperAdapter.ListIt
     private RecyclerView recyclerView;
     private ArrayList<WallpaperUnsplash> wallpapersList = new ArrayList<>();
     private WallpaperAdapter adapter;
+    private GridLayoutManager gridLayoutManager;
     private String tag_json_arry = "TAG_JSON_ARRAY";
 
     @Nullable
@@ -46,7 +48,6 @@ public class FragmentPopular extends Fragment implements WallpaperAdapter.ListIt
         recyclerView = (RecyclerView) rootView.findViewById(R.id.item_list);
 
         recyclerView.setHasFixedSize(true);
-        GridLayoutManager gridLayoutManager;
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             gridLayoutManager = new GridLayoutManager(getActivity(), 2);
             recyclerView.setLayoutManager(gridLayoutManager);
@@ -56,8 +57,8 @@ public class FragmentPopular extends Fragment implements WallpaperAdapter.ListIt
         }
         if (savedInstanceState != null) {
             wallpapersList = savedInstanceState.getParcelableArrayList(STATE_WALLPAPERS);
-            //adapter = new WallpaperAdapter(wallpapersList, FragmentPopular.this);
-           // recyclerView.setAdapter(adapter);
+            adapter = new WallpaperAdapter(wallpapersList, FragmentPopular.this);
+            recyclerView.setAdapter(adapter);
         } else {
             getListOfWallpapers();
         }
@@ -119,33 +120,6 @@ public class FragmentPopular extends Fragment implements WallpaperAdapter.ListIt
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(req,
                 tag_json_arry);
-
-        /*ApiInterface apiService =
-                ApiClient.getClient().create(ApiInterface.class);
-
-        Call<WallpaperWithInfoResponse> call = apiService.getWallpaperPopularOrLatest(Constants.api_key,
-                Constants.response_group_img_details, Constants.booleanImagesWithoutEditorsCoice,
-                Constants.orderPopular, Constants.prettyBooleanValue, Constants.image_type_photo);
-        call.enqueue(new Callback<WallpaperWithInfoResponse>() {
-            @Override
-            public void onResponse(Call<WallpaperWithInfoResponse> call, Response<WallpaperWithInfoResponse> response) {
-                try {
-                    if (response != null) {
-                        wallpapersList = response.body().getHits();
-                       // adapter = new WallpaperAdapter(wallpapersList, FragmentPopular.this);
-                       // recyclerView.setAdapter(adapter);
-                    }
-                } catch (NullPointerException ignored) {
-                    Toast.makeText(getActivity(), "NPE Again", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<WallpaperWithInfoResponse> call, Throwable t) {
-                // Log error here since request failed
-                Log.e("TAG", t.toString());
-            }
-        });*/
     }
 
     @Override
@@ -157,7 +131,27 @@ public class FragmentPopular extends Fragment implements WallpaperAdapter.ListIt
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
+        Intent intent = new Intent(getActivity(), ItemDetailActivity.class);
+        intent.putExtra("class","Fragment");
+        intent.putExtra("id", wallpapersList.get(clickedItemIndex).getId());
+        intent.putExtra("width", wallpapersList.get(clickedItemIndex).getWidth());
+        intent.putExtra("height", wallpapersList.get(clickedItemIndex).getHeight());
+        intent.putExtra("color", wallpapersList.get(clickedItemIndex).getColor());
+        intent.putExtra("likes", wallpapersList.get(clickedItemIndex).getLikes());
+        intent.putExtra("user_id", wallpapersList.get(clickedItemIndex).getUser_id());
+        intent.putExtra("username", wallpapersList.get(clickedItemIndex).getUsername());
+        intent.putExtra("name", wallpapersList.get(clickedItemIndex).getName());
+        intent.putExtra("first_name", wallpapersList.get(clickedItemIndex).getFirst_name());
+        intent.putExtra("profile_image_small", wallpapersList.get(clickedItemIndex).getProfile_image_small());
+        intent.putExtra("profile_image_medium", wallpapersList.get(clickedItemIndex).getProfile_image_medium());
+        intent.putExtra("profile_image_large", wallpapersList.get(clickedItemIndex).getProfile_image_large());
+        intent.putExtra("urls_raw", wallpapersList.get(clickedItemIndex).getUrls_raw());
+        intent.putExtra("urls_full", wallpapersList.get(clickedItemIndex).getUrls_full());
+        intent.putExtra("urls_regular", wallpapersList.get(clickedItemIndex).getUrls_regular());
+        intent.putExtra("urls_small", wallpapersList.get(clickedItemIndex).getUrls_small());
+        intent.putExtra("urls_thumb", wallpapersList.get(clickedItemIndex).getUrls_thumb());
 
+        startActivity(intent);
     }
 }
 

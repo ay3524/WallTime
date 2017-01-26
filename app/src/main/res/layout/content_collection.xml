@@ -8,5 +8,13 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="ay3524.com.wallpapertime.ui.CollectionActivity"
     tools:showIn="@layout/activity_collection">
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/item_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="GridLayoutManager"
+        tools:context="ay3524.com.wallpapertime.ui.ItemListActivity"
+        tools:listitem="@layout/single_wallpaper">
+    </android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

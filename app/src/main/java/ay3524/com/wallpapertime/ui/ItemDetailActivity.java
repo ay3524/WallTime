@@ -38,22 +38,15 @@ import ay3524.com.wallpapertime.utils.ImageDownloadTask;
  */
 public class ItemDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
-    ImageView userImage;
-    Button dwnld, set;
-    String fileName, image_path_with_folder;
-    //String tagsList[];
-    //TextView firstTag, secondTag, thirdTag;
-    String hash = "#";
-    private String urls_raw;
-    private String urls_full;
-    private String urls_small;
-    private String urls_regular;
-    private String urls_thum;
+    private Button dwnld, set;
+    private String fileName, image_path_with_folder;
+    private String urls_raw,urls_full,urls_small,urls_regular,urls_thumb;
+    private String activityOrFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.item_detail2);
+        setContentView(R.layout.item_detail);
 
         checkPermissionForMarshmallowAndAbove();
 
@@ -61,11 +54,12 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         setSupportActionBar(toolbar);
 
         if (getIntent().getExtras() != null) {
+            activityOrFragment = getIntent().getStringExtra("class");
             urls_raw = getIntent().getStringExtra("urls_raw");
             urls_full = getIntent().getStringExtra("urls_full");
             urls_regular = getIntent().getStringExtra("urls_regular");
             urls_small = getIntent().getStringExtra("urls_small");
-            urls_thum = getIntent().getStringExtra("urls_thumb");
+            urls_thumb = getIntent().getStringExtra("urls_thumb");
             String splitted[] = urls_raw.split("/");
             fileName = splitted[splitted.length - 1]+".jpg";
             image_path_with_folder = Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName;
@@ -83,11 +77,6 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
                 .bitmapTransform(new CircleTransform(this))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(userImage);*/
-
-        //collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-
-        //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        //fab.setOnClickListener(this);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -161,10 +150,18 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            Intent intent = new Intent(this, ItemListActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            navigateUpTo(intent);
-            return true;
+            if(activityOrFragment.equalsIgnoreCase("Fragment")){
+                Intent intent = new Intent(this, ItemListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                navigateUpTo(intent);
+                return true;
+            }else {
+                Intent intent = new Intent(this, CollectionActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                navigateUpTo(intent);
+                return true;
+            }
+
         }
         return super.onOptionsItemSelected(item);
     }

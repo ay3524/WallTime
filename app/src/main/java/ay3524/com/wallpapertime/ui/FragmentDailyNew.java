@@ -47,8 +47,6 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.item_list);
 
-        //gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        //recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setHasFixedSize(true);
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             gridLayoutManager = new GridLayoutManager(getActivity(), 2);
@@ -118,7 +116,6 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
             }
         });
 
-        // Adding request to request queue
         AppController.getInstance().addToRequestQueue(req,
                 tag_json_arry);
     }
@@ -132,9 +129,10 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
-        //Toast.makeText(getActivity(), "Phone", Toast.LENGTH_SHORT).show();
+
         Intent intent = new Intent(getActivity(), ItemDetailActivity.class);
 
+        intent.putExtra("class","Fragment");
         intent.putExtra("id", wallpapersList.get(clickedItemIndex).getId());
         intent.putExtra("width", wallpapersList.get(clickedItemIndex).getWidth());
         intent.putExtra("height", wallpapersList.get(clickedItemIndex).getHeight());
