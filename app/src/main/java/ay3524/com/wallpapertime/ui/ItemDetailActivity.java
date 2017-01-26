@@ -38,7 +38,6 @@ import ay3524.com.wallpapertime.utils.ImageDownloadTask;
  */
 public class ItemDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
-    //CollapsingToolbarLayout collapsingToolbarLayout;
     ImageView userImage;
     Button dwnld, set;
     String fileName, image_path_with_folder;
