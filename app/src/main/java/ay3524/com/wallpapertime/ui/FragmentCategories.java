@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -26,13 +28,13 @@ import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.adapter.WallpaperCategoryAdapter;
 import ay3524.com.wallpapertime.app.AppController;
 import ay3524.com.wallpapertime.model.WallpaperCollection;
+import ay3524.com.wallpapertime.utils.Constants;
 
 /**
  * Created by Ashish on 31-12-2016.
  */
 
-public class FragmentCategories extends Fragment implements WallpaperCategoryAdapter.ListItemClickListener{
-
+public class FragmentCategories extends Fragment implements WallpaperCategoryAdapter.ListItemClickListener {
 
     private static final String STATE_WALLPAPERS = "state";
     RecyclerView recyclerView;
@@ -40,12 +42,18 @@ public class FragmentCategories extends Fragment implements WallpaperCategoryAda
     ArrayList<WallpaperCollection> wallpapersList = new ArrayList<>();
     private String tag_json_arry = "TAG_JSON_ARRAY";
     private GridLayoutManager gridLayoutManager;
+    private RelativeLayout emptyView;
+    private ProgressBar pb;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.single_tab_layout, container, false);
+
+        emptyView = (RelativeLayout) rootView.findViewById(R.id.empty_view);
+
+        pb = (ProgressBar) rootView.findViewById(R.id.progressBar);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.item_list);
 
@@ -62,7 +70,13 @@ public class FragmentCategories extends Fragment implements WallpaperCategoryAda
             adapter = new WallpaperCategoryAdapter(wallpapersList, FragmentCategories.this);
             recyclerView.setAdapter(adapter);
         } else {
-            getListOfCollections();
+            if (Constants.isConnected(getActivity())) {
+                pb.setVisibility(View.VISIBLE);
+                getListOfCollections();
+                emptyView.setVisibility(View.GONE);
+            } else {
+                emptyView.setVisibility(View.VISIBLE);
+            }
         }
 
         return rootView;
@@ -122,10 +136,12 @@ public class FragmentCategories extends Fragment implements WallpaperCategoryAda
                         }
                         adapter = new WallpaperCategoryAdapter(wallpapersList, FragmentCategories.this);
                         recyclerView.setAdapter(adapter);
+                        pb.setVisibility(View.GONE);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                pb.setVisibility(View.GONE);
                 VolleyLog.d("TAG", "Error: " + error.getMessage());
             }
         });

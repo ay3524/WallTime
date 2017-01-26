@@ -9,6 +9,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -25,6 +28,7 @@ import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.adapter.WallpaperAdapter;
 import ay3524.com.wallpapertime.app.AppController;
 import ay3524.com.wallpapertime.model.WallpaperUnsplash;
+import ay3524.com.wallpapertime.utils.Constants;
 
 public class CollectionActivity extends AppCompatActivity implements WallpaperAdapter.ListItemClickListener {
 
@@ -44,6 +48,8 @@ public class CollectionActivity extends AppCompatActivity implements WallpaperAd
     private WallpaperAdapter adapter;
     private GridLayoutManager gridLayoutManager;
     private String tag_json_arry = "TAG_JSON_ARRAY";
+    ProgressBar pb;
+    private RelativeLayout emptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +57,10 @@ public class CollectionActivity extends AppCompatActivity implements WallpaperAd
         setContentView(R.layout.activity_collection);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        emptyView = (RelativeLayout) findViewById(R.id.empty_view);
+
+        pb = (ProgressBar) findViewById(R.id.progressBar);
 
         recyclerView = (RecyclerView) findViewById(R.id.item_list);
         recyclerView.setHasFixedSize(true);
@@ -83,13 +93,20 @@ public class CollectionActivity extends AppCompatActivity implements WallpaperAd
             adapter = new WallpaperAdapter(wallpapersList, CollectionActivity.this);
             recyclerView.setAdapter(adapter);
         } else {
-            getListOfWallpapers();
+            if (Constants.isConnected(getApplicationContext())) {
+                pb.setVisibility(View.VISIBLE);
+                getListOfWallpapers();
+                emptyView.setVisibility(View.GONE);
+            } else {
+
+                emptyView.setVisibility(View.VISIBLE);
+            }
         }
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(id);
+            actionBar.setTitle(title);
         }
     }
 
@@ -134,10 +151,12 @@ public class CollectionActivity extends AppCompatActivity implements WallpaperAd
                         }
                         adapter = new WallpaperAdapter(wallpapersList, CollectionActivity.this);
                         recyclerView.setAdapter(adapter);
+                        pb.setVisibility(View.GONE);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                pb.setVisibility(View.GONE);
                 VolleyLog.d("TAG", "Error: " + error.getMessage());
             }
         });

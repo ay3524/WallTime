@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -26,6 +28,7 @@ import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.adapter.WallpaperAdapter;
 import ay3524.com.wallpapertime.app.AppController;
 import ay3524.com.wallpapertime.model.WallpaperUnsplash;
+import ay3524.com.wallpapertime.utils.Constants;
 
 /**
  * Created by Ashish on 31-12-2016.
@@ -38,12 +41,18 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
     private WallpaperAdapter adapter;
     private GridLayoutManager gridLayoutManager;
     private String tag_json_arry = "TAG_JSON_ARRAY";
+    ProgressBar pb;
+    private RelativeLayout emptyView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.single_tab_layout, container, false);
+
+        emptyView = (RelativeLayout) rootView.findViewById(R.id.empty_view);
+
+        pb = (ProgressBar) rootView.findViewById(R.id.progressBar);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.item_list);
 
@@ -60,11 +69,16 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
             adapter = new WallpaperAdapter(wallpapersList, FragmentDailyNew.this);
             recyclerView.setAdapter(adapter);
         } else {
-            getListOfWallpapers();
+            if (Constants.isConnected(getActivity())) {
+                pb.setVisibility(View.VISIBLE);
+                getListOfWallpapers();
+                emptyView.setVisibility(View.GONE);
+            } else {
+
+                emptyView.setVisibility(View.VISIBLE);
+            }
         }
-
         return rootView;
-
     }
 
     private void getListOfWallpapers() {
@@ -108,10 +122,12 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
                         }
                         adapter = new WallpaperAdapter(wallpapersList, FragmentDailyNew.this);
                         recyclerView.setAdapter(adapter);
+                        pb.setVisibility(View.GONE);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                pb.setVisibility(View.GONE);
                 VolleyLog.d("TAG", "Error: " + error.getMessage());
             }
         });
@@ -124,7 +140,6 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(STATE_WALLPAPERS, wallpapersList);
-
     }
 
     @Override
@@ -132,7 +147,7 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
 
         Intent intent = new Intent(getActivity(), ItemDetailActivity.class);
 
-        intent.putExtra("class","Fragment");
+        intent.putExtra("class", "Fragment");
         intent.putExtra("id", wallpapersList.get(clickedItemIndex).getId());
         intent.putExtra("width", wallpapersList.get(clickedItemIndex).getWidth());
         intent.putExtra("height", wallpapersList.get(clickedItemIndex).getHeight());

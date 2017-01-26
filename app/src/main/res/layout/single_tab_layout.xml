@@ -16,6 +16,13 @@
         tools:listitem="@layout/single_wallpaper">
     </android.support.v7.widget.RecyclerView>
 
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/progressBar"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <RelativeLayout
         android:id="@+id/empty_view"
         android:layout_width="wrap_content"
