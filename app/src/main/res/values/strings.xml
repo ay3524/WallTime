@@ -22,5 +22,7 @@
     <string name="error_image">Error Image</string>
     <string name="its_a_bit_lonely_here">Its a bit lonely here</string>
     <string name="there_might_be_some_problem_with_internet_connection">There might be some problem with internet connection</string>
+    <string name="title_activity_automation">AutomationActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 
 </resources>

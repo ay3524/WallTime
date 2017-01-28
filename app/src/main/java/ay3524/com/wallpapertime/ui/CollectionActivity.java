@@ -167,6 +167,12 @@ public class CollectionActivity extends AppCompatActivity implements WallpaperAd
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(STATE_WALLPAPERS, wallpapersList);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {

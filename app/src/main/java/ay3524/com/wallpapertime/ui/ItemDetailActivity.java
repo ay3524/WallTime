@@ -30,12 +30,6 @@ import java.io.IOException;
 import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.utils.ImageDownloadTask;
 
-/**
- * An activity representing a single Item detail screen. This
- * activity is only used narrow width devices. On tablet-size devices,
- * item details are presented side-by-side with a list of items
- * in a {@link ItemListActivity}.
- */
 public class ItemDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button dwnld, set;
@@ -70,6 +64,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         dwnld.setOnClickListener(this);
         set = (Button) findViewById(R.id.set_as_wallpaper);
         set.setOnClickListener(this);
+
         /*Glide.with(this).load(getIntent().getStringExtra())
                 .crossFade()
                 .thumbnail(0.5f)
@@ -93,7 +88,6 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
     private String buildUrl(String fileName,String size) {
         StringBuilder stringBuilder = new StringBuilder(fileName);
         stringBuilder.delete(fileName.length() - 4, fileName.length());
-        //Toast.makeText(getApplicationContext(),stringBuilder.toString(),Toast.LENGTH_LONG).show();
         String url = "https://images.unsplash.com/"+stringBuilder.toString()+"?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w="+size+"&fit=max&s=c9cabfb90c6a844b59176db42be9ec0c";
         return url;
     }

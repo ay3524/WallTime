@@ -44,6 +44,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ay3524.com.wallpapertime.ui.ItemListActivity" />
         </activity>
+        <activity
+            android:name=".ui.AutomationActivity"
+            android:label="@string/title_activity_automation"
+            android:parentActivityName=".ui.ItemListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ay3524.com.wallpapertime.ui.ItemListActivity" />
+        </activity>
     </application>
 
 </manifest>

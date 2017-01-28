@@ -1,5 +1,6 @@
 package ay3524.com.wallpapertime.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -84,6 +85,7 @@ public class ItemListActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     //Replacing the main content with ContentFragment Which is our Inbox View;
                     case R.id.nav_auto:
+                        startActivity(new Intent(getApplicationContext(), AutomationActivity.class));
                         break;
                     case R.id.nav_photo_of_the_day:
                         break;
