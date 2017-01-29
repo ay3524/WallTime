@@ -74,7 +74,6 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
                 getListOfWallpapers();
                 emptyView.setVisibility(View.GONE);
             } else {
-
                 emptyView.setVisibility(View.VISIBLE);
             }
         }
