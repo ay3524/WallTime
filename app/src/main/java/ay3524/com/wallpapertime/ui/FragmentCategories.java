@@ -44,7 +44,6 @@ public class FragmentCategories extends Fragment implements WallpaperCategoryAda
     private GridLayoutManager gridLayoutManager;
     private RelativeLayout emptyView;
     private ProgressBar pb;
-    private boolean progressBarIsShowing;
 
     @Nullable
     @Override
@@ -173,6 +172,5 @@ public class FragmentCategories extends Fragment implements WallpaperCategoryAda
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(STATE_WALLPAPERS, wallpapersList);
-
     }
 }

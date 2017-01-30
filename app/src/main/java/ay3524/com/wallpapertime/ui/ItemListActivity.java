@@ -1,6 +1,7 @@
 package ay3524.com.wallpapertime.ui;
 
-import android.content.Intent;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -11,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -85,7 +87,8 @@ public class ItemListActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     //Replacing the main content with ContentFragment Which is our Inbox View;
                     case R.id.nav_auto:
-                        startActivity(new Intent(getApplicationContext(), AutomationActivity.class));
+                        drawer.closeDrawers();
+                        showAutomationDialog();
                         break;
                     case R.id.nav_photo_of_the_day:
                         break;
@@ -160,5 +163,34 @@ public class ItemListActivity extends AppCompatActivity {
         adapter.addFragment(new FragmentDailyNew(), "Daily New");
         adapter.addFragment(new FragmentPopular(), "Popular");
         viewPager.setAdapter(adapter);
+    }
+    private void showAutomationDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ItemListActivity.this);
+        LayoutInflater inflater = LayoutInflater.from(ItemListActivity.this);
+        final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        //edt = (EditText) dialogView.findViewById(R.id.edit1);
+        //sp = (Spinner) dialogView.findViewById(R.id.spinner);
+        //edt.setText(st);
+
+        //Log.d("SPINNER2", String.valueOf(sp.getSelectedItem()));
+        dialogBuilder.setTitle("Add Automation");
+        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //String changedSubName = edt.getText().toString();
+                //editItem(position, changedSubName);
+                //Log.d("SPINNER1", String.valueOf(sp.getSelectedItem()));
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //pass
+                //edt.setText(st);
+                //Log.d("TAG2", edt.getText().toString());
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
     }
 }

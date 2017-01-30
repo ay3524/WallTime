@@ -5,9 +5,7 @@
     android:id="@+id/content_collection"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="ay3524.com.wallpapertime.ui.CollectionActivity"
-    tools:showIn="@layout/activity_collection">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/item_list"
