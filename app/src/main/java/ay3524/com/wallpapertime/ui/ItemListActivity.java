@@ -15,14 +15,28 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.adapter.ViewPagerAdapter;
+import ay3524.com.wallpapertime.app.AppController;
+import ay3524.com.wallpapertime.model.WallpaperCollection;
 import ay3524.com.wallpapertime.utils.CircleTransform;
 
 
@@ -37,6 +51,11 @@ public class ItemListActivity extends AppCompatActivity {
     private DrawerLayout drawer;
     private ImageView imgNavHeaderBg, imgProfile;
     private TextView txtName, txtWebsite;
+    private String tag_json_arry = "TAG_JSON_ARRAY";
+    ArrayList<WallpaperCollection> collections_list = new ArrayList<>();
+    ArrayList<String> spinner_collection_list = new ArrayList<>();
+    ArrayAdapter<String> spinner_collection_adapter;
+    private Spinner collections_spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,6 +183,7 @@ public class ItemListActivity extends AppCompatActivity {
         adapter.addFragment(new FragmentPopular(), "Popular");
         viewPager.setAdapter(adapter);
     }
+
     private void showAutomationDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ItemListActivity.this);
         LayoutInflater inflater = LayoutInflater.from(ItemListActivity.this);
@@ -171,8 +191,9 @@ public class ItemListActivity extends AppCompatActivity {
         dialogBuilder.setView(dialogView);
 
         //edt = (EditText) dialogView.findViewById(R.id.edit1);
-        //sp = (Spinner) dialogView.findViewById(R.id.spinner);
-        //edt.setText(st);
+        collections_spinner = (Spinner) dialogView.findViewById(R.id.collections);
+
+        getListOfCollections();
 
         //Log.d("SPINNER2", String.valueOf(sp.getSelectedItem()));
         dialogBuilder.setTitle("Add Automation");
@@ -193,4 +214,49 @@ public class ItemListActivity extends AppCompatActivity {
         AlertDialog b = dialogBuilder.create();
         b.show();
     }
+
+    private void getListOfCollections() {
+
+        JsonArrayRequest req = new JsonArrayRequest("https://api.unsplash.com/collections/curated?client_id=1d6adf7ef9a462a70dca375dd1f8faf911481ea8e2715bf2666984671dbc4d39",
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        //Log.d("TAG", response.toString());
+
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                WallpaperCollection wallpaperUnsplash = new WallpaperCollection();
+
+                                JSONObject jsonObject = response.getJSONObject(i);
+                                wallpaperUnsplash.setId(jsonObject.getString("id"));
+                                wallpaperUnsplash.setTitle(jsonObject.getString("title"));
+                                wallpaperUnsplash.setTotal_photos(jsonObject.getString("total_photos"));
+
+                                spinner_collection_list.add(jsonObject.getString("title"));
+
+                                collections_list.add(wallpaperUnsplash);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        spinner_collection_adapter = new ArrayAdapter<>(ItemListActivity.this,
+                                android.R.layout.simple_spinner_dropdown_item, spinner_collection_list);
+                        collections_spinner.setAdapter(spinner_collection_adapter);
+                        //pb.setVisibility(View.GONE);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //pb.setVisibility(View.GONE);
+                VolleyLog.d("TAG", "Error: " + error.getMessage());
+            }
+        });
+
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(req,
+                tag_json_arry);
+    }
+
 }

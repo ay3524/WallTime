@@ -4,26 +4,33 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_margin="10dp"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textview"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_margin="10dp"
+        android:text="Choose Collection"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
 
-        <TextView
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            android:text="Choose Collection"
-            android:id="@+id/textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+    <Spinner
+        android:id="@+id/collections"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp" />
 
-        <Spinner
-            android:layout_marginLeft="10dp"
-            android:id="@+id/collections"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-        </Spinner>
-    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Choose Duration"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
 
+    <Spinner
+        android:id="@+id/durations"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginLeft="10dp" />
 </LinearLayout>
