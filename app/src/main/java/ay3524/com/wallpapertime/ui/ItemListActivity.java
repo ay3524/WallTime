@@ -15,10 +15,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -40,7 +42,7 @@ import ay3524.com.wallpapertime.model.WallpaperCollection;
 import ay3524.com.wallpapertime.utils.CircleTransform;
 
 
-public class ItemListActivity extends AppCompatActivity {
+public class ItemListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     // index to identify current nav menu item
     public static int navItemIndex = 0;
@@ -53,9 +55,12 @@ public class ItemListActivity extends AppCompatActivity {
     private TextView txtName, txtWebsite;
     private String tag_json_arry = "TAG_JSON_ARRAY";
     ArrayList<WallpaperCollection> collections_list = new ArrayList<>();
+    ArrayList<String> durations = new ArrayList<>();
     ArrayList<String> spinner_collection_list = new ArrayList<>();
     ArrayAdapter<String> spinner_collection_adapter;
     private Spinner collections_spinner;
+    private Spinner date_spinner;
+    String collection_string, duration_string;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,8 +195,18 @@ public class ItemListActivity extends AppCompatActivity {
         final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
         dialogBuilder.setView(dialogView);
 
-        //edt = (EditText) dialogView.findViewById(R.id.edit1);
         collections_spinner = (Spinner) dialogView.findViewById(R.id.collections);
+        date_spinner = (Spinner) dialogView.findViewById(R.id.durations);
+
+        collections_spinner.setOnItemSelectedListener(this);
+        date_spinner.setOnItemSelectedListener(this);
+
+        durations.add("1 Minutes");
+        durations.add("2 Minutes");
+        durations.add("3 Minutes");
+        final ArrayAdapter<String> duration_adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item, durations);
+        date_spinner.setAdapter(duration_adapter);
 
         getListOfCollections();
 
@@ -199,16 +214,12 @@ public class ItemListActivity extends AppCompatActivity {
         dialogBuilder.setTitle("Add Automation");
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                //String changedSubName = edt.getText().toString();
-                //editItem(position, changedSubName);
-                //Log.d("SPINNER1", String.valueOf(sp.getSelectedItem()));
+                Toast.makeText(ItemListActivity.this, collection_string + "\n" + duration_string, Toast.LENGTH_SHORT).show();
             }
         });
         dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                //pass
-                //edt.setText(st);
-                //Log.d("TAG2", edt.getText().toString());
+
             }
         });
         AlertDialog b = dialogBuilder.create();
@@ -259,4 +270,32 @@ public class ItemListActivity extends AppCompatActivity {
                 tag_json_arry);
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+        Spinner duration_spinner = (Spinner) parent;
+        Spinner collection_spinner = (Spinner) parent;
+
+        if (duration_spinner.getId() == R.id.collections) {
+            //Toast.makeText(getApplicationContext(),duration_spinner.getItemAtPosition(position).toString(),);
+            collection_string = collection_spinner.getItemAtPosition(position).toString();
+        }
+        if (collection_spinner.getId() == R.id.durations) {
+            duration_string = duration_spinner.getItemAtPosition(position).toString();
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        Spinner duration_spinner = (Spinner) parent;
+        Spinner collection_spinner = (Spinner) parent;
+
+        if (duration_spinner.getId() == R.id.collections) {
+            //Toast.makeText(getApplicationContext(),duration_spinner.getItemAtPosition(position).toString(),);
+            collection_string = collection_spinner.getSelectedItem().toString();
+        }
+        if (collection_spinner.getId() == R.id.durations) {
+            duration_string = duration_spinner.getSelectedItem().toString();
+        }
+    }
 }
