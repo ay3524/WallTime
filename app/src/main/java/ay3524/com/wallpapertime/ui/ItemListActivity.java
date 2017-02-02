@@ -208,7 +208,13 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
                 android.R.layout.simple_spinner_dropdown_item, durations);
         date_spinner.setAdapter(duration_adapter);
 
-        getListOfCollections();
+        if (spinner_collection_list.size() == 0) {
+            getListOfCollections();
+        } else {
+            spinner_collection_adapter = new ArrayAdapter<>(ItemListActivity.this,
+                    android.R.layout.simple_spinner_dropdown_item, spinner_collection_list);
+            collections_spinner.setAdapter(spinner_collection_adapter);
+        }
 
         //Log.d("SPINNER2", String.valueOf(sp.getSelectedItem()));
         dialogBuilder.setTitle("Add Automation");
@@ -252,6 +258,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
                             }
 
                         }
+                        //Toast.makeText(ItemListActivity.this, spinner_collection_list.size() + "\n" + collections_list.size(), Toast.LENGTH_SHORT).show();
                         spinner_collection_adapter = new ArrayAdapter<>(ItemListActivity.this,
                                 android.R.layout.simple_spinner_dropdown_item, spinner_collection_list);
                         collections_spinner.setAdapter(spinner_collection_adapter);
