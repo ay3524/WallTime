@@ -44,7 +44,6 @@ import ay3524.com.wallpapertime.utils.CircleTransform;
 
 public class ItemListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    // index to identify current nav menu item
     public static int navItemIndex = 0;
     private static final String urlNavHeaderBg = "https://images.unsplash.com/photo-1484452330304-377cdeb05340?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&s=503f268f4cd99055517cc7ba13215db6";
     private static final String urlProfileImg = "https://images.unsplash.com/profile-1470357472607-48d8b4cba2cc?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&cs=tinysrgb&fit=crop&h=128&w=128&s=f2cb264bbb4c3550f3e795b1ed4ccde8";
@@ -59,8 +58,9 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
     ArrayList<String> spinner_collection_list = new ArrayList<>();
     ArrayAdapter<String> spinner_collection_adapter;
     private Spinner collections_spinner;
-    private Spinner date_spinner;
     String collection_string, duration_string;
+    private TextView total_photos;
+    private String total_photos_value;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,7 +183,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new FragmentCategories(), "Categories");
+        adapter.addFragment(new FragmentCategories(), "Collections");
         adapter.addFragment(new FragmentDailyNew(), "Daily New");
         adapter.addFragment(new FragmentPopular(), "Popular");
         viewPager.setAdapter(adapter);
@@ -196,7 +196,8 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         dialogBuilder.setView(dialogView);
 
         collections_spinner = (Spinner) dialogView.findViewById(R.id.collections);
-        date_spinner = (Spinner) dialogView.findViewById(R.id.durations);
+        total_photos = (TextView)dialogView.findViewById(R.id.total_photos);
+        Spinner date_spinner = (Spinner) dialogView.findViewById(R.id.durations);
 
         collections_spinner.setOnItemSelectedListener(this);
         date_spinner.setOnItemSelectedListener(this);
@@ -214,6 +215,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
             spinner_collection_adapter = new ArrayAdapter<>(ItemListActivity.this,
                     android.R.layout.simple_spinner_dropdown_item, spinner_collection_list);
             collections_spinner.setAdapter(spinner_collection_adapter);
+            total_photos.setText(total_photos_value);
         }
 
         //Log.d("SPINNER2", String.valueOf(sp.getSelectedItem()));
@@ -251,6 +253,8 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
 
                                 spinner_collection_list.add(jsonObject.getString("title"));
 
+                                total_photos_value = jsonObject.getString("total_photos");
+
                                 collections_list.add(wallpaperUnsplash);
 
                             } catch (JSONException e) {
@@ -258,10 +262,10 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
                             }
 
                         }
-                        //Toast.makeText(ItemListActivity.this, spinner_collection_list.size() + "\n" + collections_list.size(), Toast.LENGTH_SHORT).show();
                         spinner_collection_adapter = new ArrayAdapter<>(ItemListActivity.this,
                                 android.R.layout.simple_spinner_dropdown_item, spinner_collection_list);
                         collections_spinner.setAdapter(spinner_collection_adapter);
+                        total_photos.setText(total_photos_value);
                         //pb.setVisibility(View.GONE);
                     }
                 }, new Response.ErrorListener() {
@@ -284,8 +288,8 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         Spinner collection_spinner = (Spinner) parent;
 
         if (duration_spinner.getId() == R.id.collections) {
-            //Toast.makeText(getApplicationContext(),duration_spinner.getItemAtPosition(position).toString(),);
             collection_string = collection_spinner.getItemAtPosition(position).toString();
+            total_photos.setText(collections_list.get(position).getTotal_photos());
         }
         if (collection_spinner.getId() == R.id.durations) {
             duration_string = duration_spinner.getItemAtPosition(position).toString();
@@ -298,7 +302,6 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         Spinner collection_spinner = (Spinner) parent;
 
         if (duration_spinner.getId() == R.id.collections) {
-            //Toast.makeText(getApplicationContext(),duration_spinner.getItemAtPosition(position).toString(),);
             collection_string = collection_spinner.getSelectedItem().toString();
         }
         if (collection_spinner.getId() == R.id.durations) {

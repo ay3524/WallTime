@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -58,6 +59,8 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.Wall
         //Cache cache = AppController.getInstance().getRequestQueue().getCache();
         //Cache.Entry entry = cache.get(wallpaper.get(position).getWebformatURL());*/
 
+        holder.likes.setText(wallpaper.get(position).getLikes());
+
         String buildSingleListImageUrl = wallpaper.get(position).getUrls_small();
 
         Glide.with(context).load(buildSingleListImageUrl).crossFade()
@@ -72,6 +75,8 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.Wall
     class WallpaperViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.wallpaperPoster)
         ImageView wallpaperPoster;
+        @BindView(R.id.likes)
+        TextView likes;
 
         WallpaperViewHolder(View itemView) {
             super(itemView);
