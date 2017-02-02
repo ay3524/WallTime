@@ -24,5 +24,6 @@
     <string name="there_might_be_some_problem_with_internet_connection">There might be some problem with internet connection</string>
     <string name="title_activity_automation">AutomationActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_my_downloads">My Downloads</string>
 
 </resources>
