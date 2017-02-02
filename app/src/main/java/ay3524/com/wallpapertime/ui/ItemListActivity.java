@@ -2,6 +2,7 @@ package ay3524.com.wallpapertime.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -20,7 +21,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -40,7 +40,6 @@ import ay3524.com.wallpapertime.adapter.ViewPagerAdapter;
 import ay3524.com.wallpapertime.app.AppController;
 import ay3524.com.wallpapertime.model.WallpaperCollection;
 import ay3524.com.wallpapertime.utils.CircleTransform;
-
 
 public class ItemListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -117,6 +116,8 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
                     case R.id.nav_photo_of_the_day:
                         break;
                     case R.id.nav_downloads:
+                        drawer.closeDrawers();
+                        startActivity(new Intent(getApplicationContext(),MyDownloadsActivity.class));
                         break;
                     case R.id.nav_settings:
 
@@ -196,7 +197,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         dialogBuilder.setView(dialogView);
 
         collections_spinner = (Spinner) dialogView.findViewById(R.id.collections);
-        total_photos = (TextView)dialogView.findViewById(R.id.total_photos);
+        total_photos = (TextView) dialogView.findViewById(R.id.total_photos);
         Spinner date_spinner = (Spinner) dialogView.findViewById(R.id.durations);
 
         collections_spinner.setOnItemSelectedListener(this);
@@ -222,7 +223,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         dialogBuilder.setTitle("Add Automation");
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                Toast.makeText(ItemListActivity.this, collection_string + "\n" + duration_string, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ItemListActivity.this, collection_string + "\n" + duration_string, Toast.LENGTH_SHORT).show();
             }
         });
         dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
