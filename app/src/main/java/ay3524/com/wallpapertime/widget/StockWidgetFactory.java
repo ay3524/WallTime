@@ -3,13 +3,17 @@ package ay3524.com.wallpapertime.widget;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
+import android.graphics.Bitmap;
 import android.os.Binder;
 import android.os.Environment;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import java.io.File;
+import java.util.concurrent.ExecutionException;
 
 import ay3524.com.wallpapertime.R;
 
@@ -60,7 +64,13 @@ class StockWidgetFactory implements RemoteViewsService.RemoteViewsFactory {
     @Override
     public RemoteViews getViewAt(int position) {
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.single_widget_layout);
-        rv.setImageViewBitmap(R.id.widget_single_image, BitmapFactory.decodeFile(allFiles[position].getPath()));
+        try {
+            Bitmap bmp = Glide.with(mContext).load(allFiles[position]).asBitmap().diskCacheStrategy(DiskCacheStrategy.ALL).into(200,100).get();
+            rv.setImageViewBitmap(R.id.widget_single_image, bmp);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
         /*if (mCursor.moveToPosition(position)) {
             rv.setTextViewText(R.id.symbol,
                     mCursor.getString(Contract.Quote.POSITION_SYMBOL));
