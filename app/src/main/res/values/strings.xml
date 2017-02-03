@@ -27,5 +27,6 @@
     <string name="title_activity_my_downloads">My Downloads</string>
     <string name="don_t_be_sad_bro">Don\'t be sad bro</string>
     <string name="go_back_and_download_images">Go back and download images!</string>
+    <string name="widget_image">widget image</string>
 
 </resources>

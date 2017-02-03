@@ -66,35 +66,33 @@ public class MyDownloadsActivity extends AppCompatActivity implements WallpaperD
                         .setAction("Action", null).show();
             }
         });
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         File folder = new File(Environment.getExternalStorageDirectory() + "/WallTime");
         if (folder.exists()) {
             File allFiles[] = folder.listFiles();
 
-            Arrays.sort( allFiles, new Comparator()
-            {
+            Arrays.sort(allFiles, new Comparator() {
                 public int compare(Object o1, Object o2) {
-
-                    if (((File)o1).lastModified() > ((File)o2).lastModified()) {
+                    if (((File) o1).lastModified() > ((File) o2).lastModified()) {
                         return -1;
-                    } else if (((File)o1).lastModified() < ((File)o2).lastModified()) {
+                    } else if (((File) o1).lastModified() < ((File) o2).lastModified()) {
                         return +1;
                     } else {
                         return 0;
                     }
                 }
-
             });
             List<File> listOfFiles = Arrays.asList(allFiles);
             if (allFiles.length != 0) {
-                wallpaperDownloadsAdapter = new WallpaperDownloadsAdapter(listOfFiles,MyDownloadsActivity.this);
+                wallpaperDownloadsAdapter = new WallpaperDownloadsAdapter(listOfFiles, MyDownloadsActivity.this);
                 recyclerView.setAdapter(wallpaperDownloadsAdapter);
-            }else{
+            } else {
                 emptyView.setVisibility(View.VISIBLE);
                 Toast.makeText(this, "No Files", Toast.LENGTH_SHORT).show();
             }
-        }else{
+        } else {
             emptyView.setVisibility(View.VISIBLE);
             Toast.makeText(this, "Folder not created", Toast.LENGTH_SHORT).show();
         }
