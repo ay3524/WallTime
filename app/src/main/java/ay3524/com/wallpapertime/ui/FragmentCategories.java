@@ -96,17 +96,17 @@ public class FragmentCategories extends Fragment implements WallpaperCategoryAda
                             try {
                                 WallpaperCollection wallpaperUnsplash = new WallpaperCollection();
                                 JSONObject jsonObject = response.getJSONObject(i);
-                                wallpaperUnsplash.setId(jsonObject.getString("id"));
-                                wallpaperUnsplash.setTitle(jsonObject.getString("title"));
-                                wallpaperUnsplash.setTotal_photos(jsonObject.getString("total_photos"));
+                                wallpaperUnsplash.setId(jsonObject.getString(Constants.ID));
+                                wallpaperUnsplash.setTitle(jsonObject.getString(Constants.TITLE));
+                                wallpaperUnsplash.setTotal_photos(jsonObject.getString(Constants.TOTAL_PHOTOS));
 
-                                JSONObject jsonObject3 = jsonObject.getJSONObject("cover_photo");
-                                JSONObject jsonObject4 = jsonObject3.getJSONObject("urls");
-                                wallpaperUnsplash.setUrls_raw(jsonObject4.getString("raw"));
-                                wallpaperUnsplash.setUrls_full(jsonObject4.getString("full"));
-                                wallpaperUnsplash.setUrls_regular(jsonObject4.getString("regular"));
-                                wallpaperUnsplash.setUrls_small(jsonObject4.getString("small"));
-                                wallpaperUnsplash.setUrls_thumb(jsonObject4.getString("thumb"));
+                                JSONObject jsonObject3 = jsonObject.getJSONObject(Constants.COVER_PHOTOS);
+                                JSONObject jsonObject4 = jsonObject3.getJSONObject(Constants.URLS);
+                                wallpaperUnsplash.setUrls_raw(jsonObject4.getString(Constants.RAW));
+                                wallpaperUnsplash.setUrls_full(jsonObject4.getString(Constants.FULL));
+                                wallpaperUnsplash.setUrls_regular(jsonObject4.getString(Constants.REGULAR));
+                                wallpaperUnsplash.setUrls_small(jsonObject4.getString(Constants.SMALL));
+                                wallpaperUnsplash.setUrls_thumb(jsonObject4.getString(Constants.THUMB));
 
                                 /*wallpaperUnsplash.setId(jsonObject.getString("id"));
                                 wallpaperUnsplash.setWidth(jsonObject.getString("width"));
@@ -156,14 +156,14 @@ public class FragmentCategories extends Fragment implements WallpaperCategoryAda
     public void onListItemClick(int clickedItemIndex) {
         Intent intent = new Intent(getActivity(), CollectionActivity.class);
 
-        intent.putExtra("id", wallpapersList.get(clickedItemIndex).getId());
-        intent.putExtra("title", wallpapersList.get(clickedItemIndex).getTitle());
-        intent.putExtra("total_photos", wallpapersList.get(clickedItemIndex).getTotal_photos());
-        intent.putExtra("raw", wallpapersList.get(clickedItemIndex).getUrls_raw());
-        intent.putExtra("full", wallpapersList.get(clickedItemIndex).getUrls_full());
-        intent.putExtra("regular", wallpapersList.get(clickedItemIndex).getUrls_regular());
-        intent.putExtra("small", wallpapersList.get(clickedItemIndex).getUrls_small());
-        intent.putExtra("thumb", wallpapersList.get(clickedItemIndex).getUrls_thumb());
+        intent.putExtra(Constants.ID, wallpapersList.get(clickedItemIndex).getId());
+        intent.putExtra(Constants.TITLE, wallpapersList.get(clickedItemIndex).getTitle());
+        intent.putExtra(Constants.TOTAL_PHOTOS, wallpapersList.get(clickedItemIndex).getTotal_photos());
+        intent.putExtra(Constants.RAW, wallpapersList.get(clickedItemIndex).getUrls_raw());
+        intent.putExtra(Constants.FULL, wallpapersList.get(clickedItemIndex).getUrls_full());
+        intent.putExtra(Constants.REGULAR, wallpapersList.get(clickedItemIndex).getUrls_regular());
+        intent.putExtra(Constants.SMALL, wallpapersList.get(clickedItemIndex).getUrls_small());
+        intent.putExtra(Constants.THUMB, wallpapersList.get(clickedItemIndex).getUrls_thumb());
 
         startActivity(intent);
     }

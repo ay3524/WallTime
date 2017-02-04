@@ -10,7 +10,29 @@ import android.net.NetworkInfo;
 
 public class Constants {
 
-    public static boolean isConnected(Context context){
+    public static final String ID = "id";
+    public static final String WIDTH = "width";
+    public static final String HEIGHT = "height";
+    public static final String COLOR = "color";
+    public static final String LIKES = "likes";
+    public static final String USER = "user";
+    public static final String USER_ID = "user_id";
+    public static final String PROFILE_IMAGE = "profile_image";
+    public static final String SMALL_PROFILE_IMAGE = "small";
+    public static final String MEDIUM_PROFILE_IMAGE = "medium";
+    public static final String LARGE_PROFILE_IMAGE = "large";
+    public static final String URLS = "urls";
+    public static final String RAW = "raw";
+    public static final String FULL = "full";
+    public static final String REGULAR = "regular";
+    public static final String SMALL = "small";
+    public static final String THUMB = "thumb";
+
+    public static final String TITLE = "title";
+    public static final String TOTAL_PHOTOS = "total_photos";
+    public static final String COVER_PHOTOS = "cover_photo";
+
+    public static boolean isConnected(Context context) {
         ConnectivityManager connMgr = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();

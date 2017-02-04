@@ -41,6 +41,7 @@ import ay3524.com.wallpapertime.adapter.ViewPagerAdapter;
 import ay3524.com.wallpapertime.app.AppController;
 import ay3524.com.wallpapertime.model.WallpaperCollection;
 import ay3524.com.wallpapertime.utils.CircleTransform;
+import ay3524.com.wallpapertime.utils.Constants;
 
 public class ItemListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -265,13 +266,13 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
                                 WallpaperCollection wallpaperUnsplash = new WallpaperCollection();
 
                                 JSONObject jsonObject = response.getJSONObject(i);
-                                wallpaperUnsplash.setId(jsonObject.getString("id"));
-                                wallpaperUnsplash.setTitle(jsonObject.getString("title"));
-                                wallpaperUnsplash.setTotal_photos(jsonObject.getString("total_photos"));
+                                wallpaperUnsplash.setId(jsonObject.getString(Constants.ID));
+                                wallpaperUnsplash.setTitle(jsonObject.getString(Constants.TITLE));
+                                wallpaperUnsplash.setTotal_photos(jsonObject.getString(Constants.TOTAL_PHOTOS));
 
-                                spinner_collection_list.add(jsonObject.getString("title"));
+                                spinner_collection_list.add(jsonObject.getString(Constants.TITLE));
 
-                                total_photos_value = jsonObject.getString("total_photos");
+                                total_photos_value = jsonObject.getString(Constants.TOTAL_PHOTOS);
 
                                 collections_list.add(wallpaperUnsplash);
 

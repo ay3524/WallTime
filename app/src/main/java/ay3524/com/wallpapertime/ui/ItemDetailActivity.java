@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 
 import ay3524.com.wallpapertime.R;
+import ay3524.com.wallpapertime.utils.Constants;
 import ay3524.com.wallpapertime.utils.ImageDownloadTask;
 
 public class ItemDetailActivity extends AppCompatActivity implements View.OnClickListener {
@@ -50,11 +51,11 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
 
         if (getIntent().getExtras() != null) {
             activityOrFragment = getIntent().getStringExtra("class");
-            urls_raw = getIntent().getStringExtra("urls_raw");
-            urls_full = getIntent().getStringExtra("urls_full");
-            urls_regular = getIntent().getStringExtra("urls_regular");
-            urls_small = getIntent().getStringExtra("urls_small");
-            urls_thumb = getIntent().getStringExtra("urls_thumb");
+            urls_raw = getIntent().getStringExtra(Constants.RAW);
+            urls_full = getIntent().getStringExtra(Constants.FULL);
+            urls_regular = getIntent().getStringExtra(Constants.REGULAR);
+            urls_small = getIntent().getStringExtra(Constants.SMALL);
+            urls_thumb = getIntent().getStringExtra(Constants.THUMB);
             String splitted[] = urls_raw.split("/");
             fileName = splitted[splitted.length - 1] + ".jpg";
             image_path_with_folder = Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName;
