@@ -60,6 +60,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
     String collection_string, duration_string;
     private TextView total_photos;
     private String total_photos_value;
+    private ArrayAdapter<String> duration_adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,16 +204,22 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         collections_spinner.setOnItemSelectedListener(this);
         date_spinner.setOnItemSelectedListener(this);
 
-        durations.add("1 Minutes");
-        durations.add("2 Minutes");
-        durations.add("3 Minutes");
-        final ArrayAdapter<String> duration_adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_dropdown_item, durations);
-        date_spinner.setAdapter(duration_adapter);
+
 
         if (spinner_collection_list.size() == 0) {
             getListOfCollections();
+
+            durations.add("1 Minutes");
+            durations.add("2 Minutes");
+            durations.add("3 Minutes");
+            duration_adapter = new ArrayAdapter<>(ItemListActivity.this,
+                    android.R.layout.simple_spinner_dropdown_item, durations);
+            date_spinner.setAdapter(duration_adapter);
         } else {
+            duration_adapter = new ArrayAdapter<>(ItemListActivity.this,
+                    android.R.layout.simple_spinner_dropdown_item, durations);
+            date_spinner.setAdapter(duration_adapter);
+
             spinner_collection_adapter = new ArrayAdapter<>(ItemListActivity.this,
                     android.R.layout.simple_spinner_dropdown_item, spinner_collection_list);
             collections_spinner.setAdapter(spinner_collection_adapter);
