@@ -32,6 +32,9 @@ public class Constants {
     public static final String TOTAL_PHOTOS = "total_photos";
     public static final String COVER_PHOTOS = "cover_photo";
 
+    public static final String TAG_JSON_ARRAY = "TAG_JSON_ARRAY";
+    public static final String STATE_WALLPAPERS = "state";
+
     public static boolean isConnected(Context context) {
         ConnectivityManager connMgr = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);

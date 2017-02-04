@@ -297,7 +297,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
 
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(req,
-                tag_json_arry);
+                Constants.TAG_JSON_ARRAY);
     }
 
     @Override

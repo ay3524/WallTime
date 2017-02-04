@@ -30,19 +30,17 @@ import ay3524.com.wallpapertime.app.AppController;
 import ay3524.com.wallpapertime.model.WallpaperCollection;
 import ay3524.com.wallpapertime.utils.Constants;
 
+import static ay3524.com.wallpapertime.utils.Constants.STATE_WALLPAPERS;
+
 /**
  * Created by Ashish on 31-12-2016.
  */
 
 public class FragmentCategories extends Fragment implements WallpaperCategoryAdapter.ListItemClickListener {
 
-    private static final String STATE_WALLPAPERS = "state";
     RecyclerView recyclerView;
     WallpaperCategoryAdapter adapter;
     ArrayList<WallpaperCollection> wallpapersList = new ArrayList<>();
-    private String tag_json_arry = "TAG_JSON_ARRAY";
-    private GridLayoutManager gridLayoutManager;
-    private RelativeLayout emptyView;
     private ProgressBar pb;
 
     @Nullable
@@ -51,13 +49,14 @@ public class FragmentCategories extends Fragment implements WallpaperCategoryAda
 
         View rootView = inflater.inflate(R.layout.single_tab_layout, container, false);
 
-        emptyView = (RelativeLayout) rootView.findViewById(R.id.empty_view);
+        RelativeLayout emptyView = (RelativeLayout) rootView.findViewById(R.id.empty_view);
 
         pb = (ProgressBar) rootView.findViewById(R.id.progressBar);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.item_list);
 
         recyclerView.setHasFixedSize(true);
+        GridLayoutManager gridLayoutManager;
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             gridLayoutManager = new GridLayoutManager(getActivity(), 2);
             recyclerView.setLayoutManager(gridLayoutManager);
@@ -149,7 +148,7 @@ public class FragmentCategories extends Fragment implements WallpaperCategoryAda
 
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(req,
-                tag_json_arry);
+                Constants.TAG_JSON_ARRAY);
     }
 
     @Override
