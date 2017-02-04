@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -61,6 +62,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
     private TextView total_photos;
     private String total_photos_value;
     private ArrayAdapter<String> duration_adapter;
+    int position_of_collection_spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +120,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
                         break;
                     case R.id.nav_downloads:
                         drawer.closeDrawers();
-                        startActivity(new Intent(getApplicationContext(),MyDownloadsActivity.class));
+                        startActivity(new Intent(getApplicationContext(), MyDownloadsActivity.class));
                         break;
                     case R.id.nav_settings:
 
@@ -205,7 +207,6 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         date_spinner.setOnItemSelectedListener(this);
 
 
-
         if (spinner_collection_list.size() == 0) {
             getListOfCollections();
 
@@ -230,7 +231,16 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         dialogBuilder.setTitle("Add Automation");
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                //Toast.makeText(ItemListActivity.this, collection_string + "\n" + duration_string, Toast.LENGTH_SHORT).show();
+
+                /*SharedPreferences sharedPreferences = getApplicationContext()
+                        .getSharedPreferences("ay3524.com.wallpapertime", MODE_PRIVATE);
+                sharedPreferences.edit().putString("id", "136").apply();
+
+                WallpaperSyncUtils.scheduleWallpaperChange(getApplicationContext());
+                Intent intentToSyncImmediately = new Intent(getApplicationContext(), WallpaperIntentService.class);
+                startService(intentToSyncImmediately);*/
+
+                Toast.makeText(ItemListActivity.this, collection_string + "\n" + duration_string + "\n" + collections_list.get(position_of_collection_spinner).getId(), Toast.LENGTH_SHORT).show();
             }
         });
         dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -298,6 +308,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         if (duration_spinner.getId() == R.id.collections) {
             collection_string = collection_spinner.getItemAtPosition(position).toString();
             total_photos.setText(collections_list.get(position).getTotal_photos());
+            position_of_collection_spinner = position;
         }
         if (collection_spinner.getId() == R.id.durations) {
             duration_string = duration_spinner.getItemAtPosition(position).toString();
