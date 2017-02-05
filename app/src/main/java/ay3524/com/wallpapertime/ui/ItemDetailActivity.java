@@ -23,11 +23,14 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 
 import java.io.File;
 import java.io.IOException;
 
 import ay3524.com.wallpapertime.R;
+import ay3524.com.wallpapertime.app.MyApplication;
 import ay3524.com.wallpapertime.utils.Constants;
 import ay3524.com.wallpapertime.utils.ImageDownloadTask;
 
@@ -38,6 +41,12 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
     private String urls_raw, urls_full, urls_small, urls_regular, urls_thumb;
     private String activityOrFragment;
     ImageView image;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyApplication.getInstance().trackScreenView("ItemDetailActivity");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +90,35 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         }
 
         image = (ImageView) findViewById(R.id.background);
-        String url = buildUrl(fileName,"800");
-        Glide.with(getApplicationContext()).load(url).crossFade()
-                .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
+        final String url = buildUrl(fileName,"800");
+        Glide.with(getApplicationContext())
+                .load(urls_thumb)
+                .asBitmap()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                        // Do something with bitmap here.
+                        image.setImageBitmap(bitmap);
+
+                        Glide.with(getApplicationContext())
+                                .load(url)
+                                .asBitmap()
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(new SimpleTarget<Bitmap>() {
+                                    @Override
+                                    public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                                        // Do something with bitmap here.
+                                        image.setImageBitmap(bitmap);
+                                    }
+                                });
+                    }
+                });
+        /*Glide.with(getApplicationContext()).load(url)
+                .crossFade()
+                .thumbnail(0.5f)
+                .placeholder(R.mipmap.ic_launcher)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);*/
     }
 
     private String buildUrl(String fileName,String size) {

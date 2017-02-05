@@ -38,7 +38,7 @@ import java.util.ArrayList;
 
 import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.adapter.ViewPagerAdapter;
-import ay3524.com.wallpapertime.app.AppController;
+import ay3524.com.wallpapertime.app.MyApplication;
 import ay3524.com.wallpapertime.model.WallpaperCollection;
 import ay3524.com.wallpapertime.utils.CircleTransform;
 import ay3524.com.wallpapertime.utils.Constants;
@@ -53,7 +53,6 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
     private DrawerLayout drawer;
     private ImageView imgNavHeaderBg, imgProfile;
     private TextView txtName, txtWebsite;
-    private String tag_json_arry = "TAG_JSON_ARRAY";
     ArrayList<WallpaperCollection> collections_list = new ArrayList<>();
     ArrayList<String> durations = new ArrayList<>();
     ArrayList<String> spinner_collection_list = new ArrayList<>();
@@ -64,6 +63,12 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
     private String total_photos_value;
     private ArrayAdapter<String> duration_adapter;
     int position_of_collection_spinner;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyApplication.getInstance().trackScreenView("ItemListActivity");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,7 +193,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new FragmentCategories(), "Collections");
+        adapter.addFragment(new FragmentCollections(), "Collections");
         adapter.addFragment(new FragmentDailyNew(), "Daily New");
         adapter.addFragment(new FragmentPopular(), "Popular");
         viewPager.setAdapter(adapter);
@@ -296,7 +301,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         });
 
         // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(req,
+        MyApplication.getInstance().addToRequestQueue(req,
                 Constants.TAG_JSON_ARRAY);
     }
 

@@ -26,9 +26,11 @@ import java.util.ArrayList;
 
 import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.adapter.WallpaperAdapter;
-import ay3524.com.wallpapertime.app.AppController;
+import ay3524.com.wallpapertime.app.MyApplication;
 import ay3524.com.wallpapertime.model.WallpaperUnsplash;
 import ay3524.com.wallpapertime.utils.Constants;
+
+import static ay3524.com.wallpapertime.utils.Constants.STATE_WALLPAPERS;
 
 public class CollectionActivity extends AppCompatActivity implements WallpaperAdapter.ListItemClickListener {
 
@@ -42,14 +44,18 @@ public class CollectionActivity extends AppCompatActivity implements WallpaperAd
     private String total_photos;
     private String urls_collection_list;
 
-    private static final String STATE_WALLPAPERS = "state";
     private RecyclerView recyclerView;
     private ArrayList<WallpaperUnsplash> wallpapersList = new ArrayList<>();
     private WallpaperAdapter adapter;
     private GridLayoutManager gridLayoutManager;
-    private String tag_json_arry = "TAG_JSON_ARRAY";
     ProgressBar pb;
     private RelativeLayout emptyView;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyApplication.getInstance().trackScreenView("CollectionActivity");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,8 +168,8 @@ public class CollectionActivity extends AppCompatActivity implements WallpaperAd
         });
 
         // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(req,
-                tag_json_arry);
+        MyApplication.getInstance().addToRequestQueue(req,
+                Constants.TAG_JSON_ARRAY);
     }
 
     @Override

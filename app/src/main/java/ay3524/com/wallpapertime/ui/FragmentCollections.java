@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.adapter.WallpaperCategoryAdapter;
-import ay3524.com.wallpapertime.app.AppController;
+import ay3524.com.wallpapertime.app.MyApplication;
 import ay3524.com.wallpapertime.model.WallpaperCollection;
 import ay3524.com.wallpapertime.utils.Constants;
 
@@ -36,12 +36,18 @@ import static ay3524.com.wallpapertime.utils.Constants.STATE_WALLPAPERS;
  * Created by Ashish on 31-12-2016.
  */
 
-public class FragmentCategories extends Fragment implements WallpaperCategoryAdapter.ListItemClickListener {
+public class FragmentCollections extends Fragment implements WallpaperCategoryAdapter.ListItemClickListener {
 
     RecyclerView recyclerView;
     WallpaperCategoryAdapter adapter;
     ArrayList<WallpaperCollection> wallpapersList = new ArrayList<>();
     private ProgressBar pb;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MyApplication.getInstance().trackScreenView("FragmentCollections");
+    }
 
     @Nullable
     @Override
@@ -66,7 +72,7 @@ public class FragmentCategories extends Fragment implements WallpaperCategoryAda
         }
         if (savedInstanceState != null) {
             wallpapersList = savedInstanceState.getParcelableArrayList(STATE_WALLPAPERS);
-            adapter = new WallpaperCategoryAdapter(wallpapersList, FragmentCategories.this);
+            adapter = new WallpaperCategoryAdapter(wallpapersList, FragmentCollections.this);
             recyclerView.setAdapter(adapter);
 
         } else {
@@ -134,7 +140,7 @@ public class FragmentCategories extends Fragment implements WallpaperCategoryAda
                             }
 
                         }
-                        adapter = new WallpaperCategoryAdapter(wallpapersList, FragmentCategories.this);
+                        adapter = new WallpaperCategoryAdapter(wallpapersList, FragmentCollections.this);
                         recyclerView.setAdapter(adapter);
                         pb.setVisibility(View.GONE);
                     }
@@ -147,7 +153,7 @@ public class FragmentCategories extends Fragment implements WallpaperCategoryAda
         });
 
         // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(req,
+        MyApplication.getInstance().addToRequestQueue(req,
                 Constants.TAG_JSON_ARRAY);
     }
 

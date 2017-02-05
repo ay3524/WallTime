@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
-import ay3524.com.wallpapertime.app.AppController;
+import ay3524.com.wallpapertime.app.MyApplication;
 import ay3524.com.wallpapertime.model.WallpaperUnsplash;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -98,7 +98,7 @@ public class WallpaperSyncTask {
         });
 
         // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(req,
+        MyApplication.getInstance().addToRequestQueue(req,
                 tag_json_arry);
 
         /*ApiInterface apiService =

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- End current session if app sleeps for a period of time -->
+    <integer name="ga_sessionTimeout">300</integer>
+
+    <!-- Enable automatic Activity measurement -->
+    <bool name="ga_autoActivityTracking">false</bool>
+
+    <!--  The property id associated with this analytics tracker -->
+    <string name="ga_trackingId">UA-91407565-1</string>
+
+    <string name="ga_sampleFrequency">100.0</string>
+
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+
+    <screenName name="ay3524.com.wallpapertime.ui.ItemListActivity">ItemListActivity</screenName>
+    <screenName name="ay3524.com.wallpapertime.ui.CollectionActivity">CollectionActivity</screenName>
+    <screenName name="ay3524.com.wallpapertime.ui.MyDownloadsActivity">MyDownloadsActivity</screenName>
+    <screenName name="ay3524.com.wallpapertime.ui.ItemDetailActivity">ItemDetailActivity</screenName>
+
+    <screenName name="ay3524.com.wallpapertime.ui.FragmentPopular">FragmentPopular</screenName>
+    <screenName name="ay3524.com.wallpapertime.ui.FragmentDailyNew">FragmentDailyNew</screenName>
+    <screenName name="ay3524.com.wallpapertime.ui.FragmentCollections">FragmentCollections</screenName>
+    <!--
+      See Project Structure -> Analytics -> Google Analytics -> Learn More
+      to learn more about configuring this file.
+    -->
+</resources>

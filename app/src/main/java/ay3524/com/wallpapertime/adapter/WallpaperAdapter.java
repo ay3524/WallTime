@@ -48,20 +48,44 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.Wall
     }
 
     @Override
-    public void onBindViewHolder(WallpaperViewHolder holder, int position) {
-        /*ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+    public void onBindViewHolder(final WallpaperViewHolder holder, final int position) {
+        /*ImageLoader imageLoader = MyApplication.getInstance().getImageLoader();
 
         holder.wallpaperPoster.setImageUrl(wallpaper.get(position).getWebformatURL(), imageLoader);
 
         imageLoader.get(wallpaper.get(position).getWebformatURL(), ImageLoader.getImageListener(
                 holder.wallpaperPoster, R.mipmap.ic_launcher, R.mipmap.ic_launcher));
 
-        //Cache cache = AppController.getInstance().getRequestQueue().getCache();
+        //Cache cache = MyApplication.getInstance().getRequestQueue().getCache();
         //Cache.Entry entry = cache.get(wallpaper.get(position).getWebformatURL());*/
 
         holder.likes.setText(wallpaper.get(position).getLikes());
 
         String buildSingleListImageUrl = wallpaper.get(position).getUrls_small();
+
+        /*Glide.with(context)
+                .load(wallpaper.get(position).getUrls_thumb())
+                .asBitmap()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                        // Do something with bitmap here.
+                        holder.wallpaperPoster.setImageBitmap(bitmap);
+
+                        Glide.with(context)
+                                .load(wallpaper.get(position).getUrls_small())
+                                .asBitmap()
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(new SimpleTarget<Bitmap>() {
+                                    @Override
+                                    public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                                        // Do something with bitmap here.
+                                        holder.wallpaperPoster.setImageBitmap(bitmap);
+                                    }
+                                });
+                    }
+                });*/
 
         Glide.with(context).load(buildSingleListImageUrl).crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.wallpaperPoster);

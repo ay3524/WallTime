@@ -28,6 +28,7 @@ import java.util.List;
 
 import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.adapter.WallpaperDownloadsAdapter;
+import ay3524.com.wallpapertime.app.MyApplication;
 
 public class MyDownloadsActivity extends AppCompatActivity implements WallpaperDownloadsAdapter.ListItemClickListener {
 
@@ -35,6 +36,12 @@ public class MyDownloadsActivity extends AppCompatActivity implements WallpaperD
     WallpaperDownloadsAdapter wallpaperDownloadsAdapter;
     private GridLayoutManager gridLayoutManager;
     private RelativeLayout emptyView;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyApplication.getInstance().trackScreenView("MyDownloadsActivity");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

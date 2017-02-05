@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.adapter.WallpaperAdapter;
-import ay3524.com.wallpapertime.app.AppController;
+import ay3524.com.wallpapertime.app.MyApplication;
 import ay3524.com.wallpapertime.model.WallpaperUnsplash;
 import ay3524.com.wallpapertime.utils.Constants;
 
@@ -42,6 +42,12 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
     private ArrayList<WallpaperUnsplash> wallpapersList = new ArrayList<>();
     private WallpaperAdapter adapter;
     ProgressBar pb;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MyApplication.getInstance().trackScreenView("FragmentDailyNew");
+    }
 
     @Nullable
     @Override
@@ -131,7 +137,7 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
             }
         });
 
-        AppController.getInstance().addToRequestQueue(req,
+        MyApplication.getInstance().addToRequestQueue(req,
                 Constants.TAG_JSON_ARRAY);
     }
 
