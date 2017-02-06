@@ -9,7 +9,7 @@
             android:title="Automation" />
         <item
             android:id="@+id/nav_photo_of_the_day"
-            android:icon="@drawable/ic_local_movies_black_24dp"
+            android:icon="@drawable/bing_icon"
             android:title="Photo of the day" />
         <item
             android:id="@+id/nav_settings"

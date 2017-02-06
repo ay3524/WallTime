@@ -4,6 +4,7 @@ package ay3524.com.wallpapertime.app;
  * Created by Ashish on 05-02-2017.
  */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -25,16 +26,17 @@ import ay3524.com.wallpapertime.R;
  * TODO: Call {@link #initialize(Context)} from an entry point in your app
  * before using this!
  */
-public final class AnalyticsTrackers {
+final class AnalyticsTrackers {
 
-    public enum Target {
+    enum Target {
         APP,
         // Add more trackers here if you need, and update the code in #get(Target) below
     }
 
+    @SuppressLint("StaticFieldLeak")
     private static AnalyticsTrackers sInstance;
 
-    public static synchronized void initialize(Context context) {
+    static synchronized void initialize(Context context) {
         if (sInstance != null) {
             throw new IllegalStateException("Extra call to initialize analytics trackers");
         }
@@ -50,7 +52,7 @@ public final class AnalyticsTrackers {
         return sInstance;
     }
 
-    private final Map<Target, Tracker> mTrackers = new HashMap<Target, Tracker>();
+    private final Map<Target, Tracker> mTrackers = new HashMap<>();
     private final Context mContext;
 
     /**

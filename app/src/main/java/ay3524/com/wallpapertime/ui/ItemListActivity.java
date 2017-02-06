@@ -27,8 +27,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +38,6 @@ import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.adapter.ViewPagerAdapter;
 import ay3524.com.wallpapertime.app.MyApplication;
 import ay3524.com.wallpapertime.model.WallpaperCollection;
-import ay3524.com.wallpapertime.utils.CircleTransform;
 import ay3524.com.wallpapertime.utils.Constants;
 
 public class ItemListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -162,22 +159,23 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
 
     private void loadNavHeader() {
         // name, website
-        txtName.setText("Ashish Yadav");
-        txtWebsite.setText("www.example.com");
+        //txtName.setText("Ashish Yadav");
+        txtWebsite.setText("Sign In");
+        txtWebsite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         // loading header background image
-        Glide.with(this).load(urlNavHeaderBg)
-                .crossFade()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imgNavHeaderBg);
-
         // Loading profile image
-        Glide.with(this).load(urlProfileImg)
+        /*Glide.with(this).load(R.mipmap.ic_launcher)
                 .crossFade()
                 .thumbnail(0.5f)
                 .bitmapTransform(new CircleTransform(this))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imgProfile);
+                .into(imgProfile);*/
 
     }
 

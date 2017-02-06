@@ -26,8 +26,6 @@ public class ImageDownloadTask extends AsyncTask<String, Integer, String> {
     private PowerManager.WakeLock mWakeLock;
     private ProgressDialog pDialog;
     private String fileName;
-    private volatile boolean running = true;
-    int fileLength;
 
     public ImageDownloadTask(Context cxt, String file_name) {
         context = cxt;
@@ -90,7 +88,7 @@ public class ImageDownloadTask extends AsyncTask<String, Integer, String> {
 
                 // this will be useful to display download percentage
                 // might be -1: server did not report the length
-                fileLength = connection.getContentLength();
+                int fileLength = connection.getContentLength();
 
                 // download the file
                 input = connection.getInputStream();
