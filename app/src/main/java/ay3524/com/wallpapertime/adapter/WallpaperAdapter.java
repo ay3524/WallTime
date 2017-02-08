@@ -87,8 +87,13 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.Wall
                     }
                 });*/
 
-        Glide.with(context).load(buildSingleListImageUrl).crossFade()
-                .diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.wallpaperPoster);
+        Glide.with(context)
+                .load(buildSingleListImageUrl)
+                .placeholder(R.mipmap.ic_launcher)
+                .error(R.mipmap.ic_launcher)
+                .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.wallpaperPoster);
     }
 
     @Override

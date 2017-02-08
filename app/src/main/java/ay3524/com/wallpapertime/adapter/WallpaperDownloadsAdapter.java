@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
  * Created by Ashish on 02-02-2017.
  */
 
-public class WallpaperDownloadsAdapter extends RecyclerView.Adapter<WallpaperDownloadsAdapter.WallpaperViewHolder>{
+public class WallpaperDownloadsAdapter extends RecyclerView.Adapter<WallpaperDownloadsAdapter.WallpaperViewHolder> {
 
     List<File> wallpaperDownloads;
     private Context context;
@@ -30,11 +30,13 @@ public class WallpaperDownloadsAdapter extends RecyclerView.Adapter<WallpaperDow
     public interface ListItemClickListener {
         void onListItemClick(int clickedItemIndex);
     }
-    public WallpaperDownloadsAdapter(List<File> wallpaperDownload, ListItemClickListener listener){
+
+    public WallpaperDownloadsAdapter(List<File> wallpaperDownload, ListItemClickListener listener) {
         wallpaperDownloads = wallpaperDownload;
         clickListener = listener;
 
     }
+
     @Override
     public WallpaperViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
@@ -47,12 +49,16 @@ public class WallpaperDownloadsAdapter extends RecyclerView.Adapter<WallpaperDow
 
     @Override
     public void onBindViewHolder(WallpaperViewHolder holder, int position) {
-        Glide.with(context).load(wallpaperDownloads.get(position)).into(holder.collection_cover);
+        Glide.with(context)
+                .load(wallpaperDownloads.get(position))
+                .placeholder(R.mipmap.ic_launcher)
+                .error(R.mipmap.ic_launcher)
+                .into(holder.collection_cover);
     }
 
     @Override
     public int getItemCount() {
-        return wallpaperDownloads.size();
+        return wallpaperDownloads == null ? 0 : wallpaperDownloads.size();
     }
 
     public class WallpaperViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

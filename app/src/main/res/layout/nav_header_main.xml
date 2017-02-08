@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/view_container"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
@@ -16,11 +15,16 @@
 
     <LinearLayout
         android:id="@+id/linear"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin">
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin">
 
         <ImageView
             android:visibility="invisible"
@@ -28,7 +32,6 @@
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
-            app:srcCompat="@android:drawable/sym_def_app_icon"
             android:contentDescription="@string/account_image" />
 
         <TextView

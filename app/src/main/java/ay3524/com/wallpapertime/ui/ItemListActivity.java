@@ -27,6 +27,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,9 +46,10 @@ import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.adapter.ViewPagerAdapter;
 import ay3524.com.wallpapertime.app.MyApplication;
 import ay3524.com.wallpapertime.model.WallpaperCollection;
+import ay3524.com.wallpapertime.utils.CircleTransform;
 import ay3524.com.wallpapertime.utils.Constants;
 
-public class ItemListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class ItemListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
 
     public static int navItemIndex = 0;
     private static final String urlNavHeaderBg = "https://images.unsplash.com/photo-1484452330304-377cdeb05340?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&s=503f268f4cd99055517cc7ba13215db6";
@@ -58,8 +67,10 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
     String collection_string, duration_string;
     private TextView total_photos;
     private String total_photos_value;
-    private ArrayAdapter<String> duration_adapter;
     int position_of_collection_spinner;
+    private static final int REQ_CODE = 9001;
+
+    GoogleApiClient googleApiClient;
 
     @Override
     protected void onResume() {
@@ -75,6 +86,9 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
+
+        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this).addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions).build();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
@@ -164,7 +178,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         txtWebsite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                signIn();
             }
         });
 
@@ -211,6 +225,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         date_spinner.setOnItemSelectedListener(this);
 
 
+        ArrayAdapter<String> duration_adapter;
         if (spinner_collection_list.size() == 0) {
             getListOfCollections();
 
@@ -329,6 +344,55 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         }
         if (collection_spinner.getId() == R.id.durations) {
             duration_string = duration_spinner.getSelectedItem().toString();
+        }
+    }
+
+    private void signIn() {
+        Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+        startActivityForResult(intent, REQ_CODE);
+    }
+
+    private void handleResult(GoogleSignInResult result) {
+
+        if (result.isSuccess()) {
+            GoogleSignInAccount account = result.getSignInAccount();
+            String name = null, email = null, img_url = null;
+            if (account != null) {
+                name = account.getDisplayName();
+                email = account.getEmail();
+                img_url = account.getPhotoUrl().toString();
+            }
+
+            txtName.setText(name);
+            txtWebsite.setText(email);
+
+            imgProfile.setVisibility(View.VISIBLE);
+
+            Glide.with(this).load(img_url)
+                    .crossFade()
+                    .thumbnail(0.5f)
+                    .bitmapTransform(new CircleTransform(this))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(imgProfile);
+        }
+    }
+
+    private void updateUI(boolean isLogin) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQ_CODE) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleResult(result);
         }
     }
 }

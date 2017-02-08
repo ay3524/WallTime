@@ -51,14 +51,19 @@ public class WallpaperCategoryAdapter  extends RecyclerView.Adapter<WallpaperCat
     public void onBindViewHolder(WallpaperCategoryAdapter.WallpaperViewHolder holder, int position) {
         String buildSingleListImageUrl = wallpaper.get(position).getUrls_small();
 
-        Glide.with(context).load(buildSingleListImageUrl).crossFade()
-                .diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.collection_cover);
+        Glide.with(context)
+                .load(buildSingleListImageUrl)
+                .placeholder(R.mipmap.ic_launcher)
+                .error(R.mipmap.ic_launcher)
+                .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.collection_cover);
         holder.collection_name.setText(wallpaper.get(position).getTitle());
     }
 
     @Override
     public int getItemCount() {
-        return wallpaper.size();
+        return wallpaper == null ? 0 : wallpaper.size();
     }
 
     class WallpaperViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
