@@ -35,6 +35,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,13 +54,13 @@ import ay3524.com.wallpapertime.utils.Constants;
 public class ItemListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
 
     public static int navItemIndex = 0;
-    private static final String urlNavHeaderBg = "https://images.unsplash.com/photo-1484452330304-377cdeb05340?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&s=503f268f4cd99055517cc7ba13215db6";
-    private static final String urlProfileImg = "https://images.unsplash.com/profile-1470357472607-48d8b4cba2cc?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&cs=tinysrgb&fit=crop&h=128&w=128&s=f2cb264bbb4c3550f3e795b1ed4ccde8";
+    //private static final String urlNavHeaderBg = "https://images.unsplash.com/photo-1484452330304-377cdeb05340?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&s=503f268f4cd99055517cc7ba13215db6";
+    //private static final String urlProfileImg = "https://images.unsplash.com/profile-1470357472607-48d8b4cba2cc?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&cs=tinysrgb&fit=crop&h=128&w=128&s=f2cb264bbb4c3550f3e795b1ed4ccde8";
 
     private NavigationView navigationView;
     private DrawerLayout drawer;
     private ImageView imgNavHeaderBg, imgProfile;
-    private TextView txtName, txtWebsite;
+    private TextView txtName, txtWebsite, txtSignOut;
     ArrayList<WallpaperCollection> collections_list = new ArrayList<>();
     ArrayList<String> durations = new ArrayList<>();
     ArrayList<String> spinner_collection_list = new ArrayList<>();
@@ -98,6 +100,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         txtWebsite = (TextView) navHeader.findViewById(R.id.website);
         imgNavHeaderBg = (ImageView) navHeader.findViewById(R.id.img_header_bg);
         imgProfile = (ImageView) navHeader.findViewById(R.id.img_profile);
+        txtSignOut = (TextView) navHeader.findViewById(R.id.signout);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -179,6 +182,23 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
             @Override
             public void onClick(View v) {
                 signIn();
+            }
+        });
+        txtSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
+                        txtName.setVisibility(View.INVISIBLE);
+                        //txtWebsite.setVisibility(View.GONE);
+                        imgProfile.setVisibility(View.INVISIBLE);
+                        txtWebsite.setText("Sign In");
+                        txtWebsite.setClickable(true);
+                        txtSignOut.setVisibility(View.INVISIBLE);
+                        Toast.makeText(ItemListActivity.this, "Logged Out Successfully", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
@@ -365,8 +385,11 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
 
             txtName.setText(name);
             txtWebsite.setText(email);
+            txtWebsite.setClickable(false);
 
+            txtName.setVisibility(View.VISIBLE);
             imgProfile.setVisibility(View.VISIBLE);
+            txtSignOut.setVisibility(View.VISIBLE);
 
             Glide.with(this).load(img_url)
                     .crossFade()

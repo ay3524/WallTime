@@ -30,5 +30,6 @@
     <string name="widget_image">widget image</string>
     <string name="navigation_drawer_big_image">Navigation Drawer Big Image</string>
     <string name="account_image">Account Image</string>
+    <string name="sign_out">Sign Out</string>
 
 </resources>
