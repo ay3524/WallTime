@@ -99,24 +99,27 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
                                 WallpaperUnsplash wallpaperUnsplash = new WallpaperUnsplash();
                                 JSONObject jsonObject = response.getJSONObject(i);
                                 wallpaperUnsplash.setId(jsonObject.getString(Constants.ID));
-                                wallpaperUnsplash.setWidth(jsonObject.getString(Constants.WIDTH));
-                                wallpaperUnsplash.setHeight(jsonObject.getString(Constants.HEIGHT));
-                                wallpaperUnsplash.setColor(jsonObject.getString(Constants.COLOR));
+                                //wallpaperUnsplash.setWidth(jsonObject.getString(Constants.WIDTH));
+                                //wallpaperUnsplash.setHeight(jsonObject.getString(Constants.HEIGHT));
+                                //wallpaperUnsplash.setColor(jsonObject.getString(Constants.COLOR));
                                 wallpaperUnsplash.setLikes(jsonObject.getString(Constants.LIKES));
 
-                                JSONObject jsonObject2 = jsonObject.getJSONObject(Constants.USER);
+                                /*JSONObject jsonObject2 = jsonObject.getJSONObject(Constants.USER);
                                 wallpaperUnsplash.setUser_id(jsonObject2.getString(Constants.ID));
                                 JSONObject jsonObject3 = jsonObject2.getJSONObject(Constants.PROFILE_IMAGE);
                                 wallpaperUnsplash.setProfile_image_small(jsonObject3.getString(Constants.SMALL_PROFILE_IMAGE));
                                 wallpaperUnsplash.setProfile_image_medium(jsonObject3.getString(Constants.MEDIUM_PROFILE_IMAGE));
-                                wallpaperUnsplash.setProfile_image_large(jsonObject3.getString(Constants.LARGE_PROFILE_IMAGE));
+                                wallpaperUnsplash.setProfile_image_large(jsonObject3.getString(Constants.LARGE_PROFILE_IMAGE));*/
 
                                 JSONObject jsonObject4 = jsonObject.getJSONObject(Constants.URLS);
                                 wallpaperUnsplash.setUrls_raw(jsonObject4.getString(Constants.RAW));
-                                wallpaperUnsplash.setUrls_full(jsonObject4.getString(Constants.FULL));
-                                wallpaperUnsplash.setUrls_regular(jsonObject4.getString(Constants.REGULAR));
-                                wallpaperUnsplash.setUrls_small(jsonObject4.getString(Constants.SMALL));
-                                wallpaperUnsplash.setUrls_thumb(jsonObject4.getString(Constants.THUMB));
+                                String splitted[] = jsonObject4.getString(Constants.RAW).split("/");
+                                String fileName = splitted[splitted.length - 1] + ".jpg";
+                                wallpaperUnsplash.setUrls_small(fileName);
+                                //wallpaperUnsplash.setUrls_full(jsonObject4.getString(Constants.FULL));
+                                //wallpaperUnsplash.setUrls_regular(jsonObject4.getString(Constants.REGULAR));
+                                //wallpaperUnsplash.setUrls_small(jsonObject4.getString(Constants.SMALL));
+                                //wallpaperUnsplash.setUrls_thumb(jsonObject4.getString(Constants.THUMB));
 
                                 wallpapersList.add(wallpaperUnsplash);
 
@@ -154,22 +157,22 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
 
         intent.putExtra("class", "Fragment");
         intent.putExtra(Constants.ID, wallpapersList.get(clickedItemIndex).getId());
-        intent.putExtra(Constants.WIDTH, wallpapersList.get(clickedItemIndex).getWidth());
-        intent.putExtra(Constants.HEIGHT, wallpapersList.get(clickedItemIndex).getHeight());
-        intent.putExtra(Constants.COLOR, wallpapersList.get(clickedItemIndex).getColor());
+        //intent.putExtra(Constants.WIDTH, wallpapersList.get(clickedItemIndex).getWidth());
+        //intent.putExtra(Constants.HEIGHT, wallpapersList.get(clickedItemIndex).getHeight());
+        //intent.putExtra(Constants.COLOR, wallpapersList.get(clickedItemIndex).getColor());
         intent.putExtra(Constants.LIKES, wallpapersList.get(clickedItemIndex).getLikes());
-        intent.putExtra(Constants.USER_ID, wallpapersList.get(clickedItemIndex).getUser_id());
-        intent.putExtra(Constants.USER, wallpapersList.get(clickedItemIndex).getUsername());
+        //intent.putExtra(Constants.USER_ID, wallpapersList.get(clickedItemIndex).getUser_id());
+        //intent.putExtra(Constants.USER, wallpapersList.get(clickedItemIndex).getUsername());
         //intent.putExtra("name", wallpapersList.get(clickedItemIndex).getName());
         //intent.putExtra("first_name", wallpapersList.get(clickedItemIndex).getFirst_name());
-        intent.putExtra(Constants.SMALL_PROFILE_IMAGE, wallpapersList.get(clickedItemIndex).getProfile_image_small());
-        intent.putExtra(Constants.MEDIUM_PROFILE_IMAGE, wallpapersList.get(clickedItemIndex).getProfile_image_medium());
-        intent.putExtra(Constants.LARGE_PROFILE_IMAGE, wallpapersList.get(clickedItemIndex).getProfile_image_large());
+        //intent.putExtra(Constants.SMALL_PROFILE_IMAGE, wallpapersList.get(clickedItemIndex).getProfile_image_small());
+        //intent.putExtra(Constants.MEDIUM_PROFILE_IMAGE, wallpapersList.get(clickedItemIndex).getProfile_image_medium());
+        //intent.putExtra(Constants.LARGE_PROFILE_IMAGE, wallpapersList.get(clickedItemIndex).getProfile_image_large());
         intent.putExtra(Constants.RAW, wallpapersList.get(clickedItemIndex).getUrls_raw());
-        intent.putExtra(Constants.FULL, wallpapersList.get(clickedItemIndex).getUrls_full());
-        intent.putExtra(Constants.REGULAR, wallpapersList.get(clickedItemIndex).getUrls_regular());
-        intent.putExtra(Constants.SMALL, wallpapersList.get(clickedItemIndex).getUrls_small());
-        intent.putExtra(Constants.THUMB, wallpapersList.get(clickedItemIndex).getUrls_thumb());
+        //intent.putExtra(Constants.FULL, wallpapersList.get(clickedItemIndex).getUrls_full());
+        //intent.putExtra(Constants.REGULAR, wallpapersList.get(clickedItemIndex).getUrls_regular());
+        //intent.putExtra(Constants.SMALL, wallpapersList.get(clickedItemIndex).getUrls_small());
+        //intent.putExtra(Constants.THUMB, wallpapersList.get(clickedItemIndex).getUrls_thumb());
 
         startActivity(intent);
     }

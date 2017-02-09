@@ -108,10 +108,12 @@ public class FragmentCollections extends Fragment implements WallpaperCategoryAd
                                 JSONObject jsonObject3 = jsonObject.getJSONObject(Constants.COVER_PHOTOS);
                                 JSONObject jsonObject4 = jsonObject3.getJSONObject(Constants.URLS);
                                 wallpaperUnsplash.setUrls_raw(jsonObject4.getString(Constants.RAW));
-                                wallpaperUnsplash.setUrls_full(jsonObject4.getString(Constants.FULL));
-                                wallpaperUnsplash.setUrls_regular(jsonObject4.getString(Constants.REGULAR));
-                                wallpaperUnsplash.setUrls_small(jsonObject4.getString(Constants.SMALL));
-                                wallpaperUnsplash.setUrls_thumb(jsonObject4.getString(Constants.THUMB));
+                                String splitted[] = jsonObject4.getString(Constants.RAW).split("/");
+                                String fileName = splitted[splitted.length - 1] + ".jpg";
+                                //wallpaperUnsplash.setUrls_full(jsonObject4.getString(Constants.FULL));
+                                //wallpaperUnsplash.setUrls_regular(jsonObject4.getString(Constants.REGULAR));
+                                wallpaperUnsplash.setUrls_small(fileName);
+                                //wallpaperUnsplash.setUrls_thumb(jsonObject4.getString(Constants.THUMB));
 
                                 /*wallpaperUnsplash.setId(jsonObject.getString("id"));
                                 wallpaperUnsplash.setWidth(jsonObject.getString("width"));

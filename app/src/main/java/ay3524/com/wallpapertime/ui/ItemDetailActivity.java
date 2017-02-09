@@ -65,10 +65,10 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         if (getIntent().getExtras() != null) {
             activityOrFragment = getIntent().getStringExtra("class");
             urls_raw = getIntent().getStringExtra(Constants.RAW);
-            urls_full = getIntent().getStringExtra(Constants.FULL);
-            urls_regular = getIntent().getStringExtra(Constants.REGULAR);
-            urls_small = getIntent().getStringExtra(Constants.SMALL);
-            urls_thumb = getIntent().getStringExtra(Constants.THUMB);
+            //urls_full = getIntent().getStringExtra(Constants.FULL);
+            //urls_regular = getIntent().getStringExtra(Constants.REGULAR);
+            //urls_small = getIntent().getStringExtra(Constants.SMALL);
+            //urls_thumb = getIntent().getStringExtra(Constants.THUMB);
             String splitted[] = urls_raw.split("/");
             fileName = splitted[splitted.length - 1] + ".jpg";
             image_path_with_folder = Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName;
@@ -94,9 +94,9 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         }
 
         image = (ImageView) findViewById(R.id.background);
-        final String url = buildUrl(fileName,"800");
+        final String url = Constants.buildUrl(fileName,"800");
         Glide.with(getApplicationContext())
-                .load(urls_thumb)
+                .load(Constants.buildUrl(fileName,"200"))
                 .asBitmap()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(new SimpleTarget<Bitmap>() {
@@ -123,13 +123,6 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
                 .thumbnail(0.5f)
                 .placeholder(R.mipmap.ic_launcher)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);*/
-    }
-
-    private String buildUrl(String fileName,String size) {
-        StringBuilder stringBuilder = new StringBuilder(fileName);
-        stringBuilder.delete(fileName.length() - 4, fileName.length());
-        String url = "https://images.unsplash.com/"+stringBuilder.toString()+"?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w="+size+"&fit=max&s=c9cabfb90c6a844b59176db42be9ec0c";
-        return url;
     }
 
     private void checkPermissionForMarshmallowAndAbove() {
@@ -217,7 +210,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
 
                 if (!(new File(image_path_with_folder).exists())) {
 
-                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(buildUrl(fileName,"1100"));
+                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(Constants.buildUrl(fileName,"1100"));
                 } else {
                     Toast.makeText(ItemDetailActivity.this, "Image Already Downloaded", Toast.LENGTH_SHORT).show();
                 }
@@ -225,7 +218,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
             case R.id.set_as_wallpaper:
 
                 if (!(new File(image_path_with_folder).exists())) {
-                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(buildUrl(fileName,"1100"));
+                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(Constants.buildUrl(fileName,"1100"));
                     setAsWallpaper();
 
                 } else {

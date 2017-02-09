@@ -76,11 +76,11 @@ public class CollectionActivity extends AppCompatActivity implements WallpaperAd
             id = getIntent().getStringExtra(Constants.ID);
             title = getIntent().getStringExtra(Constants.TITLE);
             total_photos = getIntent().getStringExtra(Constants.TOTAL_PHOTOS);
-            urls_raw = getIntent().getStringExtra(Constants.RAW);
-            urls_full = getIntent().getStringExtra(Constants.FULL);
-            urls_regular = getIntent().getStringExtra(Constants.REGULAR);
-            urls_small = getIntent().getStringExtra(Constants.SMALL);
-            urls_thumb = getIntent().getStringExtra(Constants.THUMB);
+            //urls_raw = getIntent().getStringExtra(Constants.RAW);
+            //urls_full = getIntent().getStringExtra(Constants.FULL);
+            //urls_regular = getIntent().getStringExtra(Constants.REGULAR);
+            //urls_small = getIntent().getStringExtra(Constants.SMALL);
+            //urls_thumb = getIntent().getStringExtra(Constants.THUMB);
             urls_collection_list = "https://api.unsplash.com/collections/curated/" + id + "/photos?client_id=1d6adf7ef9a462a70dca375dd1f8faf911481ea8e2715bf2666984671dbc4d39";
             //String splitted[] = urls_raw.split("/");
             //fileName = splitted[splitted.length - 1]+".jpg";
@@ -129,24 +129,27 @@ public class CollectionActivity extends AppCompatActivity implements WallpaperAd
                                 WallpaperUnsplash wallpaperUnsplash = new WallpaperUnsplash();
                                 JSONObject jsonObject = response.getJSONObject(i);
                                 wallpaperUnsplash.setId(jsonObject.getString(Constants.ID));
-                                wallpaperUnsplash.setWidth(jsonObject.getString(Constants.WIDTH));
-                                wallpaperUnsplash.setHeight(jsonObject.getString(Constants.HEIGHT));
-                                wallpaperUnsplash.setColor(jsonObject.getString(Constants.COLOR));
+                                //wallpaperUnsplash.setWidth(jsonObject.getString(Constants.WIDTH));
+                                //wallpaperUnsplash.setHeight(jsonObject.getString(Constants.HEIGHT));
+                                //wallpaperUnsplash.setColor(jsonObject.getString(Constants.COLOR));
                                 wallpaperUnsplash.setLikes(jsonObject.getString(Constants.LIKES));
 
-                                JSONObject jsonObject2 = jsonObject.getJSONObject(Constants.USER);
+                                /*JSONObject jsonObject2 = jsonObject.getJSONObject(Constants.USER);
                                 wallpaperUnsplash.setUser_id(jsonObject2.getString(Constants.ID));
                                 JSONObject jsonObject3 = jsonObject2.getJSONObject(Constants.PROFILE_IMAGE);
                                 wallpaperUnsplash.setProfile_image_small(jsonObject3.getString(Constants.SMALL_PROFILE_IMAGE));
                                 wallpaperUnsplash.setProfile_image_medium(jsonObject3.getString(Constants.MEDIUM_PROFILE_IMAGE));
-                                wallpaperUnsplash.setProfile_image_large(jsonObject3.getString(Constants.LARGE_PROFILE_IMAGE));
+                                wallpaperUnsplash.setProfile_image_large(jsonObject3.getString(Constants.LARGE_PROFILE_IMAGE));*/
 
                                 JSONObject jsonObject4 = jsonObject.getJSONObject(Constants.URLS);
                                 wallpaperUnsplash.setUrls_raw(jsonObject4.getString(Constants.RAW));
-                                wallpaperUnsplash.setUrls_full(jsonObject4.getString(Constants.FULL));
-                                wallpaperUnsplash.setUrls_regular(jsonObject4.getString(Constants.REGULAR));
-                                wallpaperUnsplash.setUrls_small(jsonObject4.getString(Constants.SMALL));
-                                wallpaperUnsplash.setUrls_thumb(jsonObject4.getString(Constants.THUMB));
+                                String splitted[] = jsonObject4.getString(Constants.RAW).split("/");
+                                String fileName = splitted[splitted.length - 1] + ".jpg";
+                                wallpaperUnsplash.setUrls_small(fileName);
+                                //wallpaperUnsplash.setUrls_full(jsonObject4.getString(Constants.FULL));
+                                //wallpaperUnsplash.setUrls_regular(jsonObject4.getString(Constants.REGULAR));
+                                //wallpaperUnsplash.setUrls_small(jsonObject4.getString(Constants.SMALL));
+                                //wallpaperUnsplash.setUrls_thumb(jsonObject4.getString(Constants.THUMB));
 
                                 wallpapersList.add(wallpaperUnsplash);
 
