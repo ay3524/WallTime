@@ -15,15 +15,16 @@ import java.util.ArrayList;
 
 import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.model.WallpaperCollection;
-import ay3524.com.wallpapertime.utils.Constants;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static ay3524.com.wallpapertime.utils.Constants.buildUrl;
 
 /**
  * Created by Ashish on 21-01-2017.
  */
 
-public class WallpaperCategoryAdapter  extends RecyclerView.Adapter<WallpaperCategoryAdapter.WallpaperViewHolder> {
+public class WallpaperCategoryAdapter extends RecyclerView.Adapter<WallpaperCategoryAdapter.WallpaperViewHolder> {
 
     private ArrayList<WallpaperCollection> wallpaper;
     private Context context;
@@ -50,7 +51,7 @@ public class WallpaperCategoryAdapter  extends RecyclerView.Adapter<WallpaperCat
 
     @Override
     public void onBindViewHolder(WallpaperCategoryAdapter.WallpaperViewHolder holder, int position) {
-        String buildSingleListImageUrl = Constants.buildUrl(wallpaper.get(position).getUrls_small(),"300");
+        String buildSingleListImageUrl = buildUrl(wallpaper.get(position).getUrls_regular(), "300");
         Glide.with(context)
                 .load(buildSingleListImageUrl)
                 .placeholder(R.mipmap.ic_launcher)

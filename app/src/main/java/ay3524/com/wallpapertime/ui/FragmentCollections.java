@@ -107,12 +107,12 @@ public class FragmentCollections extends Fragment implements WallpaperCategoryAd
 
                                 JSONObject jsonObject3 = jsonObject.getJSONObject(Constants.COVER_PHOTOS);
                                 JSONObject jsonObject4 = jsonObject3.getJSONObject(Constants.URLS);
-                                wallpaperUnsplash.setUrls_raw(jsonObject4.getString(Constants.RAW));
-                                String splitted[] = jsonObject4.getString(Constants.RAW).split("/");
-                                String fileName = splitted[splitted.length - 1] + ".jpg";
-                                //wallpaperUnsplash.setUrls_full(jsonObject4.getString(Constants.FULL));
-                                //wallpaperUnsplash.setUrls_regular(jsonObject4.getString(Constants.REGULAR));
-                                wallpaperUnsplash.setUrls_small(fileName);
+                                wallpaperUnsplash.setUrls_regular(jsonObject4.getString(Constants.REGULAR));
+                                //String splitted[] = jsonObject4.getString(Constants.REGULAR).split("/");
+                                //String fileName = splitted[splitted.length - 1] + ".jpg";
+                                //wallpaperUnsplash.setUrls_small(fileName);
+                                //wallpaperUnsplash.setUrls_raw(jsonObject4.getString(Constants.RAW));
+                                //wallpaperUnsplash.setUrls_regular(jsonObject4.getString(Constants.FULL));
                                 //wallpaperUnsplash.setUrls_thumb(jsonObject4.getString(Constants.THUMB));
 
                                 /*wallpaperUnsplash.setId(jsonObject.getString("id"));
@@ -166,11 +166,11 @@ public class FragmentCollections extends Fragment implements WallpaperCategoryAd
         intent.putExtra(Constants.ID, wallpapersList.get(clickedItemIndex).getId());
         intent.putExtra(Constants.TITLE, wallpapersList.get(clickedItemIndex).getTitle());
         intent.putExtra(Constants.TOTAL_PHOTOS, wallpapersList.get(clickedItemIndex).getTotal_photos());
-        intent.putExtra(Constants.RAW, wallpapersList.get(clickedItemIndex).getUrls_raw());
-        intent.putExtra(Constants.FULL, wallpapersList.get(clickedItemIndex).getUrls_full());
-        intent.putExtra(Constants.REGULAR, wallpapersList.get(clickedItemIndex).getUrls_regular());
-        intent.putExtra(Constants.SMALL, wallpapersList.get(clickedItemIndex).getUrls_small());
-        intent.putExtra(Constants.THUMB, wallpapersList.get(clickedItemIndex).getUrls_thumb());
+        //intent.putExtra(Constants.RAW, wallpapersList.get(clickedItemIndex).getUrls_raw());
+        //intent.putExtra(Constants.FULL, wallpapersList.get(clickedItemIndex).getUrls_full());
+        //intent.putExtra(Constants.REGULAR, wallpapersList.get(clickedItemIndex).getUrls_regular());
+        //intent.putExtra(Constants.SMALL, wallpapersList.get(clickedItemIndex).getUrls_small());
+        //intent.putExtra(Constants.THUMB, wallpapersList.get(clickedItemIndex).getUrls_thumb());
 
         startActivity(intent);
     }

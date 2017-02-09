@@ -35,11 +35,13 @@ import ay3524.com.wallpapertime.app.MyApplication;
 import ay3524.com.wallpapertime.utils.Constants;
 import ay3524.com.wallpapertime.utils.ImageDownloadTask;
 
+import static ay3524.com.wallpapertime.utils.Constants.buildUrl;
+
 public class ItemDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button dwnld, set;
     private String fileName, image_path_with_folder;
-    private String urls_raw, urls_full, urls_small, urls_regular, urls_thumb;
+    private String id, urls_raw, urls_full, urls_small, urls_regular, urls_thumb;
     private String activityOrFragment;
     ImageView image;
 
@@ -64,13 +66,18 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
 
         if (getIntent().getExtras() != null) {
             activityOrFragment = getIntent().getStringExtra("class");
-            urls_raw = getIntent().getStringExtra(Constants.RAW);
+            id = getIntent().getStringExtra(Constants.ID);
+            //urls_raw = getIntent().getStringExtra(Constants.RAW);
             //urls_full = getIntent().getStringExtra(Constants.FULL);
-            //urls_regular = getIntent().getStringExtra(Constants.REGULAR);
+            urls_regular = getIntent().getStringExtra(Constants.REGULAR);
+            //String split[] = urls_regular.split("&");
+            //String url = split[0] + split[1] + split[2] + split[3] + split[4] + "w=300" + split[6] + split[7];
+            //Toast.makeText(this, url, Toast.LENGTH_SHORT).show();
             //urls_small = getIntent().getStringExtra(Constants.SMALL);
             //urls_thumb = getIntent().getStringExtra(Constants.THUMB);
-            String splitted[] = urls_raw.split("/");
-            fileName = splitted[splitted.length - 1] + ".jpg";
+            //String splitted[] = urls_regular.split("/");
+            //Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
+            fileName = id + ".jpg";
             image_path_with_folder = Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName;
         }
 
@@ -94,9 +101,9 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         }
 
         image = (ImageView) findViewById(R.id.background);
-        final String url = Constants.buildUrl(fileName,"800");
+        final String url = buildUrl(urls_regular, "800");
         Glide.with(getApplicationContext())
-                .load(Constants.buildUrl(fileName,"200"))
+                .load(buildUrl(urls_regular, "200"))
                 .asBitmap()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(new SimpleTarget<Bitmap>() {
@@ -210,7 +217,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
 
                 if (!(new File(image_path_with_folder).exists())) {
 
-                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(Constants.buildUrl(fileName,"1100"));
+                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(buildUrl(urls_regular, "1100"));
                 } else {
                     Toast.makeText(ItemDetailActivity.this, "Image Already Downloaded", Toast.LENGTH_SHORT).show();
                 }
@@ -218,7 +225,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
             case R.id.set_as_wallpaper:
 
                 if (!(new File(image_path_with_folder).exists())) {
-                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(Constants.buildUrl(fileName,"1100"));
+                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(buildUrl(urls_regular, "1100"));
                     setAsWallpaper();
 
                 } else {

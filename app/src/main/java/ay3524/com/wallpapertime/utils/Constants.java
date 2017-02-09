@@ -41,10 +41,10 @@ public class Constants {
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
     }
-    public static String buildUrl(String fileName,String size) {
-        StringBuilder stringBuilder = new StringBuilder(fileName);
-        stringBuilder.delete(fileName.length() - 4, fileName.length());
-        String url = "https://images.unsplash.com/"+stringBuilder.toString()+"?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w="+size+"&fit=max&s=c9cabfb90c6a844b59176db42be9ec0c";
+
+    public static String buildUrl(String regular_url, String size) {
+        String split[] = regular_url.split("&");
+        String url = split[0] +"&"+ split[1] +"&"+ split[2] +"&"+ split[3] +"&"+ split[4] +"&"+ "w=" + size + "&" + split[6] +"&"+ split[7];
         return url;
     }
 }

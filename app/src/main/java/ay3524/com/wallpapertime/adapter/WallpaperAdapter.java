@@ -62,7 +62,7 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.Wall
 
         holder.likes.setText(wallpaper.get(position).getLikes());
 
-        String buildSingleListImageUrl = Constants.buildUrl(wallpaper.get(position).getUrls_small(),"300");
+        String buildSingleListImageUrl = Constants.buildUrl(wallpaper.get(position).getUrls_regular(), "300");
 
         /*Glide.with(context)
                 .load(wallpaper.get(position).getUrls_thumb())
@@ -120,4 +120,6 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.Wall
             clickListener.onListItemClick(clickedPosition);
         }
     }
+
+
 }
