@@ -136,6 +136,8 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
                         showAutomationDialog();
                         break;
                     case R.id.nav_photo_of_the_day:
+                        drawer.closeDrawers();
+                        startActivity(new Intent(getApplicationContext(), PhotoOfTheDay.class));
                         break;
                     case R.id.nav_downloads:
                         drawer.closeDrawers();

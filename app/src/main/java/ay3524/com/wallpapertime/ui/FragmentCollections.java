@@ -97,7 +97,7 @@ public class FragmentCollections extends Fragment implements WallpaperCategoryAd
                     @Override
                     public void onResponse(JSONArray response) {
                         //Log.d("TAG", response.toString());
-
+                        pb.setVisibility(View.VISIBLE);
                         for (int i = 0; i < response.length(); i++) {
                             try {
                                 WallpaperCollection wallpaperUnsplash = new WallpaperCollection();
@@ -151,8 +151,11 @@ public class FragmentCollections extends Fragment implements WallpaperCategoryAd
             @Override
             public void onErrorResponse(VolleyError error) {
                 pb.setVisibility(View.GONE);
-                Toast.makeText(getActivity(), "Error While loading photos", Toast.LENGTH_SHORT).show();
-                VolleyLog.d("TAG", "Error: " + error.getMessage());
+                Toast.makeText(getActivity(), "Slow Internet Connection...May take while", Toast.LENGTH_SHORT).show();
+                if (wallpapersList.size() == 0){
+                    getListOfCollections();
+                }
+                    VolleyLog.d("TAG", "Error: " + error.getMessage());
             }
         });
 

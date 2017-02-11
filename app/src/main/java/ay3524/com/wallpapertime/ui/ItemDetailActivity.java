@@ -44,6 +44,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
     private String id, urls_raw, urls_full, urls_small, urls_regular, urls_thumb;
     private String activityOrFragment;
     ImageView image;
+    private String detail_url;
 
     @Override
     protected void onResume() {
@@ -101,7 +102,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         }
 
         image = (ImageView) findViewById(R.id.background);
-        final String url = buildUrl(urls_regular, "800");
+        //detail_url = buildUrl(urls_regular, "800");
         Glide.with(getApplicationContext())
                 .load(buildUrl(urls_regular, "200"))
                 .asBitmap()
@@ -113,7 +114,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
                         image.setImageBitmap(bitmap);
 
                         Glide.with(getApplicationContext())
-                                .load(url)
+                                .load(buildUrl(urls_regular, "800"))
                                 .asBitmap()
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(new SimpleTarget<Bitmap>() {

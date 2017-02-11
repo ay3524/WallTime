@@ -94,6 +94,7 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
                     @Override
                     public void onResponse(JSONArray response) {
                         //Log.d("TAG", response.toString());
+                        pb.setVisibility(View.VISIBLE);
 
                         for (int i = 0; i < response.length(); i++) {
                             try {
@@ -137,7 +138,10 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
             @Override
             public void onErrorResponse(VolleyError error) {
                 pb.setVisibility(View.GONE);
-                Toast.makeText(getActivity(), "Error While loading photos", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Slow Internet Connection...May take while", Toast.LENGTH_SHORT).show();
+                if (wallpapersList.size() == 0){
+                    getListOfWallpapers();
+                }
                 VolleyLog.d("TAG", "Error: " + error.getMessage());
             }
         });

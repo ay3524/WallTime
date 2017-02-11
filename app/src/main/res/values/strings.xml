@@ -33,5 +33,7 @@
     <string name="sign_out">Sign Out</string>
     <string name="title_activity_photo_of_the_day">PhotoOfTheDay</string>
     <string name="today_image">today image</string>
+    <string name="single_photo">single photo</string>
+    <string name="heart_icon">heart icon</string>
 
 </resources>

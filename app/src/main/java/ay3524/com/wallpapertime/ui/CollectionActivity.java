@@ -142,11 +142,8 @@ public class CollectionActivity extends AppCompatActivity implements WallpaperAd
                                 wallpaperUnsplash.setProfile_image_large(jsonObject3.getString(Constants.LARGE_PROFILE_IMAGE));*/
 
                                 JSONObject jsonObject4 = jsonObject.getJSONObject(Constants.URLS);
-                                wallpaperUnsplash.setUrls_raw(jsonObject4.getString(Constants.FULL));
-                                String splitted[] = jsonObject4.getString(Constants.FULL).split("/");
-                                String fileName = splitted[splitted.length - 1] + ".jpg";
-                                wallpaperUnsplash.setUrls_small(fileName);
-                                //wallpaperUnsplash.setUrls_raw(jsonObject4.getString(Constants.RAW));
+                                wallpaperUnsplash.setUrls_regular(jsonObject4.getString(Constants.REGULAR));
+                                 //wallpaperUnsplash.setUrls_raw(jsonObject4.getString(Constants.RAW));
                                 //wallpaperUnsplash.setUrls_regular(jsonObject4.getString(Constants.REGULAR));
                                 //wallpaperUnsplash.setUrls_small(jsonObject4.getString(Constants.SMALL));
                                 //wallpaperUnsplash.setUrls_thumb(jsonObject4.getString(Constants.THUMB));
@@ -212,8 +209,8 @@ public class CollectionActivity extends AppCompatActivity implements WallpaperAd
         intent.putExtra(Constants.MEDIUM_PROFILE_IMAGE, wallpapersList.get(clickedItemIndex).getProfile_image_medium());
         intent.putExtra(Constants.LARGE_PROFILE_IMAGE, wallpapersList.get(clickedItemIndex).getProfile_image_large());*/
         //intent.putExtra(Constants.RAW, wallpapersList.get(clickedItemIndex).getUrls_raw());
-        intent.putExtra(Constants.FULL, wallpapersList.get(clickedItemIndex).getUrls_full());
-        //intent.putExtra(Constants.REGULAR, wallpapersList.get(clickedItemIndex).getUrls_regular());
+        //intent.putExtra(Constants.FULL, wallpapersList.get(clickedItemIndex).getUrls_full());
+        intent.putExtra(Constants.REGULAR, wallpapersList.get(clickedItemIndex).getUrls_regular());
         //intent.putExtra(Constants.SMALL, wallpapersList.get(clickedItemIndex).getUrls_small());
         //intent.putExtra(Constants.THUMB, wallpapersList.get(clickedItemIndex).getUrls_thumb());
 
