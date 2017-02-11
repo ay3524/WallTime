@@ -59,7 +59,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
 
     private NavigationView navigationView;
     private DrawerLayout drawer;
-    private ImageView imgNavHeaderBg, imgProfile;
+    private ImageView imgProfile;
     private TextView txtName, txtWebsite, txtSignOut;
     ArrayList<WallpaperCollection> collections_list = new ArrayList<>();
     ArrayList<String> durations = new ArrayList<>();
@@ -98,7 +98,6 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         View navHeader = navigationView.getHeaderView(0);
         txtName = (TextView) navHeader.findViewById(R.id.name);
         txtWebsite = (TextView) navHeader.findViewById(R.id.website);
-        imgNavHeaderBg = (ImageView) navHeader.findViewById(R.id.img_header_bg);
         imgProfile = (ImageView) navHeader.findViewById(R.id.img_profile);
         txtSignOut = (TextView) navHeader.findViewById(R.id.signout);
 

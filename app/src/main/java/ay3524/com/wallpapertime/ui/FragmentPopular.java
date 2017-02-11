@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -139,6 +140,7 @@ public class FragmentPopular extends Fragment implements WallpaperAdapter.ListIt
             @Override
             public void onErrorResponse(VolleyError error) {
                 pb.setVisibility(View.GONE);
+                Toast.makeText(getActivity(), "Error While loading photos", Toast.LENGTH_SHORT).show();
                 VolleyLog.d("TAG", "Error: " + error.getMessage());
             }
         });

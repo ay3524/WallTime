@@ -31,5 +31,7 @@
     <string name="navigation_drawer_big_image">Navigation Drawer Big Image</string>
     <string name="account_image">Account Image</string>
     <string name="sign_out">Sign Out</string>
+    <string name="title_activity_photo_of_the_day">PhotoOfTheDay</string>
+    <string name="today_image">today image</string>
 
 </resources>

@@ -24,6 +24,7 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+
                 <action android:name="ay3524.com.wallpapertime.widget.WidgetActivity.ACTION_WIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
@@ -62,7 +63,6 @@
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <receiver android:name=".widget.WidgetActivity">
-
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -112,6 +112,15 @@
             </intent-filter>
         </receiver>
 
+        <activity
+            android:name=".ui.PhotoOfTheDay"
+            android:label="@string/title_activity_photo_of_the_day"
+            android:parentActivityName=".ui.ItemListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ay3524.com.wallpapertime.ui.ItemListActivity" />
+        </activity>
     </application>
 
 </manifest>
