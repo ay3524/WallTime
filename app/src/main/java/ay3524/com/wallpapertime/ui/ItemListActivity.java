@@ -3,6 +3,7 @@ package ay3524.com.wallpapertime.ui;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -14,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -37,6 +39,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,6 +76,8 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
     private static final int REQ_CODE = 9001;
 
     GoogleApiClient googleApiClient;
+    private int position_of_duration_spinner;
+    private MaterialSearchView searchView;
 
     @Override
     protected void onResume() {
@@ -137,15 +142,16 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
                         break;
                     case R.id.nav_photo_of_the_day:
                         drawer.closeDrawers();
-                        startActivity(new Intent(getApplicationContext(), PhotoOfTheDay.class));
+                        startActivity(new Intent(getApplicationContext(), PhotoOfTheDayActivity.class));
                         break;
                     case R.id.nav_downloads:
                         drawer.closeDrawers();
                         startActivity(new Intent(getApplicationContext(), MyDownloadsActivity.class));
                         break;
-                    case R.id.nav_settings:
-
-                        break;
+                    /*case R.id.nav_settings:
+                        drawer.closeDrawers();
+                        //startActivity(new Intent(getApplicationContext(), SettingActivity.class));
+                        break;*/
                     case R.id.nav_about_us:
                         drawer.closeDrawers();
                         return true;
@@ -246,13 +252,13 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         date_spinner.setOnItemSelectedListener(this);
 
 
-        ArrayAdapter<String> duration_adapter;
+        final ArrayAdapter<String> duration_adapter;
         if (spinner_collection_list.size() == 0) {
             getListOfCollections();
 
-            durations.add("1 Minutes");
-            durations.add("2 Minutes");
-            durations.add("3 Minutes");
+            durations.add("1 Hour");
+            durations.add("2 Hour");
+            durations.add("3 Hour");
             duration_adapter = new ArrayAdapter<>(ItemListActivity.this,
                     android.R.layout.simple_spinner_dropdown_item, durations);
             date_spinner.setAdapter(duration_adapter);
@@ -269,18 +275,24 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
 
         //Log.d("SPINNER2", String.valueOf(sp.getSelectedItem()));
         dialogBuilder.setTitle("Add Automation");
+
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
-                /*SharedPreferences sharedPreferences = getApplicationContext()
+                SharedPreferences sharedPreferences = getApplicationContext()
                         .getSharedPreferences("ay3524.com.wallpapertime", MODE_PRIVATE);
-                sharedPreferences.edit().putString("id", "136").apply();
+                sharedPreferences.edit().putString("id", collections_list.get(position_of_collection_spinner).getId()).apply();
+                sharedPreferences.edit().putInt("time", position_of_duration_spinner + 1).apply();
+                sharedPreferences.edit().putBoolean("automation", true).apply();
 
-                WallpaperSyncUtils.scheduleWallpaperChange(getApplicationContext());
-                Intent intentToSyncImmediately = new Intent(getApplicationContext(), WallpaperIntentService.class);
-                startService(intentToSyncImmediately);*/
+                Toast.makeText(ItemListActivity.this, collections_list.get(position_of_collection_spinner).getId() + "\n"
+                        + (position_of_duration_spinner + 1), Toast.LENGTH_SHORT).show();
 
-                Toast.makeText(ItemListActivity.this, collection_string + "\n" + duration_string + "\n" + collections_list.get(position_of_collection_spinner).getId(), Toast.LENGTH_SHORT).show();
+                //WallpaperSyncUtils.scheduleWallpaperChange(getApplicationContext(), constraint, position_of_duration_spinner);
+                //Intent intentToSyncImmediately = new Intent(getApplicationContext(), WallpaperIntentService.class);
+                //startService(intentToSyncImmediately);
+
+                //Toast.makeText(ItemListActivity.this, collection_string + "\n" + duration_string + "\n" + collections_list.get(position_of_collection_spinner).getId(), Toast.LENGTH_SHORT).show();
             }
         });
         dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -352,6 +364,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         }
         if (collection_spinner.getId() == R.id.durations) {
             duration_string = duration_spinner.getItemAtPosition(position).toString();
+            position_of_duration_spinner = position;
         }
     }
 
@@ -401,10 +414,6 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         }
     }
 
-    private void updateUI(boolean isLogin) {
-
-    }
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
@@ -418,5 +427,16 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleResult(result);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 }

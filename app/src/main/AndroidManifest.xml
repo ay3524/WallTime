@@ -19,6 +19,7 @@
             android:name=".ui.ItemListActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -113,13 +114,22 @@
         </receiver>
 
         <activity
-            android:name=".ui.PhotoOfTheDay"
+            android:name=".ui.PhotoOfTheDayActivity"
             android:label="@string/title_activity_photo_of_the_day"
             android:parentActivityName=".ui.ItemListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ay3524.com.wallpapertime.ui.ItemListActivity" />
+        </activity>
+        <activity
+            android:name=".ui.DownloadDetailActivity"
+            android:label="@string/title_activity_download_detail"
+            android:parentActivityName=".ui.MyDownloadsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ay3524.com.wallpapertime.ui.MyDownloadsActivity" />
         </activity>
     </application>
 

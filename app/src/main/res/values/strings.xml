@@ -36,4 +36,14 @@
     <string name="single_photo">single photo</string>
     <string name="heart_icon">heart icon</string>
 
+    <string name="wifi_pref_key" translatable="false">wifi</string>
+    <string name="wifi_pref_title">Automation Over Wifi Only</string>
+    <string name="wifi_summary_on">Enabled</string>
+    <string name="wifi_summary_off">Not Enabled</string>
+    <string name="charging_pref_key" translatable="false">charging</string>
+    <string name="charging_pref_title">Automation When Charging</string>
+    <string name="charging_summary_on">Enabled</string>
+    <string name="charging_summary_off">Not Enabled</string>
+    <string name="title_activity_download_detail">DownloadDetailActivity</string>
+
 </resources>
