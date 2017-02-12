@@ -34,6 +34,7 @@ public class MyDownloadsActivity extends AppCompatActivity implements WallpaperD
     WallpaperDownloadsAdapter wallpaperDownloadsAdapter;
     private GridLayoutManager gridLayoutManager;
     private RelativeLayout emptyView;
+    List<File> listOfFiles;
 
     @Override
     protected void onResume() {
@@ -80,7 +81,7 @@ public class MyDownloadsActivity extends AppCompatActivity implements WallpaperD
                     }
                 }
             });
-            List<File> listOfFiles = Arrays.asList(allFiles);
+            listOfFiles = Arrays.asList(allFiles);
             if (allFiles.length != 0) {
                 wallpaperDownloadsAdapter = new WallpaperDownloadsAdapter(listOfFiles, MyDownloadsActivity.this);
                 recyclerView.setAdapter(wallpaperDownloadsAdapter);
@@ -151,6 +152,8 @@ public class MyDownloadsActivity extends AppCompatActivity implements WallpaperD
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
-
+        Intent i = new Intent(getApplicationContext(),DownloadDetailActivity.class);
+        i.putExtra("url_file",listOfFiles.get(clickedItemIndex).getAbsolutePath());
+        startActivity(i);
     }
 }
