@@ -9,10 +9,12 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,7 +41,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,14 +55,14 @@ import ay3524.com.wallpapertime.model.WallpaperCollection;
 import ay3524.com.wallpapertime.utils.CircleTransform;
 import ay3524.com.wallpapertime.utils.Constants;
 
-public class ItemListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
+public class ItemListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, GoogleApiClient.OnConnectionFailedListener, SearchView.OnQueryTextListener {
 
     public static int navItemIndex = 0;
     //private static final String urlNavHeaderBg = "https://images.unsplash.com/photo-1484452330304-377cdeb05340?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&s=503f268f4cd99055517cc7ba13215db6";
     //private static final String urlProfileImg = "https://images.unsplash.com/profile-1470357472607-48d8b4cba2cc?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&cs=tinysrgb&fit=crop&h=128&w=128&s=f2cb264bbb4c3550f3e795b1ed4ccde8";
 
     private NavigationView navigationView;
-    private DrawerLayout drawer;
+    private DrawerLayout mDrawerLayout;
     private ImageView imgProfile;
     private TextView txtName, txtWebsite, txtSignOut;
     ArrayList<WallpaperCollection> collections_list = new ArrayList<>();
@@ -77,7 +78,8 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
 
     GoogleApiClient googleApiClient;
     private int position_of_duration_spinner;
-    private MaterialSearchView searchView;
+    private MenuItem mSearchItem;
+    private Toolbar mToolbar;
 
     @Override
     protected void onResume() {
@@ -90,9 +92,9 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle(getTitle());
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        mToolbar.setTitle(getTitle());
 
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this).addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions).build();
@@ -113,14 +115,14 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         loadNavHeader();
 
         setUpNavigationView();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
 
@@ -137,15 +139,15 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
                 switch (menuItem.getItemId()) {
                     //Replacing the main content with ContentFragment Which is our Inbox View;
                     case R.id.nav_auto:
-                        drawer.closeDrawers();
+                        mDrawerLayout.closeDrawers();
                         showAutomationDialog();
                         break;
                     case R.id.nav_photo_of_the_day:
-                        drawer.closeDrawers();
+                        mDrawerLayout.closeDrawers();
                         startActivity(new Intent(getApplicationContext(), PhotoOfTheDayActivity.class));
                         break;
                     case R.id.nav_downloads:
-                        drawer.closeDrawers();
+                        mDrawerLayout.closeDrawers();
                         startActivity(new Intent(getApplicationContext(), MyDownloadsActivity.class));
                         break;
                     /*case R.id.nav_settings:
@@ -153,10 +155,10 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
                         //startActivity(new Intent(getApplicationContext(), SettingActivity.class));
                         break;*/
                     case R.id.nav_about_us:
-                        drawer.closeDrawers();
+                        mDrawerLayout.closeDrawers();
                         return true;
                     case R.id.nav_privacy_policy:
-                        drawer.closeDrawers();
+                        mDrawerLayout.closeDrawers();
                         return true;
                     default:
                         navItemIndex = 0;
@@ -432,11 +434,26 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        searchView.setOnQueryTextListener(this);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Toast.makeText(this, query, Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        Toast.makeText(this, newText, Toast.LENGTH_SHORT).show();
+        return false;
     }
 }
