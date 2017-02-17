@@ -28,8 +28,8 @@
 
         <ImageView
             android:id="@+id/img_profile"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="@dimen/avatar_image_width"
+            android:layout_height="@dimen/avatar_image_height"
             android:contentDescription="@string/account_image"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
             android:visibility="invisible" />

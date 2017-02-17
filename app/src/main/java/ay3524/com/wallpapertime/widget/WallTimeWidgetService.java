@@ -8,14 +8,14 @@ import android.widget.RemoteViewsService;
  * Created by Ashish on 11-12-2016.
  */
 
-public class StockWidgetService extends RemoteViewsService {
+public class WallTimeWidgetService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         int appWidgetId = intent.getIntExtra(
                 AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
-        return new StockWidgetFactory(this.getApplicationContext(), intent);
+        return new WallTimeWidgetFactory(this.getApplicationContext(), intent);
     }
 }
 

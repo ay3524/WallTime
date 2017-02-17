@@ -2,33 +2,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frameLayout"
+    android:id="@+id/content_log"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="ay3524.com.wallpapertime.ui.LogActivity"
+    tools:showIn="@layout/activity_log">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/item_list"
+        android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="GridLayoutManager"
-        tools:context="ay3524.com.wallpapertime.ui.ItemListActivity"
-        tools:listitem="@layout/single_wallpaper">
-    </android.support.v7.widget.RecyclerView>
-
-    <ProgressBar
-        android:visibility="gone"
-        android:id="@+id/progressBar"
-        android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        tools:context="ay3524.com.wallpapertime.ui.LogActivity" />
 
     <RelativeLayout
-        android:visibility="gone"
         android:id="@+id/empty_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
+        android:layout_centerInParent="true"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/empty_shelter_image"
@@ -55,7 +47,7 @@
             android:layout_below="@+id/empty_title_text"
             android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif"
-            android:text="@string/there_might_be_some_problem_with_internet_connection"
+            android:text="@string/no_log_for_you_chill"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@android:color/black" />
     </RelativeLayout>

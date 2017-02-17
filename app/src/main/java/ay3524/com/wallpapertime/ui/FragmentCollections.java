@@ -1,11 +1,9 @@
 package ay3524.com.wallpapertime.ui;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +14,6 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
@@ -30,7 +27,11 @@ import ay3524.com.wallpapertime.adapter.WallpaperCategoryAdapter;
 import ay3524.com.wallpapertime.app.MyApplication;
 import ay3524.com.wallpapertime.model.WallpaperCollection;
 import ay3524.com.wallpapertime.utils.Constants;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
+import static ay3524.com.wallpapertime.utils.Constants.API_KEY;
+import static ay3524.com.wallpapertime.utils.Constants.CLIENT_ID;
 import static ay3524.com.wallpapertime.utils.Constants.STATE_WALLPAPERS;
 
 /**
@@ -39,15 +40,20 @@ import static ay3524.com.wallpapertime.utils.Constants.STATE_WALLPAPERS;
 
 public class FragmentCollections extends Fragment implements WallpaperCategoryAdapter.ListItemClickListener {
 
+    @BindView(R.id.item_list)
     RecyclerView recyclerView;
+    @BindView(R.id.progressBar)
+    ProgressBar pb;
+    @BindView(R.id.empty_view)
+    RelativeLayout emptyView;
+
     WallpaperCategoryAdapter adapter;
     ArrayList<WallpaperCollection> wallpapersList = new ArrayList<>();
-    private ProgressBar pb;
 
     @Override
     public void onResume() {
         super.onResume();
-        MyApplication.getInstance().trackScreenView("FragmentCollections");
+        MyApplication.getInstance().trackScreenView(getClass().getName());
     }
 
     @Nullable
@@ -56,21 +62,12 @@ public class FragmentCollections extends Fragment implements WallpaperCategoryAd
 
         View rootView = inflater.inflate(R.layout.single_tab_layout, container, false);
 
-        RelativeLayout emptyView = (RelativeLayout) rootView.findViewById(R.id.empty_view);
-
-        pb = (ProgressBar) rootView.findViewById(R.id.progressBar);
-
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.item_list);
+        ButterKnife.bind(this,rootView);
 
         recyclerView.setHasFixedSize(true);
-        GridLayoutManager gridLayoutManager;
-        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-            recyclerView.setLayoutManager(gridLayoutManager);
-        } else {
-            gridLayoutManager = new GridLayoutManager(getActivity(), 4);
-            recyclerView.setLayoutManager(gridLayoutManager);
-        }
+
+        Constants.setGridLayoutManager(getActivity(), recyclerView);
+
         if (savedInstanceState != null) {
             wallpapersList = savedInstanceState.getParcelableArrayList(STATE_WALLPAPERS);
             adapter = new WallpaperCategoryAdapter(wallpapersList, FragmentCollections.this);
@@ -87,12 +84,11 @@ public class FragmentCollections extends Fragment implements WallpaperCategoryAd
         }
 
         return rootView;
-
     }
 
     private void getListOfCollections() {
 
-        JsonArrayRequest req = new JsonArrayRequest("https://api.unsplash.com/collections/curated?client_id=1d6adf7ef9a462a70dca375dd1f8faf911481ea8e2715bf2666984671dbc4d39",
+        JsonArrayRequest req = new JsonArrayRequest(Constants.UNSPLASH_BASE_COLLECTION_CURATED + CLIENT_ID+API_KEY,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -109,32 +105,6 @@ public class FragmentCollections extends Fragment implements WallpaperCategoryAd
                                 JSONObject jsonObject3 = jsonObject.getJSONObject(Constants.COVER_PHOTOS);
                                 JSONObject jsonObject4 = jsonObject3.getJSONObject(Constants.URLS);
                                 wallpaperUnsplash.setUrls_regular(jsonObject4.getString(Constants.REGULAR));
-                                //String splitted[] = jsonObject4.getString(Constants.REGULAR).split("/");
-                                //String fileName = splitted[splitted.length - 1] + ".jpg";
-                                //wallpaperUnsplash.setUrls_small(fileName);
-                                //wallpaperUnsplash.setUrls_raw(jsonObject4.getString(Constants.RAW));
-                                //wallpaperUnsplash.setUrls_regular(jsonObject4.getString(Constants.FULL));
-                                //wallpaperUnsplash.setUrls_thumb(jsonObject4.getString(Constants.THUMB));
-
-                                /*wallpaperUnsplash.setId(jsonObject.getString("id"));
-                                wallpaperUnsplash.setWidth(jsonObject.getString("width"));
-                                wallpaperUnsplash.setHeight(jsonObject.getString("height"));
-                                wallpaperUnsplash.setColor(jsonObject.getString("color"));
-                                wallpaperUnsplash.setLikes(jsonObject.getString("likes"));
-
-                                JSONObject jsonObject2 = jsonObject.getJSONObject("user");
-                                wallpaperUnsplash.setUser_id(jsonObject2.getString("id"));
-                                JSONObject jsonObject3 = jsonObject2.getJSONObject("profile_image");
-                                wallpaperUnsplash.setProfile_image_small(jsonObject3.getString("small"));
-                                wallpaperUnsplash.setProfile_image_medium(jsonObject3.getString("medium"));
-                                wallpaperUnsplash.setProfile_image_large(jsonObject3.getString("large"));
-
-                                JSONObject jsonObject4 = jsonObject.getJSONObject("urls");
-                                wallpaperUnsplash.setUrls_raw(jsonObject4.getString("raw"));
-                                wallpaperUnsplash.setUrls_full(jsonObject4.getString("full"));
-                                wallpaperUnsplash.setUrls_regular(jsonObject4.getString("regular"));
-                                wallpaperUnsplash.setUrls_small(jsonObject4.getString("small"));
-                                wallpaperUnsplash.setUrls_thumb(jsonObject4.getString("thumb"));*/
 
                                 wallpapersList.add(wallpaperUnsplash);
 
@@ -151,11 +121,11 @@ public class FragmentCollections extends Fragment implements WallpaperCategoryAd
             @Override
             public void onErrorResponse(VolleyError error) {
                 pb.setVisibility(View.GONE);
-                Toast.makeText(getActivity(), "Slow Internet Connection...May take while", Toast.LENGTH_SHORT).show();
-                if (wallpapersList.size() == 0){
+                Toast.makeText(getActivity(), getString(R.string.slow_message_toast), Toast.LENGTH_SHORT).show();
+                if (wallpapersList.size() == 0) {
                     getListOfCollections();
                 }
-                    VolleyLog.d("TAG", "Error: " + error.getMessage());
+                //VolleyLog.d("TAG", "Error: " + error.getMessage());
             }
         });
 
@@ -171,11 +141,7 @@ public class FragmentCollections extends Fragment implements WallpaperCategoryAd
         intent.putExtra(Constants.ID, wallpapersList.get(clickedItemIndex).getId());
         intent.putExtra(Constants.TITLE, wallpapersList.get(clickedItemIndex).getTitle());
         intent.putExtra(Constants.TOTAL_PHOTOS, wallpapersList.get(clickedItemIndex).getTotal_photos());
-        //intent.putExtra(Constants.RAW, wallpapersList.get(clickedItemIndex).getUrls_raw());
-        //intent.putExtra(Constants.FULL, wallpapersList.get(clickedItemIndex).getUrls_full());
-        //intent.putExtra(Constants.REGULAR, wallpapersList.get(clickedItemIndex).getUrls_regular());
-        //intent.putExtra(Constants.SMALL, wallpapersList.get(clickedItemIndex).getUrls_small());
-        //intent.putExtra(Constants.THUMB, wallpapersList.get(clickedItemIndex).getUrls_thumb());
+
         startActivity(intent);
     }
 

@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <bool name="isTablet">false</bool>
-
-    <bool name="pref_wifi_def_value">false</bool>
-    <bool name="pref_charging_def_value">false</bool>
 </resources>

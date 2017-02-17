@@ -6,29 +6,29 @@
         <item
             android:id="@+id/nav_auto"
             android:icon="@drawable/ic_photo_library_black_24dp"
-            android:title="Automation" />
+            android:title="@string/automation" />
         <item
             android:id="@+id/nav_photo_of_the_day"
             android:icon="@drawable/bing_icon"
-            android:title="Photo of the day" />
+            android:title="@string/photo_of_the_day" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings_black_24dp"
-            android:title="Settings" />
+            android:title="@string/logs" />
         <item
             android:id="@+id/nav_downloads"
             android:icon="@android:drawable/stat_sys_download"
-            android:title="My Downloads" />
+            android:title="@string/my_downloads" />
     </group>
 
-    <item android:title="Other">
+    <item android:title="@string/other">
         <menu>
             <item
                 android:id="@+id/nav_about_us"
-                android:title="About Us" />
+                android:title="@string/about_us" />
             <item
                 android:id="@+id/nav_privacy_policy"
-                android:title="Privacy Policy" />
+                android:title="@string/privacy_policy" />
         </menu>
     </item>
 

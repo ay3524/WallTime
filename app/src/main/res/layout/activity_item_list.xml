@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
-        app:elevation="0dp">
+        app:elevation="@dimen/app_bar_elevation_list_item">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabIndicatorColor="@android:color/white"
-            app:tabIndicatorHeight="4dp" />
+            app:tabIndicatorHeight="@dimen/tab_indicator_height" />
         <!-- app:tabMode="fixed"-->
 
     </android.support.design.widget.AppBarLayout>
@@ -35,7 +35,7 @@
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#e0e0e0"
+        android:background="@color/material_ripple_light"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.v7.widget.RecyclerView
@@ -46,12 +46,4 @@
             tools:context="ay3524.com.wallpapertime.ui.ItemListActivity"
             tools:listitem="@layout/single_wallpaper" />
     </android.support.v4.view.ViewPager>
-
-    <!--  <android.support.design.widget.FloatingActionButton
-          android:id="@+id/fab"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="bottom|end"
-          android:layout_margin="@dimen/fab_margin"
-          app:srcCompat="@android:drawable/ic_dialog_email" />-->
 </android.support.design.widget.CoordinatorLayout>

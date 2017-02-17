@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:alpha="0.5"
-        android:background="#AA000000"
+        android:background="@color/transparent_color"
         app:layout_collapseMode="pin"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -23,26 +22,30 @@
         android:contentDescription="@string/collection_cover"/>
 
     <LinearLayout
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="@dimen/margin_top_photo_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginStart="@dimen/margin_left_photo_text"
+        android:layout_marginLeft="@dimen/margin_left_photo_text"
+        android:layout_marginBottom="@dimen/margin_bottom_photo_text"
+        android:layout_marginRight="@dimen/margin_right_photo_text"
+        android:layout_marginEnd="@dimen/margin_right_photo_text"
         android:background="@drawable/bg_rounded_corner_for_wall"
         android:orientation="horizontal"
-        android:padding="5dip">
+        android:padding="@dimen/linear_padding">
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginLeft="@dimen/photo_text_margin_left"
+            android:layout_marginStart="@dimen/photo_text_margin_left"
+            android:layout_marginRight="@dimen/photo_text_margin_right"
+            android:layout_marginEnd="@dimen/photo_text_margin_right"
             android:alpha="0.5"
             android:textColor="#000"
-            android:textSize="15sp"
+            android:textSize="@dimen/photo_text_size"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -51,17 +54,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:layout_margin="15dp"
-        android:background="#AA000000"
-        android:orientation="horizontal"
-        android:textColor="#ffffffff"
-        android:textSize="18sp">
+        android:layout_margin="@dimen/linear_margin"
+        android:background="@color/transparent_color"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/dwnld"
-            android:layout_width="500dp"
+            android:layout_width="@dimen/button_width"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/button_margin"
             android:layout_weight="1"
             android:background="@drawable/item_selector"
             android:text="@string/download"
@@ -69,9 +70,9 @@
 
         <Button
             android:id="@+id/set_as_wallpaper"
-            android:layout_width="500dp"
+            android:layout_width="@dimen/button_width"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/button_margin"
             android:layout_weight="1"
             android:background="@drawable/item_selector"
             android:text="@string/set_it"

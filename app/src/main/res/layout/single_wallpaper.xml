@@ -7,7 +7,7 @@
     <ImageView
         android:id="@+id/wallpaperPoster"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="@dimen/collection_frame_size"
         android:adjustViewBounds="true"
         android:contentDescription="@string/wallpaper"
         android:scaleType="centerCrop" />
@@ -15,12 +15,13 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_margin="@dimen/linear_five_dp_margin"
         android:background="@drawable/bg_rounded_corner_for_wall"
         android:orientation="horizontal"
-        android:padding="5dip">
+        android:padding="@dimen/linear_five_dp_padding">
 
         <ImageView
+            android:contentDescription="@string/heart_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_favorite" />
@@ -30,11 +31,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="@dimen/like_text_margin_left"
+            android:layout_marginStart="@dimen/like_text_margin_left"
             android:alpha="0.5"
-            android:text="22"
-            android:textColor="#000"
-            android:textSize="15sp"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/like_text_size"
             android:textStyle="bold" />
     </LinearLayout>
 

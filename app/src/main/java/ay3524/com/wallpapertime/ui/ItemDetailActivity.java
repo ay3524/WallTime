@@ -34,22 +34,29 @@ import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.app.MyApplication;
 import ay3524.com.wallpapertime.utils.Constants;
 import ay3524.com.wallpapertime.utils.ImageDownloadTask;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static ay3524.com.wallpapertime.utils.Constants.buildUrl;
 
 public class ItemDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button dwnld, set;
     private String fileName, image_path_with_folder;
-    private String id, urls_raw, urls_full, urls_small, urls_regular, urls_thumb;
+    private String urls_regular;
     private String activityOrFragment;
+    @BindView(R.id.background)
     ImageView image;
-    private String detail_url;
+    @BindView(R.id.detail_toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.dwnld)
+    Button dwnld;
+    @BindView(R.id.set_as_wallpaper)
+    Button set;
 
     @Override
     protected void onResume() {
         super.onResume();
-        MyApplication.getInstance().trackScreenView("ItemDetailActivity");
+        MyApplication.getInstance().trackScreenView(getClass().getName());
     }
 
     @Override
@@ -60,51 +67,33 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         }
         setContentView(R.layout.item_detail);
 
+        ButterKnife.bind(this);
+
         checkPermissionForMarshmallowAndAbove();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
-
-        if (getIntent().getExtras() != null) {
-            activityOrFragment = getIntent().getStringExtra("class");
-            id = getIntent().getStringExtra(Constants.ID);
-            //urls_raw = getIntent().getStringExtra(Constants.RAW);
-            //urls_full = getIntent().getStringExtra(Constants.FULL);
-            urls_regular = getIntent().getStringExtra(Constants.REGULAR);
-            //String split[] = urls_regular.split("&");
-            //String url = split[0] + split[1] + split[2] + split[3] + split[4] + "w=300" + split[6] + split[7];
-            //Toast.makeText(this, url, Toast.LENGTH_SHORT).show();
-            //urls_small = getIntent().getStringExtra(Constants.SMALL);
-            //urls_thumb = getIntent().getStringExtra(Constants.THUMB);
-            //String splitted[] = urls_regular.split("/");
-            //Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
-            fileName = id + ".jpg";
-            image_path_with_folder = Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName;
-        }
-
-        dwnld = (Button) findViewById(R.id.dwnld);
-        dwnld.setOnClickListener(this);
-        set = (Button) findViewById(R.id.set_as_wallpaper);
-        set.setOnClickListener(this);
-
-        /*Glide.with(this).load(getIntent().getStringExtra())
-                .crossFade()
-                .thumbnail(0.5f)
-                .placeholder(R.mipmap.ic_launcher)
-                .error(R.mipmap.ic_launcher)
-                .bitmapTransform(new CircleTransform(this))
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(userImage);*/
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        image = (ImageView) findViewById(R.id.background);
-        //detail_url = buildUrl(urls_regular, "800");
+        if (getIntent().getExtras() != null) {
+            activityOrFragment = getIntent().getStringExtra(Constants.CLASS);
+            String id = getIntent().getStringExtra(Constants.ID);
+            urls_regular = getIntent().getStringExtra(Constants.REGULAR);
+
+            fileName = id + Constants.JPG;
+            image_path_with_folder = Environment.getExternalStorageDirectory().toString() + Constants.WALLTIME_PATH + fileName;
+        }
+
+        dwnld.setOnClickListener(this);
+
+        set.setOnClickListener(this);
+
+
         Glide.with(getApplicationContext())
-                .load(buildUrl(urls_regular, "200"))
+                .load(buildUrl(urls_regular, Constants.PHOTO_SIZE_200))
                 .asBitmap()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(new SimpleTarget<Bitmap>() {
@@ -114,7 +103,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
                         image.setImageBitmap(bitmap);
 
                         Glide.with(getApplicationContext())
-                                .load(buildUrl(urls_regular, "800"))
+                                .load(buildUrl(urls_regular, Constants.PHOTO_SIZE_800))
                                 .asBitmap()
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(new SimpleTarget<Bitmap>() {
@@ -126,11 +115,6 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
                                 });
                     }
                 });
-        /*Glide.with(getApplicationContext()).load(url)
-                .crossFade()
-                .thumbnail(0.5f)
-                .placeholder(R.mipmap.ic_launcher)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);*/
     }
 
     private void checkPermissionForMarshmallowAndAbove() {
@@ -153,9 +137,9 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
                             && ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setMessage("To get storage access you have to allow us access to your sd card content.");
-                        builder.setTitle("Storage");
-                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        builder.setMessage(getString(R.string.permission_message));
+                        builder.setTitle(getString(R.string.storage));
+                        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 ActivityCompat.requestPermissions(ItemDetailActivity.this, storage_permissions, 0);
@@ -184,7 +168,7 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
             try {
                 wallpaperManager.setBitmap(bitmap);
             } catch (IOException e) {
-                Toast.makeText(ItemDetailActivity.this, "Error While Image Setting", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ItemDetailActivity.this, getString(R.string.error_set_image), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
         } catch (NullPointerException ignored) {
@@ -195,8 +179,14 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            if (activityOrFragment.equalsIgnoreCase("Fragment")) {
+            if (activityOrFragment.equalsIgnoreCase(Constants.FRAGMENT)) {
                 Intent intent = new Intent(this, ItemListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                navigateUpTo(intent);
+                return true;
+            }
+            if (activityOrFragment.equalsIgnoreCase(Constants.SEARCHACTIVITY)) {
+                Intent intent = new Intent(this, SearchActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 navigateUpTo(intent);
                 return true;
@@ -218,20 +208,19 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
 
                 if (!(new File(image_path_with_folder).exists())) {
 
-                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(buildUrl(urls_regular, "1100"));
+                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(buildUrl(urls_regular, Constants.PHOTO_SIZE_1100));
                 } else {
-                    Toast.makeText(ItemDetailActivity.this, "Image Already Downloaded", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ItemDetailActivity.this, getString(R.string.dwnld_image), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.set_as_wallpaper:
 
                 if (!(new File(image_path_with_folder).exists())) {
-                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(buildUrl(urls_regular, "1100"));
+                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(buildUrl(urls_regular, Constants.PHOTO_SIZE_1100));
                     setAsWallpaper();
 
                 } else {
                     setAsWallpaper();
-                    Toast.makeText(ItemDetailActivity.this, "Setting wallpaper successfull", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

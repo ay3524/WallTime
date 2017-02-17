@@ -57,7 +57,7 @@
             android:fontFamily="sans-serif"
             android:text="@string/there_might_be_some_problem_with_internet_connection"
             android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="#000" />
+            android:textColor="@android:color/black" />
     </RelativeLayout>
 
 </RelativeLayout>

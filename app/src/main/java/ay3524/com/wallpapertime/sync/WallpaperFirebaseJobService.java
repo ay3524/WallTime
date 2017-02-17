@@ -40,6 +40,6 @@ public class WallpaperFirebaseJobService extends JobService {
         if (mFetchWallpaperTask != null) {
             mFetchWallpaperTask.cancel(true);
         }
-        return true;
+        return false;
     }
 }

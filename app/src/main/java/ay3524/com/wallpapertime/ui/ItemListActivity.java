@@ -29,7 +29,6 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -52,19 +51,32 @@ import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.adapter.ViewPagerAdapter;
 import ay3524.com.wallpapertime.app.MyApplication;
 import ay3524.com.wallpapertime.model.WallpaperCollection;
+import ay3524.com.wallpapertime.sync.WallpaperIntentService;
+import ay3524.com.wallpapertime.sync.WallpaperSyncUtils;
 import ay3524.com.wallpapertime.utils.CircleTransform;
 import ay3524.com.wallpapertime.utils.Constants;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static ay3524.com.wallpapertime.utils.Constants.API_KEY;
+import static ay3524.com.wallpapertime.utils.Constants.CLIENT_ID;
 
 public class ItemListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, GoogleApiClient.OnConnectionFailedListener, SearchView.OnQueryTextListener {
 
     public static int navItemIndex = 0;
-    //private static final String urlNavHeaderBg = "https://images.unsplash.com/photo-1484452330304-377cdeb05340?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&s=503f268f4cd99055517cc7ba13215db6";
-    //private static final String urlProfileImg = "https://images.unsplash.com/profile-1470357472607-48d8b4cba2cc?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&cs=tinysrgb&fit=crop&h=128&w=128&s=f2cb264bbb4c3550f3e795b1ed4ccde8";
 
-    private NavigationView navigationView;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+
+    TextView txtName;
+    TextView txtWebsite;
+    TextView txtSignOut;
+
     private DrawerLayout mDrawerLayout;
     private ImageView imgProfile;
-    private TextView txtName, txtWebsite, txtSignOut;
+
     ArrayList<WallpaperCollection> collections_list = new ArrayList<>();
     ArrayList<String> durations = new ArrayList<>();
     ArrayList<String> spinner_collection_list = new ArrayList<>();
@@ -78,13 +90,11 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
 
     GoogleApiClient googleApiClient;
     private int position_of_duration_spinner;
-    private MenuItem mSearchItem;
-    private Toolbar mToolbar;
 
     @Override
     protected void onResume() {
         super.onResume();
-        MyApplication.getInstance().trackScreenView("ItemListActivity");
+        MyApplication.getInstance().trackScreenView(getClass().getName());
     }
 
     @Override
@@ -92,14 +102,13 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
+
         setSupportActionBar(mToolbar);
         mToolbar.setTitle(getTitle());
 
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this).addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions).build();
-
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         // Navigation view header
         View navHeader = navigationView.getHeaderView(0);
@@ -150,10 +159,10 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
                         mDrawerLayout.closeDrawers();
                         startActivity(new Intent(getApplicationContext(), MyDownloadsActivity.class));
                         break;
-                    /*case R.id.nav_settings:
-                        drawer.closeDrawers();
-                        //startActivity(new Intent(getApplicationContext(), SettingActivity.class));
-                        break;*/
+                    case R.id.nav_settings:
+                        mDrawerLayout.closeDrawers();
+                        startActivity(new Intent(getApplicationContext(), LogActivity.class));
+                        break;
                     case R.id.nav_about_us:
                         mDrawerLayout.closeDrawers();
                         return true;
@@ -186,7 +195,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
     private void loadNavHeader() {
         // name, website
         //txtName.setText("Ashish Yadav");
-        txtWebsite.setText("Sign In");
+        txtWebsite.setText(getString(R.string.sign_in));
         txtWebsite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -202,23 +211,14 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
                         txtName.setVisibility(View.INVISIBLE);
                         //txtWebsite.setVisibility(View.GONE);
                         imgProfile.setVisibility(View.INVISIBLE);
-                        txtWebsite.setText("Sign In");
+                        txtWebsite.setText(getString(R.string.sign_in));
                         txtWebsite.setClickable(true);
                         txtSignOut.setVisibility(View.INVISIBLE);
-                        Toast.makeText(ItemListActivity.this, "Logged Out Successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ItemListActivity.this, getString(R.string.logged_out), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         });
-
-        // loading header background image
-        // Loading profile image
-        /*Glide.with(this).load(R.mipmap.ic_launcher)
-                .crossFade()
-                .thumbnail(0.5f)
-                .bitmapTransform(new CircleTransform(this))
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imgProfile);*/
 
     }
 
@@ -234,9 +234,9 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new FragmentCollections(), "Collections");
-        adapter.addFragment(new FragmentDailyNew(), "Daily New");
-        adapter.addFragment(new FragmentPopular(), "Popular");
+        adapter.addFragment(new FragmentCollections(), getString(R.string.collection));
+        adapter.addFragment(new FragmentDailyNew(), getString(R.string.daily_new));
+        adapter.addFragment(new FragmentPopular(), getString(R.string.popular));
         viewPager.setAdapter(adapter);
     }
 
@@ -258,9 +258,9 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         if (spinner_collection_list.size() == 0) {
             getListOfCollections();
 
-            durations.add("1 Hour");
-            durations.add("2 Hour");
-            durations.add("3 Hour");
+            durations.add(getString(R.string.one_hour));
+            durations.add(getString(R.string.two_hour));
+            durations.add(getString(R.string.three_hour));
             duration_adapter = new ArrayAdapter<>(ItemListActivity.this,
                     android.R.layout.simple_spinner_dropdown_item, durations);
             date_spinner.setAdapter(duration_adapter);
@@ -275,29 +275,29 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
             total_photos.setText(total_photos_value);
         }
 
-        //Log.d("SPINNER2", String.valueOf(sp.getSelectedItem()));
-        dialogBuilder.setTitle("Add Automation");
+         dialogBuilder.setTitle(getString(R.string.add_automation));
 
-        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+        dialogBuilder.setPositiveButton(getString(R.string.done), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
-                SharedPreferences sharedPreferences = getApplicationContext()
-                        .getSharedPreferences("ay3524.com.wallpapertime", MODE_PRIVATE);
-                sharedPreferences.edit().putString("id", collections_list.get(position_of_collection_spinner).getId()).apply();
-                sharedPreferences.edit().putInt("time", position_of_duration_spinner + 1).apply();
-                sharedPreferences.edit().putBoolean("automation", true).apply();
+                if (spinner_collection_list.isEmpty()) {
+                    Toast.makeText(ItemListActivity.this, getString(R.string.data_not_fetched), Toast.LENGTH_SHORT).show();
+                } else {
 
-                Toast.makeText(ItemListActivity.this, collections_list.get(position_of_collection_spinner).getId() + "\n"
-                        + (position_of_duration_spinner + 1), Toast.LENGTH_SHORT).show();
+                    SharedPreferences sharedPreferences = getApplicationContext()
+                            .getSharedPreferences(getPackageName(), MODE_PRIVATE);
+                    sharedPreferences.edit().putString(Constants.ID, collections_list.get(position_of_collection_spinner).getId()).apply();
+                    sharedPreferences.edit().putInt(Constants.TIME, position_of_duration_spinner + 1).apply();
+                    sharedPreferences.edit().putBoolean(Constants.AUTOMATION, true).apply();
 
-                //WallpaperSyncUtils.scheduleWallpaperChange(getApplicationContext(), constraint, position_of_duration_spinner);
-                //Intent intentToSyncImmediately = new Intent(getApplicationContext(), WallpaperIntentService.class);
-                //startService(intentToSyncImmediately);
+                    WallpaperSyncUtils.scheduleWallpaperChange(getApplicationContext(), position_of_duration_spinner);
+                    Intent intentToSyncImmediately = new Intent(getApplicationContext(), WallpaperIntentService.class);
+                    startService(intentToSyncImmediately);
+                }
 
-                //Toast.makeText(ItemListActivity.this, collection_string + "\n" + duration_string + "\n" + collections_list.get(position_of_collection_spinner).getId(), Toast.LENGTH_SHORT).show();
             }
         });
-        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        dialogBuilder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
 
             }
@@ -308,7 +308,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
 
     private void getListOfCollections() {
 
-        JsonArrayRequest req = new JsonArrayRequest("https://api.unsplash.com/collections/curated?client_id=1d6adf7ef9a462a70dca375dd1f8faf911481ea8e2715bf2666984671dbc4d39",
+        JsonArrayRequest req = new JsonArrayRequest(Constants.UNSPLASH_BASE_COLLECTION_CURATED + CLIENT_ID + API_KEY,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -338,17 +338,15 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
                                 android.R.layout.simple_spinner_dropdown_item, spinner_collection_list);
                         collections_spinner.setAdapter(spinner_collection_adapter);
                         total_photos.setText(total_photos_value);
-                        //pb.setVisibility(View.GONE);
+
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                //pb.setVisibility(View.GONE);
-                VolleyLog.d("TAG", "Error: " + error.getMessage());
+
             }
         });
 
-        // Adding request to request queue
         MyApplication.getInstance().addToRequestQueue(req,
                 Constants.TAG_JSON_ARRAY);
     }
@@ -437,6 +435,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         MenuItem menuItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
         searchView.setOnQueryTextListener(this);
+        //searchView.setIconified(false);
         return true;
     }
 
@@ -448,12 +447,18 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
     @Override
     public boolean onQueryTextSubmit(String query) {
         Toast.makeText(this, query, Toast.LENGTH_SHORT).show();
+        Intent i = new Intent(getApplicationContext(), SearchActivity.class);
+        i.putExtra(Constants.QUERY, query.trim());
+        startActivity(i);
+
+        invalidateOptionsMenu();
+
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        Toast.makeText(this, newText, Toast.LENGTH_SHORT).show();
+
         return false;
     }
 }

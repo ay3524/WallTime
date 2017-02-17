@@ -46,5 +46,59 @@
     <string name="charging_summary_off">Not Enabled</string>
     <string name="title_activity_download_detail">DownloadDetailActivity</string>
     <string name="search">Search</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="action_share">Share</string>
+    <string name="choose_collection">Choose Collection</string>
+    <string name="choose_duration">Choose Duration</string>
+    <string name="total_photos">Total Photos :</string>
+    <string name="stop_current_automation">STOP CURRENT AUTOMATION</string>
+
+    <string name="slow_message_toast">Slow Internet Connection…May take while</string>
+    <string name="permission_message">To get storage access you have to allow us access to your sd card content.</string>
+    <string name="storage">Storage</string>
+    <string name="ok">OK</string>
+    <string name="dwnld_image">Image Already Downloaded</string>
+    <string name="set_image">Error While Image Setting</string>
+    <string name="sign_in">Sign In</string>
+    <string name="logged_out">Logged Out Successfully</string>
+    <string name="collection">Collections</string>
+    <string name="daily_new">Daily New</string>
+    <string name="popular">Popular</string>
+
+    <string name="one_hour">1 Hour</string>
+    <string name="two_hour">2 Hour</string>
+    <string name="three_hour">3 Hour</string>
+
+    <string name="add_automation">Add Automation</string>
+    <string name="done">Done</string>
+    <string name="data_not_fetched">Data Not Fetched…</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="no_files">No Files</string>
+    <string name="folder_not_created">Folder Not Created</string>
+
+    <string name="no_wall_del">No wallpaper to delete :(</string>
+    <string name="yes_wall_del">All wallpaper deleted :)</string>
+
+    <string name="action_del_msg">This action will delete all your downloaded wallpaper</string>
+    <string name="del">Delete</string>
+    <string name="query_wrong">Query inappropriate</string>
+    <string name="try_diff">Try different search..its the same</string>
+    <string name="dwnld_wait">Downloading Image. Please wait…</string>
+    <string name="dwnld_cancel">Download Cancelled</string>
+    <string name="dwnld_error">Download error..</string>
+    <string name="dwnld_success">File downloaded</string>
+    <string name="title_activity_log">LogActivity</string>
+    <string name="no_log_for_you_chill">No Log for you Chill…</string>
+
+    <string name="dwnld">Downloaded : </string>
+    <string name="no_wallpaper_saved">No Wallpaper Saved :(</string>
+    <string name="automation">Automation</string>
+    <string name="photo_of_the_day">Photo of the day</string>
+    <string name="logs">Logs</string>
+    <string name="my_downloads">My Downloads</string>
+    <string name="other">Other</string>
+    <string name="about_us">About Us</string>
+    <string name="privacy_policy">Privacy Policy</string>
 
 </resources>

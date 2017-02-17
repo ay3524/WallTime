@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 
 public class WallpaperDownloadsAdapter extends RecyclerView.Adapter<WallpaperDownloadsAdapter.WallpaperViewHolder> {
 
-    List<File> wallpaperDownloads;
+    private List<File> wallpaperDownloads;
     private Context context;
     private ListItemClickListener clickListener;
 
@@ -41,9 +41,8 @@ public class WallpaperDownloadsAdapter extends RecyclerView.Adapter<WallpaperDow
     public WallpaperViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        boolean shouldAttachToParentImmediately = false;
 
-        View view = inflater.inflate(R.layout.single_collection_item, parent, shouldAttachToParentImmediately);
+        View view = inflater.inflate(R.layout.single_collection_item, parent, false);
         return new WallpaperDownloadsAdapter.WallpaperViewHolder(view);
     }
 
@@ -61,7 +60,7 @@ public class WallpaperDownloadsAdapter extends RecyclerView.Adapter<WallpaperDow
         return wallpaperDownloads == null ? 0 : wallpaperDownloads.size();
     }
 
-    public class WallpaperViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class WallpaperViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.collection_cover)
         ImageView collection_cover;
         @BindView(R.id.collection_name)

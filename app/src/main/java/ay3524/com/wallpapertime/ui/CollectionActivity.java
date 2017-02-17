@@ -1,11 +1,9 @@
 package ay3524.com.wallpapertime.ui;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -15,7 +13,6 @@ import android.widget.RelativeLayout;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
@@ -29,71 +26,65 @@ import ay3524.com.wallpapertime.adapter.WallpaperAdapter;
 import ay3524.com.wallpapertime.app.MyApplication;
 import ay3524.com.wallpapertime.model.WallpaperUnsplash;
 import ay3524.com.wallpapertime.utils.Constants;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
+import static ay3524.com.wallpapertime.utils.Constants.API_KEY;
+import static ay3524.com.wallpapertime.utils.Constants.CLIENT_ID;
+import static ay3524.com.wallpapertime.utils.Constants.PHOTO_CLIENT_ID;
 import static ay3524.com.wallpapertime.utils.Constants.STATE_WALLPAPERS;
 
 public class CollectionActivity extends AppCompatActivity implements WallpaperAdapter.ListItemClickListener {
 
-    private String urls_raw;
-    private String urls_full;
-    private String urls_regular;
-    private String urls_small;
-    private String urls_thumb;
+
     private String title;
-    private String id;
-    private String total_photos;
     private String urls_collection_list;
 
-    private RecyclerView recyclerView;
+    @BindView(R.id.item_list)
+    RecyclerView recyclerView;
     private ArrayList<WallpaperUnsplash> wallpapersList = new ArrayList<>();
     private WallpaperAdapter adapter;
-    private GridLayoutManager gridLayoutManager;
+    @BindView(R.id.progressBar)
     ProgressBar pb;
-    private RelativeLayout emptyView;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.empty_view)
+    RelativeLayout emptyView;
 
     @Override
     protected void onResume() {
         super.onResume();
-        MyApplication.getInstance().trackScreenView("CollectionActivity");
+        MyApplication.getInstance().trackScreenView(getClass().getName());
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
+
         setSupportActionBar(toolbar);
 
-        emptyView = (RelativeLayout) findViewById(R.id.empty_view);
+        ActionBar actionBar = getSupportActionBar();
 
-        pb = (ProgressBar) findViewById(R.id.progressBar);
-
-        recyclerView = (RecyclerView) findViewById(R.id.item_list);
         recyclerView.setHasFixedSize(true);
 
         if (getIntent().getExtras() != null) {
 
-            id = getIntent().getStringExtra(Constants.ID);
+            String id = getIntent().getStringExtra(Constants.ID);
             title = getIntent().getStringExtra(Constants.TITLE);
-            total_photos = getIntent().getStringExtra(Constants.TOTAL_PHOTOS);
-            //urls_raw = getIntent().getStringExtra(Constants.RAW);
-            //urls_full = getIntent().getStringExtra(Constants.FULL);
-            //urls_regular = getIntent().getStringExtra(Constants.REGULAR);
-            //urls_small = getIntent().getStringExtra(Constants.SMALL);
-            //urls_thumb = getIntent().getStringExtra(Constants.THUMB);
-            urls_collection_list = "https://api.unsplash.com/collections/curated/" + id + "/photos?client_id=1d6adf7ef9a462a70dca375dd1f8faf911481ea8e2715bf2666984671dbc4d39";
-            //String splitted[] = urls_raw.split("/");
-            //fileName = splitted[splitted.length - 1]+".jpg";
-            //image_path_with_folder = Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName;
+
+            //String total_photos = getIntent().getStringExtra(Constants.TOTAL_PHOTOS);
+            urls_collection_list = Constants.UNSPLASH_BASE_COLLECTION_CURATED +"/"+ id + PHOTO_CLIENT_ID + CLIENT_ID + API_KEY;
         }
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            gridLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
-            recyclerView.setLayoutManager(gridLayoutManager);
-        } else {
-            gridLayoutManager = new GridLayoutManager(getApplicationContext(), 4);
-            recyclerView.setLayoutManager(gridLayoutManager);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(title);
         }
+
+        Constants.setGridLayoutManager(getApplicationContext(),recyclerView);
+
         if (savedInstanceState != null) {
             wallpapersList = savedInstanceState.getParcelableArrayList(STATE_WALLPAPERS);
             adapter = new WallpaperAdapter(wallpapersList, CollectionActivity.this);
@@ -107,12 +98,6 @@ public class CollectionActivity extends AppCompatActivity implements WallpaperAd
 
                 emptyView.setVisibility(View.VISIBLE);
             }
-        }
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(title);
         }
     }
 
@@ -129,24 +114,11 @@ public class CollectionActivity extends AppCompatActivity implements WallpaperAd
                                 WallpaperUnsplash wallpaperUnsplash = new WallpaperUnsplash();
                                 JSONObject jsonObject = response.getJSONObject(i);
                                 wallpaperUnsplash.setId(jsonObject.getString(Constants.ID));
-                                //wallpaperUnsplash.setWidth(jsonObject.getString(Constants.WIDTH));
-                                //wallpaperUnsplash.setHeight(jsonObject.getString(Constants.HEIGHT));
-                                //wallpaperUnsplash.setColor(jsonObject.getString(Constants.COLOR));
-                                wallpaperUnsplash.setLikes(jsonObject.getString(Constants.LIKES));
 
-                                /*JSONObject jsonObject2 = jsonObject.getJSONObject(Constants.USER);
-                                wallpaperUnsplash.setUser_id(jsonObject2.getString(Constants.ID));
-                                JSONObject jsonObject3 = jsonObject2.getJSONObject(Constants.PROFILE_IMAGE);
-                                wallpaperUnsplash.setProfile_image_small(jsonObject3.getString(Constants.SMALL_PROFILE_IMAGE));
-                                wallpaperUnsplash.setProfile_image_medium(jsonObject3.getString(Constants.MEDIUM_PROFILE_IMAGE));
-                                wallpaperUnsplash.setProfile_image_large(jsonObject3.getString(Constants.LARGE_PROFILE_IMAGE));*/
+                                wallpaperUnsplash.setLikes(jsonObject.getString(Constants.LIKES));
 
                                 JSONObject jsonObject4 = jsonObject.getJSONObject(Constants.URLS);
                                 wallpaperUnsplash.setUrls_regular(jsonObject4.getString(Constants.REGULAR));
-                                 //wallpaperUnsplash.setUrls_raw(jsonObject4.getString(Constants.RAW));
-                                //wallpaperUnsplash.setUrls_regular(jsonObject4.getString(Constants.REGULAR));
-                                //wallpaperUnsplash.setUrls_small(jsonObject4.getString(Constants.SMALL));
-                                //wallpaperUnsplash.setUrls_thumb(jsonObject4.getString(Constants.THUMB));
 
                                 wallpapersList.add(wallpaperUnsplash);
 
@@ -163,7 +135,7 @@ public class CollectionActivity extends AppCompatActivity implements WallpaperAd
             @Override
             public void onErrorResponse(VolleyError error) {
                 pb.setVisibility(View.GONE);
-                VolleyLog.d("TAG", "Error: " + error.getMessage());
+                //VolleyLog.d("TAG", "Error: " + error.getMessage());
             }
         });
 
@@ -195,24 +167,13 @@ public class CollectionActivity extends AppCompatActivity implements WallpaperAd
 
         Intent intent = new Intent(getApplicationContext(), ItemDetailActivity.class);
 
-        intent.putExtra("class", "Activity");
+        intent.putExtra(Constants.CLASS, Constants.ACTIVITY);
         intent.putExtra(Constants.ID, wallpapersList.get(clickedItemIndex).getId());
-        //intent.putExtra(Constants.WIDTH, wallpapersList.get(clickedItemIndex).getWidth());
-        //intent.putExtra(Constants.HEIGHT, wallpapersList.get(clickedItemIndex).getHeight());
-        //intent.putExtra(Constants.COLOR, wallpapersList.get(clickedItemIndex).getColor());
+
         intent.putExtra(Constants.LIKES, wallpapersList.get(clickedItemIndex).getLikes());
-        /*intent.putExtra(Constants.USER_ID, wallpapersList.get(clickedItemIndex).getUser_id());
-        intent.putExtra(Constants.USER, wallpapersList.get(clickedItemIndex).getUsername());
-        intent.putExtra("name", wallpapersList.get(clickedItemIndex).getName());
-        intent.putExtra("first_name", wallpapersList.get(clickedItemIndex).getFirst_name());
-        intent.putExtra(Constants.SMALL_PROFILE_IMAGE, wallpapersList.get(clickedItemIndex).getProfile_image_small());
-        intent.putExtra(Constants.MEDIUM_PROFILE_IMAGE, wallpapersList.get(clickedItemIndex).getProfile_image_medium());
-        intent.putExtra(Constants.LARGE_PROFILE_IMAGE, wallpapersList.get(clickedItemIndex).getProfile_image_large());*/
-        //intent.putExtra(Constants.RAW, wallpapersList.get(clickedItemIndex).getUrls_raw());
-        //intent.putExtra(Constants.FULL, wallpapersList.get(clickedItemIndex).getUrls_full());
+
         intent.putExtra(Constants.REGULAR, wallpapersList.get(clickedItemIndex).getUrls_regular());
-        //intent.putExtra(Constants.SMALL, wallpapersList.get(clickedItemIndex).getUrls_small());
-        //intent.putExtra(Constants.THUMB, wallpapersList.get(clickedItemIndex).getUrls_thumb());
+
 
         startActivity(intent);
     }

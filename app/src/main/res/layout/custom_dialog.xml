@@ -1,54 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textview"
+    <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="Choose Collection"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" />
-
-    <Spinner
-        android:id="@+id/collections"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="Choose Duration"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" />
-
-    <Spinner
-        android:id="@+id/durations"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp" />
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
     <LinearLayout
+        android:id="@+id/linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="10dp">
+        android:orientation="vertical">
 
         <TextView
-
+            android:id="@+id/textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Total Photos : "
-            android:textSize="18sp" />
-        <TextView
-            android:textSize="18sp"
-            android:id="@+id/total_photos"
+            android:layout_margin="@dimen/choose_collection_margin"
+            android:text="@string/choose_collection"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/choose_collection_text_size" />
+
+        <Spinner
+            android:id="@+id/collections"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/choose_collection_spinner_margin_left"
+            android:layout_marginStart="@dimen/choose_collection_spinner_margin_left" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/duration_collection_margin"
+            android:text="@string/choose_duration"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/duration_collection_text_size" />
+
+        <Spinner
+            android:id="@+id/durations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/duration_spinner_margin_left"
+            android:layout_marginStart="@dimen/duration_spinner_margin_left" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/linear_layout_total_photos_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/total_photos"
+                android:textSize="@dimen/total_photo_text_size" />
+
+            <TextView
+                android:id="@+id/total_photos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/total_photo_count_text_size" />
+
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+    <!-- <Button
+         android:layout_marginBottom="@dimen/button_margin_bottom"
+         android:id="@+id/button"
+         android:visibility="gone"
+         android:text="@string/stop_current_automation"
+         android:background="@drawable/item_selector"
+         android:layout_centerHorizontal="true"
+         android:layout_below="@+id/linear"
+         android:layout_width="@dimen/button_width_stop"
+         android:layout_height="wrap_content" />-->
+</RelativeLayout>

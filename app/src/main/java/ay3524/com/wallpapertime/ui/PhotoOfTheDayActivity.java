@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -42,33 +43,45 @@ import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.app.MyApplication;
 import ay3524.com.wallpapertime.utils.Constants;
 import ay3524.com.wallpapertime.utils.ImageDownloadTask;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP;
 
 public class PhotoOfTheDayActivity extends AppCompatActivity implements View.OnClickListener {
 
+    @BindView(R.id.background)
     SubsamplingScaleImageView today_photo;
+    @BindView(R.id.title)
     TextView title;
-    Button dwnld, set;
+    @BindView(R.id.dwnld)
+    Button dwnld;
+    @BindView(R.id.set_as_wallpaper)
+    Button set;
+    @BindView(R.id.detail_toolbar)
+    Toolbar toolbar;
     private String fileName;
     private String image_path_with_folder;
     private String url;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_of_the_day);
-        ActionBar ab = this.getSupportActionBar();
-        if (ab != null) {
-            ab.setDisplayHomeAsUpEnabled(true);
+
+        ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
         today_photo = (SubsamplingScaleImageView) findViewById(R.id.background);
         today_photo.setMinimumScaleType(SCALE_TYPE_CENTER_CROP);
 
-        title = (TextView) findViewById(R.id.title);
-        dwnld = (Button) findViewById(R.id.dwnld);
         dwnld.setOnClickListener(this);
-        set = (Button) findViewById(R.id.set_as_wallpaper);
         set.setOnClickListener(this);
 
         checkPermissionForMarshmallowAndAbove();
@@ -79,26 +92,26 @@ public class PhotoOfTheDayActivity extends AppCompatActivity implements View.OnC
     private void getListOfPhotos() {
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                "http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US", null,
+                Constants.BING_URL, null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
 
                         try {
-                            JSONArray jsonArray = response.getJSONArray("images");
+                            JSONArray jsonArray = response.getJSONArray(Constants.IMAGES);
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                String titleString = jsonObject.getString("copyright");
+                                String titleString = jsonObject.getString(Constants.COPYRIGHT);
                                 title.setText(titleString);
-                                url = jsonObject.getString("url");
+                                url = jsonObject.getString(Constants.URL);
 
-                                String split[] = url.split("_");
-                                fileName = split[1] + ".jpg";
-                                image_path_with_folder = Environment.getExternalStorageDirectory().toString() + "/WallTime/" + fileName;
+                                String split[] = url.split(Constants.SEPERATOR);
+                                fileName = split[1] + Constants.JPG;
+                                image_path_with_folder = Environment.getExternalStorageDirectory().toString() + Constants.WALLTIME_PATH_DOUBLE + fileName;
 
                                 Glide.with(getApplicationContext())
-                                        .load(buildURL(url, "240", "320"))
+                                        .load(buildURL(url, Constants.PHOTO_WDTH_240, Constants.PHOTO_HEIGHT_320))
                                         .asBitmap()
                                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                                         .into(new SimpleTarget<Bitmap>() {
@@ -108,7 +121,7 @@ public class PhotoOfTheDayActivity extends AppCompatActivity implements View.OnC
                                                 today_photo.setImage(ImageSource.bitmap(bitmap));
 
                                                 Glide.with(getApplicationContext())
-                                                        .load(buildURL(url, "720", "1280"))
+                                                        .load(buildURL(url, Constants.PHOTO_WDTH_720, Constants.PHOTO_HEIGHT_1280))
                                                         .asBitmap()
                                                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                                                         .into(new SimpleTarget<Bitmap>() {
@@ -126,14 +139,11 @@ public class PhotoOfTheDayActivity extends AppCompatActivity implements View.OnC
                             e.printStackTrace();
                         }
 
-                        //Log.d(TAG, response.toString());
-                        //msgResponse.setText(response.toString());
                     }
                 }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                //VolleyLog.d(TAG, "Error: " + error.getMessage());
             }
         });
 
@@ -147,7 +157,7 @@ public class PhotoOfTheDayActivity extends AppCompatActivity implements View.OnC
         StringBuilder stringBuilder = new StringBuilder(url);
 
         stringBuilder.delete(url.length() - 13, url.length());
-        return "http://www.bing.com" + stringBuilder.toString() + width + "x" + height + ".jpg";
+        return Constants.BING_BASE_URL + stringBuilder.toString() + width + Constants.X + height + Constants.JPG;
     }
 
     @Override
@@ -170,9 +180,9 @@ public class PhotoOfTheDayActivity extends AppCompatActivity implements View.OnC
                 if (url != null) {
                     if (!(new File(image_path_with_folder).exists())) {
 
-                        new ImageDownloadTask(PhotoOfTheDayActivity.this, fileName).execute(buildURL(url, "1280", "720"));
+                        new ImageDownloadTask(PhotoOfTheDayActivity.this, fileName).execute(buildURL(url, Constants.PHOTO_HEIGHT_1280, Constants.PHOTO_WDTH_720));
                     } else {
-                        Toast.makeText(PhotoOfTheDayActivity.this, "Image Already Downloaded", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PhotoOfTheDayActivity.this, getString(R.string.dwnld_image), Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -180,12 +190,11 @@ public class PhotoOfTheDayActivity extends AppCompatActivity implements View.OnC
             case R.id.set_as_wallpaper:
                 if (url != null) {
                     if (!(new File(image_path_with_folder).exists())) {
-                        new ImageDownloadTask(PhotoOfTheDayActivity.this, fileName).execute(buildURL(url, "1280", "720"));
+                        new ImageDownloadTask(PhotoOfTheDayActivity.this, fileName).execute(buildURL(url, Constants.PHOTO_HEIGHT_1280, Constants.PHOTO_WDTH_720));
                         setAsWallpaper();
 
                     } else {
                         setAsWallpaper();
-                        Toast.makeText(PhotoOfTheDayActivity.this, "Setting wallpaper successfull", Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
@@ -200,7 +209,7 @@ public class PhotoOfTheDayActivity extends AppCompatActivity implements View.OnC
             try {
                 wallpaperManager.setBitmap(bitmap);
             } catch (IOException e) {
-                Toast.makeText(PhotoOfTheDayActivity.this, "Error While Image Setting", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PhotoOfTheDayActivity.this, getString(R.string.error_image), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
         } catch (NullPointerException ignored) {
@@ -227,9 +236,9 @@ public class PhotoOfTheDayActivity extends AppCompatActivity implements View.OnC
                             && ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setMessage("To get storage access you have to allow us access to your sd card content.");
-                        builder.setTitle("Storage");
-                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        builder.setMessage(getString(R.string.permission_message));
+                        builder.setTitle(getString(R.string.storage));
+                        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 ActivityCompat.requestPermissions(PhotoOfTheDayActivity.this, storage_permissions, 0);

@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.bumptech.glide.Glide;
 
@@ -23,36 +22,36 @@ import java.util.concurrent.ExecutionException;
 
 import ay3524.com.wallpapertime.app.MyApplication;
 import ay3524.com.wallpapertime.model.WallpaperUnsplash;
+import ay3524.com.wallpapertime.utils.Constants;
 
 import static android.content.Context.MODE_PRIVATE;
+import static ay3524.com.wallpapertime.utils.Constants.API_KEY;
+import static ay3524.com.wallpapertime.utils.Constants.PHOTO_CLIENT_ID;
 
 /**
  * Created by Ashish on 06-01-2017.
  */
 
-public class WallpaperSyncTask {
+class WallpaperSyncTask {
 
     private ArrayList<WallpaperUnsplash> wallpapersArrayList = new ArrayList<>();
     private Context mContext;
-    private String urls_collection_list;
-    private String tag_json_arry = "TAG_JSON_ARRAY";
-    String id;
 
-    synchronized public void setWallpaper(Context context) {
+    synchronized void setWallpaper(Context context) {
         mContext = context;
         SharedPreferences sharedPreferences = context.
-                getSharedPreferences("ay3524.com.wallpapertime", MODE_PRIVATE);
+                getSharedPreferences(context.getPackageName(), MODE_PRIVATE);
 
-        id = sharedPreferences.getString("id", "134");
+        String id = sharedPreferences.getString(Constants.ID, Constants.DEFAULT_ID);
 
-        urls_collection_list = "https://api.unsplash.com/collections/curated/" + id + "/photos?client_id=1d6adf7ef9a462a70dca375dd1f8faf911481ea8e2715bf2666984671dbc4d39";
+        String urls_collection_list = Constants.UNSPLASH_BASE_COLLECTION_CURATED + id + PHOTO_CLIENT_ID + API_KEY;
         getListOfWallpapers(urls_collection_list);
         //new GetBitmapTask().execute(url);
     }
 
-    private int getRandomNo() {
+    private int getRandomNo(int size) {
         Random r = new Random();
-        return r.nextInt(10);
+        return r.nextInt(size);
     }
 
     private void getListOfWallpapers(String url) {
@@ -68,12 +67,8 @@ public class WallpaperSyncTask {
                                 WallpaperUnsplash wallpaperUnsplash = new WallpaperUnsplash();
                                 JSONObject jsonObject = response.getJSONObject(i);
 
-                                JSONObject jsonObject4 = jsonObject.getJSONObject("urls");
-                                wallpaperUnsplash.setUrls_raw(jsonObject4.getString("raw"));
-                                //wallpaperUnsplash.setUrls_full(jsonObject4.getString("full"));
-                                //wallpaperUnsplash.setUrls_regular(jsonObject4.getString("regular"));
-                                //wallpaperUnsplash.setUrls_small(jsonObject4.getString("small"));
-                                //wallpaperUnsplash.setUrls_thumb(jsonObject4.getString("thumb"));
+                                JSONObject jsonObject4 = jsonObject.getJSONObject(Constants.URLS);
+                                wallpaperUnsplash.setUrls_full(jsonObject4.getString(Constants.FULL));
 
                                 wallpapersArrayList.add(wallpaperUnsplash);
 
@@ -82,61 +77,26 @@ public class WallpaperSyncTask {
                             }
 
                         }
-                        wallpapersArrayList.get(getRandomNo()).getUrls_raw();
-
-                        String splitted[] = wallpapersArrayList.get(getRandomNo()).getUrls_raw().split("/");
-                        String photoName = splitted[splitted.length - 1] + ".jpg";
-                        String url = buildUrl(photoName, "900");
-                        new GetBitmapTask().execute(url);
+                        new GetBitmapTask().execute(wallpapersArrayList.get(getRandomNo(wallpapersArrayList.size())).getUrls_full());
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                //pb.setVisibility(View.GONE);
-                VolleyLog.d("TAG", "Error: " + error.getMessage());
+                //VolleyLog.d("TAG", "Error: " + error.getMessage());
             }
         });
 
         // Adding request to request queue
         MyApplication.getInstance().addToRequestQueue(req,
-                tag_json_arry);
-
-        /*ApiInterface apiService =
-                ApiClient.getClient().create(ApiInterface.class);
-
-        Call<WallpaperResponse> call = apiService.getWallpaper(Constants.api_key,
-                Constants.response_group, Constants.nature, Constants.booleanImagesWithEditorsCoice,
-                Constants.orderPopular, Constants.prettyBooleanValue);
-        call.enqueue(new Callback<WallpaperResponse>() {
-            @Override
-            public void onResponse(Call<WallpaperResponse> call, Response<WallpaperResponse> response) {
-                try {
-                    if (response != null) {
-                        wallpapersArrayList = response.body().getWallpapers();
-                        url = wallpapersArrayList.get(getRandomNo()).getLargeImageURL();
-                        new GetBitmapTask().execute(url);
-                        //Log.e("WallpaperSyncUtils",wallpapersArrayList.get(0).getFullHDURL());
-                        //return wallpapersArrayList;
-                    }
-                } catch (NullPointerException ignored) {
-                    //Toast.makeText(getActivity(), "NPE Again", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<WallpaperResponse> call, Throwable t) {
-                // Log error here since request failed
-                Log.e("TAG", t.toString());
-            }
-        });*/
+                Constants.TAG_JSON_ARRAY);
     }
 
-    private String buildUrl(String fileName, String size) {
+    /*private String buildUrl(String fileName, String size) {
         StringBuilder stringBuilder = new StringBuilder(fileName);
         stringBuilder.delete(fileName.length() - 4, fileName.length());
         String url = "https://images.unsplash.com/" + stringBuilder.toString() + "?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=" + size + "&fit=max&s=c9cabfb90c6a844b59176db42be9ec0c";
         return url;
-    }
+    }*/
 
     private class GetBitmapTask extends AsyncTask<String, Void, Bitmap> {
 
@@ -144,6 +104,7 @@ public class WallpaperSyncTask {
         protected Bitmap doInBackground(String... params) {
             Bitmap result = null;
             try {
+                //Log.e("TAG",params[0]);
                 result = Glide.with(mContext)
                         .load(params[0])
                         .asBitmap()
@@ -153,22 +114,11 @@ public class WallpaperSyncTask {
                 WallpaperManager wallpaperManager = WallpaperManager.getInstance(mContext);
 
                 wallpaperManager.setBitmap(result);
+
             } catch (IOException | ExecutionException | InterruptedException ex) {
                 ex.printStackTrace();
             }
             return result;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            try {
-                WallpaperManager wallpaperManager = WallpaperManager.getInstance(mContext);
-
-                wallpaperManager.setBitmap(bitmap);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
         }
     }
 }

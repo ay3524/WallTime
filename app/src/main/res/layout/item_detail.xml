@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:alpha="0.5"
-        android:background="#AA000000"
+        android:background="@color/transparent_color"
         app:layout_collapseMode="pin"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -26,17 +26,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:layout_margin="15dp"
-        android:background="#AA000000"
-        android:orientation="horizontal"
-        android:textColor="#ffffffff"
-        android:textSize="18sp">
+        android:layout_margin="@dimen/linear_margin"
+        android:background="@color/transparent_color"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/dwnld"
-            android:layout_width="500dp"
+            android:layout_width="@dimen/button_width"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/button_margin"
             android:layout_weight="1"
             android:background="@drawable/item_selector"
             android:text="@string/download"
@@ -44,9 +42,9 @@
 
         <Button
             android:id="@+id/set_as_wallpaper"
-            android:layout_width="500dp"
+            android:layout_width="@dimen/button_width"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/button_margin"
             android:layout_weight="1"
             android:background="@drawable/item_selector"
             android:text="@string/set_it"

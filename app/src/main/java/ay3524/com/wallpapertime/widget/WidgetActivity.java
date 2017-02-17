@@ -35,7 +35,7 @@ public class WidgetActivity extends AppWidgetProvider {
     }
 
     void setList(RemoteViews rv, Context context, int appWidgetId) {
-        Intent adapter = new Intent(context, StockWidgetService.class);
+        Intent adapter = new Intent(context, WallTimeWidgetService.class);
         adapter.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         rv.setRemoteAdapter(R.id.list_view, adapter);
     }

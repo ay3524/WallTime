@@ -17,4 +17,9 @@ public class WallpaperIntentService extends IntentService{
     protected void onHandleIntent(Intent intent) {
         new WallpaperSyncTask().setWallpaper(this);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }

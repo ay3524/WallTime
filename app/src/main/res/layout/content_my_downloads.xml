@@ -50,7 +50,7 @@
             android:fontFamily="sans-serif"
             android:text="@string/go_back_and_download_images"
             android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="#000" />
+            android:textColor="@android:color/black" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -42,51 +42,17 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.Wall
     public WallpaperViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        boolean shouldAttachToParentImmediately = false;
 
-        View view = inflater.inflate(R.layout.single_wallpaper, parent, shouldAttachToParentImmediately);
+        View view = inflater.inflate(R.layout.single_wallpaper, parent, false);
         return new WallpaperViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final WallpaperViewHolder holder, final int position) {
-        /*ImageLoader imageLoader = MyApplication.getInstance().getImageLoader();
-
-        holder.wallpaperPoster.setImageUrl(wallpaper.get(position).getWebformatURL(), imageLoader);
-
-        imageLoader.get(wallpaper.get(position).getWebformatURL(), ImageLoader.getImageListener(
-                holder.wallpaperPoster, R.mipmap.ic_launcher, R.mipmap.ic_launcher));
-
-        //Cache cache = MyApplication.getInstance().getRequestQueue().getCache();
-        //Cache.Entry entry = cache.get(wallpaper.get(position).getWebformatURL());*/
 
         holder.likes.setText(wallpaper.get(position).getLikes());
 
-        String buildSingleListImageUrl = Constants.buildUrl(wallpaper.get(position).getUrls_regular(), "300");
-
-        /*Glide.with(context)
-                .load(wallpaper.get(position).getUrls_thumb())
-                .asBitmap()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                        // Do something with bitmap here.
-                        holder.wallpaperPoster.setImageBitmap(bitmap);
-
-                        Glide.with(context)
-                                .load(wallpaper.get(position).getUrls_small())
-                                .asBitmap()
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .into(new SimpleTarget<Bitmap>() {
-                                    @Override
-                                    public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                                        // Do something with bitmap here.
-                                        holder.wallpaperPoster.setImageBitmap(bitmap);
-                                    }
-                                });
-                    }
-                });*/
+        String buildSingleListImageUrl = Constants.buildUrl(wallpaper.get(position).getUrls_regular(), Constants.PHOTO_SIZE_300);
 
         Glide.with(context)
                 .load(buildSingleListImageUrl)
@@ -120,6 +86,4 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.Wall
             clickListener.onListItemClick(clickedPosition);
         }
     }
-
-
 }

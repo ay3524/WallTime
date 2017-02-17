@@ -1,8 +1,17 @@
 package ay3524.com.wallpapertime.utils;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Created by Ashish on 31-12-2016.
@@ -10,7 +19,58 @@ import android.net.NetworkInfo;
 
 public class Constants {
 
+    public static final String PHOTO_SIZE_300 = "300";
+
+    public static final String PHOTO_SIZE_200 = "200";
+
+    public static final String PHOTO_SIZE_800 = "800";
+
+    public static final String PHOTO_SIZE_1100 = "1100";
+
+    public static final String UNSPLASH_BASE_COLLECTION_CURATED = "https://api.unsplash.com/collections/curated";
+
+    public static final String UNSPLASH_BASE_PHOTO = "https://api.unsplash.com/photos";
+
+    public static final String ORDER_BY = "&order_by=";
+
+    public static final String POPULAR = "popular";
+
+    public static final String LATEST = "latest";
+
+    public static final String PER_PAGE = "&per_page=";
+
+    public static final String PER_PAGE_COUNT = "30";
+
+    public static final String CLIENT_ID = "?client_id=";
+
+    public static final String API_KEY = "1d6adf7ef9a462a70dca375dd1f8faf911481ea8e2715bf2666984671dbc4d39";
+
+    public static final String PHOTO_CLIENT_ID = "/photos";
+
+    public static final int TWO = 2;
+
+    public static final int FOUR = 4;
+
+    public static final String CLASS = "class";
+    public static final String ACTIVITY = "Activity";
+    public static final String FRAGMENT = "Fragment";
+    public static final String SEARCHACTIVITY = "SearchActivity";
+
+    public static final String URL_FILE = "url_file";
+
+    public static final String IMAGE_TYPE = "image/*";
+
+    public static final String JPG = ".jpg";
+
+    public static final String WALLTIME_PATH = "/WallTime";
+
+    public static final String DEFAULT_ID = "134";
+
     public static final String ID = "id";
+
+    public static final String TIME = "time";
+    public static final String AUTOMATION = "automation";
+
     public static final String WIDTH = "width";
     public static final String HEIGHT = "height";
     public static final String COLOR = "color";
@@ -35,6 +95,20 @@ public class Constants {
     public static final String TAG_JSON_ARRAY = "TAG_JSON_ARRAY";
     public static final String STATE_WALLPAPERS = "state";
     public static final String TAG_JSON_OBJECT = "TAG_JSON_OBJECT";
+    public static final String QUERY = "query";
+    public static final String BING_URL = "http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US";
+    public static final String IMAGES = "images";
+    public static final String COPYRIGHT = "copyright";
+    public static final String URL = "url";
+    public static final java.lang.String SEPERATOR = "_";
+    public static final String WALLTIME_PATH_DOUBLE = "/WallTime/";
+    public static final String PHOTO_WDTH_240 = "240";
+    public static final String PHOTO_HEIGHT_320 = "320";
+    public static final String PHOTO_WDTH_720 = "720";
+    public static final String PHOTO_HEIGHT_1280 = "1280";
+    public static final String BING_BASE_URL = "http://www.bing.com";
+    public static final String X = "x";
+    public static final String RESULTS = "results";
 
     public static boolean isConnected(Context context) {
         ConnectivityManager connMgr = (ConnectivityManager)
@@ -45,8 +119,42 @@ public class Constants {
 
     public static String buildUrl(String regular_url, String size) {
         String split[] = regular_url.split("&");
-        String url = split[0] +"&"+ split[1] +"&"+ split[2] +"&"+ split[3] +"&"+ split[4] +"&"+ "w=" + size + "&" + split[6] +"&"+ split[7];
+        String url = split[0] + "&" + split[1] + "&" + split[2] + "&" + split[3] + "&" + split[4] + "&" + "w=" + size + "&" + split[6] + "&" + split[7];
         return url;
+    }
+
+    public static void refreshSystemMediaScanDataBase(Context context, String docPath) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        Uri contentUri = Uri.fromFile(new File(docPath));
+        mediaScanIntent.setData(contentUri);
+        context.sendBroadcast(mediaScanIntent);
+    }
+
+    public static void setGridLayoutManager(Context context, RecyclerView recyclerView){
+
+        GridLayoutManager gridLayoutManager;
+        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            gridLayoutManager = new GridLayoutManager(context, Constants.TWO);
+            recyclerView.setLayoutManager(gridLayoutManager);
+        } else {
+            gridLayoutManager = new GridLayoutManager(context, Constants.FOUR);
+            recyclerView.setLayoutManager(gridLayoutManager);
+        }
+    }
+
+    public static void sortAllFilesNewFirst(File allFiles[]){
+
+        Arrays.sort(allFiles, new Comparator() {
+            public int compare(Object o1, Object o2) {
+                if (((File) o1).lastModified() > ((File) o2).lastModified()) {
+                    return -1;
+                } else if (((File) o1).lastModified() < ((File) o2).lastModified()) {
+                    return +1;
+                } else {
+                    return 0;
+                }
+            }
+        });
     }
 
 }

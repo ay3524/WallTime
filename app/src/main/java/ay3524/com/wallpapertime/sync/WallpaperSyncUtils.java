@@ -3,6 +3,7 @@ package ay3524.com.wallpapertime.sync;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.firebase.jobdispatcher.Constraint;
 import com.firebase.jobdispatcher.Driver;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
@@ -23,11 +24,10 @@ public class WallpaperSyncUtils {
 
     //private static boolean sInitialized;
 
-    synchronized public static void scheduleWallpaperChange(@NonNull final Context context,int constraint[],int REMINDER_INTERVAL_HOURS) {
+    synchronized public static void scheduleWallpaperChange(@NonNull final Context context,int REMINDER_INTERVAL_HOURS) {
 
         //if (sInitialized) return;
         int REMINDER_INTERVAL_SECONDS = (int) (TimeUnit.HOURS.toSeconds(REMINDER_INTERVAL_HOURS));
-        int SYNC_FLEXTIME_SECONDS = REMINDER_INTERVAL_SECONDS;
 
 
         Driver driver = new GooglePlayDriver(context);
@@ -50,7 +50,7 @@ public class WallpaperSyncUtils {
                  * as different users may have different preferences on when you should be
                  * syncing your application's data.
                  */
-                .setConstraints(constraint)
+                .setConstraints(Constraint.ON_ANY_NETWORK,Constraint.DEVICE_CHARGING)
                 /*
                  * setLifetime sets how long this job should persist. The options are to keep the
                  * Job "forever" or to have it die the next time the device boots up.
@@ -70,7 +70,7 @@ public class WallpaperSyncUtils {
                  */
                 .setTrigger(Trigger.executionWindow(
                         REMINDER_INTERVAL_SECONDS,
-                        REMINDER_INTERVAL_SECONDS + SYNC_FLEXTIME_SECONDS))
+                        REMINDER_INTERVAL_SECONDS + REMINDER_INTERVAL_SECONDS))
                 /*
                  * If a Job with the tag with provided already exists, this new job will replace
                  * the old one.
@@ -81,7 +81,6 @@ public class WallpaperSyncUtils {
 
         /* Schedule the Job with the dispatcher */
         dispatcher.schedule(constraintReminderJob);
-
-
+        //dispatcher.cancelAll();
     }
 }
