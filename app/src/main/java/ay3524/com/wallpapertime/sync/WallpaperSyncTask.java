@@ -6,9 +6,11 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 
 import org.json.JSONArray;
@@ -21,12 +23,9 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import ay3524.com.wallpapertime.app.MyApplication;
-import ay3524.com.wallpapertime.model.WallpaperUnsplash;
 import ay3524.com.wallpapertime.utils.Constants;
 
 import static android.content.Context.MODE_PRIVATE;
-import static ay3524.com.wallpapertime.utils.Constants.API_KEY;
-import static ay3524.com.wallpapertime.utils.Constants.PHOTO_CLIENT_ID;
 
 /**
  * Created by Ashish on 06-01-2017.
@@ -34,19 +33,20 @@ import static ay3524.com.wallpapertime.utils.Constants.PHOTO_CLIENT_ID;
 
 class WallpaperSyncTask {
 
-    private ArrayList<WallpaperUnsplash> wallpapersArrayList = new ArrayList<>();
     private Context mContext;
+    private ArrayList<String> urlsList = new ArrayList<>();
 
     synchronized void setWallpaper(Context context) {
         mContext = context;
         SharedPreferences sharedPreferences = context.
                 getSharedPreferences(context.getPackageName(), MODE_PRIVATE);
 
-        String id = sharedPreferences.getString(Constants.ID, Constants.DEFAULT_ID);
+        int position = sharedPreferences.getInt(Constants.CATEGORY, Constants.DEFAULT_CATEGORY);
+        String category = Constants.getCategoryList().get(position);
 
-        String urls_collection_list = Constants.UNSPLASH_BASE_COLLECTION_CURATED + id + PHOTO_CLIENT_ID + API_KEY;
-        getListOfWallpapers(urls_collection_list);
-        //new GetBitmapTask().execute(url);
+        String url_for_a_category = Constants.PIXABAY_URI.concat(category).concat("&per_page=200");
+
+        getListOfWallpapers(url_for_a_category);
     }
 
     private int getRandomNo(int size) {
@@ -56,33 +56,34 @@ class WallpaperSyncTask {
 
     private void getListOfWallpapers(String url) {
 
-        JsonArrayRequest req = new JsonArrayRequest(url,
-                new Response.Listener<JSONArray>() {
+
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET,url,null,
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(JSONArray response) {
+                    public void onResponse(JSONObject response) {
                         //Log.d("TAG", response.toString());
 
-                        for (int i = 0; i < response.length(); i++) {
-                            try {
-                                WallpaperUnsplash wallpaperUnsplash = new WallpaperUnsplash();
-                                JSONObject jsonObject = response.getJSONObject(i);
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("hits");
 
-                                JSONObject jsonObject4 = jsonObject.getJSONObject(Constants.URLS);
-                                wallpaperUnsplash.setUrls_full(jsonObject4.getString(Constants.FULL));
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                                wallpapersArrayList.add(wallpaperUnsplash);
+                                String fullHDURL = jsonObject.getString("fullHDURL");
 
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                urlsList.add(fullHDURL);
+
                             }
-
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                        new GetBitmapTask().execute(wallpapersArrayList.get(getRandomNo(wallpapersArrayList.size())).getUrls_full());
+
+                        new GetBitmapTask().execute(urlsList.get(getRandomNo(urlsList.size())));
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                //VolleyLog.d("TAG", "Error: " + error.getMessage());
+                VolleyLog.d("TAG", "Error: " + error.getMessage());
             }
         });
 
@@ -90,13 +91,6 @@ class WallpaperSyncTask {
         MyApplication.getInstance().addToRequestQueue(req,
                 Constants.TAG_JSON_ARRAY);
     }
-
-    /*private String buildUrl(String fileName, String size) {
-        StringBuilder stringBuilder = new StringBuilder(fileName);
-        stringBuilder.delete(fileName.length() - 4, fileName.length());
-        String url = "https://images.unsplash.com/" + stringBuilder.toString() + "?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=" + size + "&fit=max&s=c9cabfb90c6a844b59176db42be9ec0c";
-        return url;
-    }*/
 
     private class GetBitmapTask extends AsyncTask<String, Void, Bitmap> {
 

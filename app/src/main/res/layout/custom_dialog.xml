@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/choose_collection_margin"
-            android:text="@string/choose_collection"
+            android:text="@string/choose_category"
             android:textColor="@android:color/black"
             android:textSize="@dimen/choose_collection_text_size" />
 
@@ -40,32 +40,28 @@
             android:textColor="@android:color/black"
             android:textSize="@dimen/duration_collection_text_size" />
 
-        <Spinner
-            android:id="@+id/durations"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/duration_spinner_margin_left"
-            android:layout_marginStart="@dimen/duration_spinner_margin_left" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/linear_layout_total_photos_margin"
+            android:layout_margin="10dp"
             android:orientation="horizontal">
 
-            <TextView
+            <EditText
+                android:maxLength="5"
+                android:inputType="number"
+                android:id="@+id/time"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/enter_time" />
+
+            <Spinner
+                android:id="@+id/durations"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/total_photos"
-                android:textSize="@dimen/total_photo_text_size" />
-
-            <TextView
-                android:id="@+id/total_photos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/total_photo_count_text_size" />
-
+                android:layout_marginLeft="@dimen/duration_spinner_margin_left"
+                android:layout_marginStart="@dimen/duration_spinner_margin_left" />
         </LinearLayout>
+
     </LinearLayout>
     <!-- <Button
          android:layout_marginBottom="@dimen/button_margin_bottom"

@@ -1,5 +1,6 @@
 package ay3524.com.wallpapertime.utils;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -10,6 +11,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -25,7 +27,9 @@ public class Constants {
 
     public static final String PHOTO_SIZE_800 = "800";
 
-    public static final String PHOTO_SIZE_1100 = "1100";
+    public static final String PHOTO_SIZE_1920 = "1920";
+
+    public static final String PIXABAY_URI = "https://pixabay.com/api/?key=4038248-09fb84ad761a396aba067e2cf&response_group=high_resolution&category=";
 
     public static final String UNSPLASH_BASE_COLLECTION_CURATED = "https://api.unsplash.com/collections/curated";
 
@@ -44,6 +48,8 @@ public class Constants {
     public static final String CLIENT_ID = "?client_id=";
 
     public static final String API_KEY = "1d6adf7ef9a462a70dca375dd1f8faf911481ea8e2715bf2666984671dbc4d39";
+
+    public static final String PIXABAY_API_KEY = "4038248-09fb84ad761a396aba067e2cf";
 
     public static final String PHOTO_CLIENT_ID = "/photos";
 
@@ -109,6 +115,8 @@ public class Constants {
     public static final String BING_BASE_URL = "http://www.bing.com";
     public static final String X = "x";
     public static final String RESULTS = "results";
+    public static final String CATEGORY = "category";
+    public static final int DEFAULT_CATEGORY = 0;
 
     public static boolean isConnected(Context context) {
         ConnectivityManager connMgr = (ConnectivityManager)
@@ -156,5 +164,38 @@ public class Constants {
             }
         });
     }
+    public static ArrayList<String> getCategoryList(){
 
+        ArrayList<String> spinner_collection_list = new ArrayList<>();
+        spinner_collection_list.add("Animals");
+        spinner_collection_list.add("Backgrounds");
+        spinner_collection_list.add("Buildings");
+        spinner_collection_list.add("Business");
+        spinner_collection_list.add("Computer");
+        spinner_collection_list.add("Education");
+        spinner_collection_list.add("Fashion");
+        spinner_collection_list.add("Feelings");
+        spinner_collection_list.add("Food");
+        spinner_collection_list.add("Health");
+        spinner_collection_list.add("Industry");
+        spinner_collection_list.add("Music");
+        spinner_collection_list.add("Nature");
+        spinner_collection_list.add("People");
+        spinner_collection_list.add("Places");
+        spinner_collection_list.add("Religion");
+        spinner_collection_list.add("Science");
+        spinner_collection_list.add("Sports");
+        spinner_collection_list.add("Transportation");
+        spinner_collection_list.add("Travel");
+        return spinner_collection_list;
+    }
+    public static boolean isServiceRunning(Class<?> serviceClass,Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

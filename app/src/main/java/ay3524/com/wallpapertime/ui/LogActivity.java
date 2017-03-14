@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import ay3524.com.wallpapertime.R;
@@ -46,7 +47,9 @@ public class LogActivity extends AppCompatActivity implements
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setLogo(R.drawable.coollogo);
         }
 
         mRecyclerView.setHasFixedSize(true);
@@ -117,7 +120,13 @@ public class LogActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mAdapter.swapCursor(data);
+
+        if(data.getCount()==0){
+            emptyView.setVisibility(View.VISIBLE);
+        }else{
+            mAdapter.swapCursor(data);
+            emptyView.setVisibility(View.GONE);
+        }
     }
 
     @Override

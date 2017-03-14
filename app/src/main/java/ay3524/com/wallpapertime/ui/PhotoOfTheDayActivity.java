@@ -2,16 +2,15 @@ package ay3524.com.wallpapertime.ui;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.WallpaperManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -37,12 +36,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 
 import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.app.MyApplication;
 import ay3524.com.wallpapertime.utils.Constants;
 import ay3524.com.wallpapertime.utils.ImageDownloadTask;
+import ay3524.com.wallpapertime.utils.SetWallpaperTask;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -68,6 +67,9 @@ public class PhotoOfTheDayActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDarkDetailActivity));
+        }
         setContentView(R.layout.activity_photo_of_the_day);
 
         ButterKnife.bind(this);
@@ -75,7 +77,9 @@ public class PhotoOfTheDayActivity extends AppCompatActivity implements View.OnC
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setLogo(R.drawable.coollogo);
         }
 
         today_photo = (SubsamplingScaleImageView) findViewById(R.id.background);
@@ -108,7 +112,8 @@ public class PhotoOfTheDayActivity extends AppCompatActivity implements View.OnC
 
                                 String split[] = url.split(Constants.SEPERATOR);
                                 fileName = split[1] + Constants.JPG;
-                                image_path_with_folder = Environment.getExternalStorageDirectory().toString() + Constants.WALLTIME_PATH_DOUBLE + fileName;
+                                image_path_with_folder = Environment.getExternalStorageDirectory().toString()
+                                        + Constants.WALLTIME_PATH_DOUBLE + fileName;
 
                                 Glide.with(getApplicationContext())
                                         .load(buildURL(url, Constants.PHOTO_WDTH_240, Constants.PHOTO_HEIGHT_320))
@@ -177,10 +182,12 @@ public class PhotoOfTheDayActivity extends AppCompatActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.dwnld:
+                checkPermissionForMarshmallowAndAbove();
                 if (url != null) {
                     if (!(new File(image_path_with_folder).exists())) {
 
-                        new ImageDownloadTask(PhotoOfTheDayActivity.this, fileName).execute(buildURL(url, Constants.PHOTO_HEIGHT_1280, Constants.PHOTO_WDTH_720));
+                        new ImageDownloadTask(PhotoOfTheDayActivity.this, fileName,false)
+                                .execute(buildURL(url, getString(R.string.imageWidth_1920), getString(R.string.imageWidth_1080)));
                     } else {
                         Toast.makeText(PhotoOfTheDayActivity.this, getString(R.string.dwnld_image), Toast.LENGTH_SHORT).show();
                     }
@@ -188,31 +195,17 @@ public class PhotoOfTheDayActivity extends AppCompatActivity implements View.OnC
 
                 break;
             case R.id.set_as_wallpaper:
+                checkPermissionForMarshmallowAndAbove();
                 if (url != null) {
                     if (!(new File(image_path_with_folder).exists())) {
-                        new ImageDownloadTask(PhotoOfTheDayActivity.this, fileName).execute(buildURL(url, Constants.PHOTO_HEIGHT_1280, Constants.PHOTO_WDTH_720));
-                        setAsWallpaper();
+                        new ImageDownloadTask(PhotoOfTheDayActivity.this, fileName,true)
+                                .execute(buildURL(url, getString(R.string.imageWidth_1920), getString(R.string.imageWidth_1080)));
 
                     } else {
-                        setAsWallpaper();
+                        new SetWallpaperTask(PhotoOfTheDayActivity.this,image_path_with_folder).execute();
                     }
                 }
                 break;
-        }
-    }
-
-    private void setAsWallpaper() {
-        try {
-            File image_file = new File(image_path_with_folder);
-            Bitmap bitmap = BitmapFactory.decodeFile(image_file.getAbsolutePath());
-            WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
-            try {
-                wallpaperManager.setBitmap(bitmap);
-            } catch (IOException e) {
-                Toast.makeText(PhotoOfTheDayActivity.this, getString(R.string.error_image), Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
-        } catch (NullPointerException ignored) {
         }
     }
 

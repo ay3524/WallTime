@@ -48,7 +48,7 @@
     <string name="search">Search</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="action_share">Share</string>
-    <string name="choose_collection">Choose Collection</string>
+    <string name="choose_category">Choose Category</string>
     <string name="choose_duration">Choose Duration</string>
     <string name="total_photos">Total Photos :</string>
     <string name="stop_current_automation">STOP CURRENT AUTOMATION</string>
@@ -65,9 +65,8 @@
     <string name="daily_new">Daily New</string>
     <string name="popular">Popular</string>
 
-    <string name="one_hour">1 Hour</string>
-    <string name="two_hour">2 Hour</string>
-    <string name="three_hour">3 Hour</string>
+    <string name="hour">Hour</string>
+    <string name="minutes">Minutes</string>
 
     <string name="add_automation">Add Automation</string>
     <string name="done">Done</string>
@@ -100,5 +99,20 @@
     <string name="other">Other</string>
     <string name="about_us">About Us</string>
     <string name="privacy_policy">Privacy Policy</string>
+
+    <string name="description">Created by Ashish Yadav.\nIts a wallpaper automation app which automatically downloads and sets the wallpaper.This FREE App provides Unique &amp; Supreme collection of Images for your screen.You can Enjoy our Awesome Contents with Simple UI and Great performance.Daily updates of Wallpapers selected by unsplash users. Guarantee the most stunning Wallpapers you\'ve ever seen.</string>
+    <string name="version">"Version 1.5"</string>
+    <string name="connect_with_us">Connect with us</string>
+    <string name="email">ay3524@gmail.com</string>
+    <string name="instagram">ashishyadav271</string>
+    <string name="git">ay3524</string>
+    <string name="facebook">ay3524</string>
+    <string name="package_name">ay3524.com.wallpapertime</string>
+    <string name="maybe_you_should_try_a_different_query">Maybe you should try a different Query..</string>
+    <string name="imageWidth_1920">1920</string>
+    <string name="imageWidth_1080">1080</string>
+    <string name="setting_wall_for_you">Setting the wallpaper for you :)</string>
+    <string name="successfully_set">Successfully set as wallpaper :)</string>
+    <string name="enter_time">Enter Time</string>
 
 </resources>

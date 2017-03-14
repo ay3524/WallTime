@@ -2,12 +2,10 @@ package ay3524.com.wallpapertime.ui;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.WallpaperManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -28,12 +26,12 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
 import java.io.File;
-import java.io.IOException;
 
 import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.app.MyApplication;
 import ay3524.com.wallpapertime.utils.Constants;
 import ay3524.com.wallpapertime.utils.ImageDownloadTask;
+import ay3524.com.wallpapertime.utils.SetWallpaperTask;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -71,11 +69,14 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
 
         checkPermissionForMarshmallowAndAbove();
 
+        //toolbar.setLogo(R.drawable.coollogo);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setLogo(R.drawable.coollogo);
         }
 
         if (getIntent().getExtras() != null) {
@@ -84,7 +85,9 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
             urls_regular = getIntent().getStringExtra(Constants.REGULAR);
 
             fileName = id + Constants.JPG;
-            image_path_with_folder = Environment.getExternalStorageDirectory().toString() + Constants.WALLTIME_PATH + fileName;
+            image_path_with_folder = Environment.getExternalStorageDirectory().toString() + Constants.WALLTIME_PATH + "/" + fileName;
+
+            //Toast.makeText(this, image_path_with_folder, Toast.LENGTH_SHORT).show();
         }
 
         dwnld.setOnClickListener(this);
@@ -160,21 +163,6 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void setAsWallpaper() {
-        try {
-            File image_file = new File(image_path_with_folder);
-            Bitmap bitmap = BitmapFactory.decodeFile(image_file.getAbsolutePath());
-            WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
-            try {
-                wallpaperManager.setBitmap(bitmap);
-            } catch (IOException e) {
-                //Toast.makeText(ItemDetailActivity.this, getString(R.string.error_set_image), Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
-        } catch (NullPointerException ignored) {
-        }
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -205,22 +193,24 @@ public class ItemDetailActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.dwnld:
-
+                checkPermissionForMarshmallowAndAbove();
                 if (!(new File(image_path_with_folder).exists())) {
 
-                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(buildUrl(urls_regular, Constants.PHOTO_SIZE_1100));
+                    new ImageDownloadTask(ItemDetailActivity.this, fileName, false).execute(buildUrl(urls_regular,
+                            Constants.PHOTO_SIZE_1920));
                 } else {
                     Toast.makeText(ItemDetailActivity.this, getString(R.string.dwnld_image), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.set_as_wallpaper:
-
+                checkPermissionForMarshmallowAndAbove();
                 if (!(new File(image_path_with_folder).exists())) {
-                    new ImageDownloadTask(ItemDetailActivity.this, fileName).execute(buildUrl(urls_regular, Constants.PHOTO_SIZE_1100));
-                    setAsWallpaper();
+
+                    new ImageDownloadTask(ItemDetailActivity.this, fileName, true).execute(buildUrl(urls_regular,
+                            Constants.PHOTO_SIZE_1920));
 
                 } else {
-                    setAsWallpaper();
+                    new SetWallpaperTask(ItemDetailActivity.this,image_path_with_folder).execute();
                 }
                 break;
         }

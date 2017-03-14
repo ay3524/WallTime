@@ -103,7 +103,9 @@ public class FragmentDailyNew extends Fragment implements WallpaperAdapter.ListI
 
 
                                 JSONObject jsonObject4 = jsonObject.getJSONObject(Constants.URLS);
-                                wallpaperUnsplash.setUrls_regular(jsonObject4.getString(Constants.REGULAR));
+                                String buildSingleListImageUrl = Constants.buildUrl(jsonObject4.getString(Constants.REGULAR), Constants.PHOTO_SIZE_300);
+                                wallpaperUnsplash.setUrls_regular(buildSingleListImageUrl);
+                                //wallpaperUnsplash.setUrls_regular(jsonObject4.getString(Constants.REGULAR));
 
                                 wallpapersList.add(wallpaperUnsplash);
 

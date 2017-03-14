@@ -21,5 +21,6 @@ public class WallpaperIntentService extends IntentService{
     @Override
     public void onDestroy() {
         super.onDestroy();
+        WallpaperSyncUtils.stopFirebaseJobDispatcher(getApplicationContext());
     }
 }

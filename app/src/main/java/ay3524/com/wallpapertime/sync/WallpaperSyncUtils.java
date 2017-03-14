@@ -19,16 +19,20 @@ import java.util.concurrent.TimeUnit;
 
 public class WallpaperSyncUtils {
 
-
     private static final String REMINDER_JOB_TAG = "wallpaper_changer_tag";
 
     //private static boolean sInitialized;
 
-    synchronized public static void scheduleWallpaperChange(@NonNull final Context context,int REMINDER_INTERVAL_HOURS) {
+    synchronized public static void scheduleWallpaperChange(@NonNull final Context context, int position, int REMINDER_INTERVAL) {
 
         //if (sInitialized) return;
-        int REMINDER_INTERVAL_SECONDS = (int) (TimeUnit.HOURS.toSeconds(REMINDER_INTERVAL_HOURS));
 
+        int REMINDER_INTERVAL_SECONDS;
+        if (position == 0) {
+            REMINDER_INTERVAL_SECONDS = (int) (TimeUnit.HOURS.toSeconds(REMINDER_INTERVAL));
+        }else{
+            REMINDER_INTERVAL_SECONDS = (int) (TimeUnit.MINUTES.toSeconds(REMINDER_INTERVAL));
+        }
 
         Driver driver = new GooglePlayDriver(context);
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
@@ -50,12 +54,12 @@ public class WallpaperSyncUtils {
                  * as different users may have different preferences on when you should be
                  * syncing your application's data.
                  */
-                .setConstraints(Constraint.ON_ANY_NETWORK,Constraint.DEVICE_CHARGING)
+                .setConstraints(Constraint.ON_ANY_NETWORK)
                 /*
                  * setLifetime sets how long this job should persist. The options are to keep the
                  * Job "forever" or to have it die the next time the device boots up.
                  */
-                .setLifetime(Lifetime.FOREVER)
+                .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
                 /*
                  * We want these reminders to continuously happen, so we tell this Job to recur.
                  */
@@ -82,5 +86,10 @@ public class WallpaperSyncUtils {
         /* Schedule the Job with the dispatcher */
         dispatcher.schedule(constraintReminderJob);
         //dispatcher.cancelAll();
+    }
+    public static void stopFirebaseJobDispatcher(Context context){
+        Driver driver = new GooglePlayDriver(context);
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
+        dispatcher.cancelAll();
     }
 }

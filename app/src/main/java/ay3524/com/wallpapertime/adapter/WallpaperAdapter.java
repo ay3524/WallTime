@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.model.WallpaperUnsplash;
-import ay3524.com.wallpapertime.utils.Constants;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -52,12 +51,12 @@ public class WallpaperAdapter extends RecyclerView.Adapter<WallpaperAdapter.Wall
 
         holder.likes.setText(wallpaper.get(position).getLikes());
 
-        String buildSingleListImageUrl = Constants.buildUrl(wallpaper.get(position).getUrls_regular(), Constants.PHOTO_SIZE_300);
+        //String buildSingleListImageUrl = Constants.buildUrl(wallpaper.get(position).getUrls_regular(), Constants.PHOTO_SIZE_300);
 
         Glide.with(context)
-                .load(buildSingleListImageUrl)
-                .placeholder(R.mipmap.ic_launcher)
-                .error(R.mipmap.ic_launcher)
+                .load(wallpaper.get(position).getUrls_regular())
+                .placeholder(R.drawable.image_loading)
+                //.error(R.drawable.sorry_no_image)
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.wallpaperPoster);

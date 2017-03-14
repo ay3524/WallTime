@@ -56,8 +56,8 @@ public class WallpaperCategoryAdapter extends RecyclerView.Adapter<WallpaperCate
 
         Glide.with(context)
                 .load(buildSingleListImageUrl)
-                .placeholder(R.mipmap.ic_launcher)
-                .error(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.image_loading)
+                //.error(R.drawable.sorry_no_image)
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.collection_cover);

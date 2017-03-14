@@ -73,7 +73,9 @@ public class MyDownloadsActivity extends AppCompatActivity implements WallpaperD
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setLogo(R.drawable.coollogo);
         }
 
         File folder = new File(Environment.getExternalStorageDirectory() + Constants.WALLTIME_PATH);

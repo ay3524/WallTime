@@ -12,6 +12,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -22,14 +23,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.auth.api.Auth;
@@ -41,16 +40,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import ay3524.com.wallpapertime.R;
 import ay3524.com.wallpapertime.adapter.ViewPagerAdapter;
 import ay3524.com.wallpapertime.app.MyApplication;
-import ay3524.com.wallpapertime.model.WallpaperCollection;
 import ay3524.com.wallpapertime.sync.WallpaperIntentService;
 import ay3524.com.wallpapertime.sync.WallpaperSyncUtils;
 import ay3524.com.wallpapertime.utils.CircleTransform;
@@ -58,8 +52,7 @@ import ay3524.com.wallpapertime.utils.Constants;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static ay3524.com.wallpapertime.utils.Constants.API_KEY;
-import static ay3524.com.wallpapertime.utils.Constants.CLIENT_ID;
+import static ay3524.com.wallpapertime.R.id.collections;
 
 public class ItemListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, GoogleApiClient.OnConnectionFailedListener, SearchView.OnQueryTextListener {
 
@@ -77,14 +70,8 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
     private DrawerLayout mDrawerLayout;
     private ImageView imgProfile;
 
-    ArrayList<WallpaperCollection> collections_list = new ArrayList<>();
     ArrayList<String> durations = new ArrayList<>();
-    ArrayList<String> spinner_collection_list = new ArrayList<>();
-    ArrayAdapter<String> spinner_collection_adapter;
-    private Spinner collections_spinner;
     String collection_string, duration_string;
-    private TextView total_photos;
-    private String total_photos_value;
     int position_of_collection_spinner;
     private static final int REQ_CODE = 9001;
 
@@ -105,7 +92,13 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
-        mToolbar.setTitle(getTitle());
+        //mToolbar.setTitle(getTitle());
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setLogo(R.drawable.coollogo);
+        }
 
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this).addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions).build();
@@ -117,12 +110,15 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         imgProfile = (ImageView) navHeader.findViewById(R.id.img_profile);
         txtSignOut = (TextView) navHeader.findViewById(R.id.signout);
 
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
         viewPager.setOffscreenPageLimit(3);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+
         tabLayout.setupWithViewPager(viewPager);
+
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -165,6 +161,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
                         break;
                     case R.id.nav_about_us:
                         mDrawerLayout.closeDrawers();
+                        startActivity(new Intent(getApplicationContext(), AboutUsActivity.class));
                         return true;
                     case R.id.nav_privacy_policy:
                         mDrawerLayout.closeDrawers();
@@ -219,7 +216,6 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
                 });
             }
         });
-
     }
 
     @Override
@@ -234,9 +230,12 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
         adapter.addFragment(new FragmentCollections(), getString(R.string.collection));
         adapter.addFragment(new FragmentDailyNew(), getString(R.string.daily_new));
         adapter.addFragment(new FragmentPopular(), getString(R.string.popular));
+
+
         viewPager.setAdapter(adapter);
     }
 
@@ -246,53 +245,36 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
         dialogBuilder.setView(dialogView);
 
-        collections_spinner = (Spinner) dialogView.findViewById(R.id.collections);
-        total_photos = (TextView) dialogView.findViewById(R.id.total_photos);
+        final Spinner collections_spinner = (Spinner) dialogView.findViewById(collections);
         Spinner date_spinner = (Spinner) dialogView.findViewById(R.id.durations);
+        final EditText editText = (EditText) dialogView.findViewById(R.id.time);
 
         collections_spinner.setOnItemSelectedListener(this);
         date_spinner.setOnItemSelectedListener(this);
 
+        setCategoryAdapter(collections_spinner);
+        setDurationAdapter(date_spinner);
 
-        final ArrayAdapter<String> duration_adapter;
-        if (spinner_collection_list.size() == 0) {
-            getListOfCollections();
-
-            durations.add(getString(R.string.one_hour));
-            durations.add(getString(R.string.two_hour));
-            durations.add(getString(R.string.three_hour));
-            duration_adapter = new ArrayAdapter<>(ItemListActivity.this,
-                    android.R.layout.simple_spinner_dropdown_item, durations);
-            date_spinner.setAdapter(duration_adapter);
-        } else {
-            duration_adapter = new ArrayAdapter<>(ItemListActivity.this,
-                    android.R.layout.simple_spinner_dropdown_item, durations);
-            date_spinner.setAdapter(duration_adapter);
-
-            spinner_collection_adapter = new ArrayAdapter<>(ItemListActivity.this,
-                    android.R.layout.simple_spinner_dropdown_item, spinner_collection_list);
-            collections_spinner.setAdapter(spinner_collection_adapter);
-            total_photos.setText(total_photos_value);
-        }
-
-         dialogBuilder.setTitle(getString(R.string.add_automation));
+        dialogBuilder.setTitle(getString(R.string.add_automation));
 
         dialogBuilder.setPositiveButton(getString(R.string.done), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-
-                if (spinner_collection_list.isEmpty()) {
-                    Toast.makeText(ItemListActivity.this, getString(R.string.data_not_fetched), Toast.LENGTH_SHORT).show();
-                } else {
-
+                String time = editText.getText().toString();
+                if (!time.isEmpty() || time.equals("0")) {
+                    int intTime = Integer.parseInt(time);
                     SharedPreferences sharedPreferences = getApplicationContext()
                             .getSharedPreferences(getPackageName(), MODE_PRIVATE);
-                    sharedPreferences.edit().putString(Constants.ID, collections_list.get(position_of_collection_spinner).getId()).apply();
-                    sharedPreferences.edit().putInt(Constants.TIME, position_of_duration_spinner + 1).apply();
+                    sharedPreferences.edit().putInt(Constants.CATEGORY, position_of_collection_spinner).apply();
                     sharedPreferences.edit().putBoolean(Constants.AUTOMATION, true).apply();
 
-                    WallpaperSyncUtils.scheduleWallpaperChange(getApplicationContext(), position_of_duration_spinner);
-                    Intent intentToSyncImmediately = new Intent(getApplicationContext(), WallpaperIntentService.class);
-                    startService(intentToSyncImmediately);
+                    if (Constants.isServiceRunning(WallpaperIntentService.class, getApplicationContext())) {
+                        //stopService(new Intent(getApplicationContext(), WallpaperIntentService.class));
+                        WallpaperSyncUtils.stopFirebaseJobDispatcher(getApplicationContext());
+                    }
+                    startWallpaperChangerService(intTime);
+
+                } else {
+                    Toast.makeText(ItemListActivity.this, "Time Not Set", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -306,49 +288,38 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         b.show();
     }
 
-    private void getListOfCollections() {
+    private void startWallpaperChangerService(int intTime) {
+        WallpaperSyncUtils.scheduleWallpaperChange(getApplicationContext(), position_of_duration_spinner, intTime);
+        Intent intentToSyncImmediately = new Intent(getApplicationContext(), WallpaperIntentService.class);
+        startService(intentToSyncImmediately);
+    }
 
-        JsonArrayRequest req = new JsonArrayRequest(Constants.UNSPLASH_BASE_COLLECTION_CURATED + CLIENT_ID + API_KEY,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        //Log.d("TAG", response.toString());
+    private void setDurationAdapter(Spinner date_spinner) {
+        if (durations.isEmpty()) {
+            durations.add(getString(R.string.hour));
+            durations.add(getString(R.string.minutes));
+            ArrayAdapter<String> duration_adapter = new ArrayAdapter<>(ItemListActivity.this,
+                    android.R.layout.simple_spinner_dropdown_item, durations);
+            date_spinner.setAdapter(duration_adapter);
+        } else {
+            ArrayAdapter<String> duration_adapter = new ArrayAdapter<>(ItemListActivity.this,
+                    android.R.layout.simple_spinner_dropdown_item, durations);
+            date_spinner.setAdapter(duration_adapter);
+        }
+    }
 
-                        for (int i = 0; i < response.length(); i++) {
-                            try {
-                                WallpaperCollection wallpaperUnsplash = new WallpaperCollection();
+    private void setCategoryAdapter(Spinner collections_spinner) {
 
-                                JSONObject jsonObject = response.getJSONObject(i);
-                                wallpaperUnsplash.setId(jsonObject.getString(Constants.ID));
-                                wallpaperUnsplash.setTitle(jsonObject.getString(Constants.TITLE));
-                                wallpaperUnsplash.setTotal_photos(jsonObject.getString(Constants.TOTAL_PHOTOS));
+        if (Constants.getCategoryList().isEmpty()) {
 
-                                spinner_collection_list.add(jsonObject.getString(Constants.TITLE));
-
-                                total_photos_value = jsonObject.getString(Constants.TOTAL_PHOTOS);
-
-                                collections_list.add(wallpaperUnsplash);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                        spinner_collection_adapter = new ArrayAdapter<>(ItemListActivity.this,
-                                android.R.layout.simple_spinner_dropdown_item, spinner_collection_list);
-                        collections_spinner.setAdapter(spinner_collection_adapter);
-                        total_photos.setText(total_photos_value);
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-
-        MyApplication.getInstance().addToRequestQueue(req,
-                Constants.TAG_JSON_ARRAY);
+            ArrayAdapter<String> spinner_collection_adapter = new ArrayAdapter<>(ItemListActivity.this,
+                    android.R.layout.simple_spinner_dropdown_item, Constants.getCategoryList());
+            collections_spinner.setAdapter(spinner_collection_adapter);
+        } else {
+            ArrayAdapter<String> spinner_collection_adapter = new ArrayAdapter<>(ItemListActivity.this,
+                    android.R.layout.simple_spinner_dropdown_item, Constants.getCategoryList());
+            collections_spinner.setAdapter(spinner_collection_adapter);
+        }
     }
 
     @Override
@@ -357,9 +328,8 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         Spinner duration_spinner = (Spinner) parent;
         Spinner collection_spinner = (Spinner) parent;
 
-        if (duration_spinner.getId() == R.id.collections) {
+        if (duration_spinner.getId() == collections) {
             collection_string = collection_spinner.getItemAtPosition(position).toString();
-            total_photos.setText(collections_list.get(position).getTotal_photos());
             position_of_collection_spinner = position;
         }
         if (collection_spinner.getId() == R.id.durations) {
@@ -373,7 +343,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
         Spinner duration_spinner = (Spinner) parent;
         Spinner collection_spinner = (Spinner) parent;
 
-        if (duration_spinner.getId() == R.id.collections) {
+        if (duration_spinner.getId() == collections) {
             collection_string = collection_spinner.getSelectedItem().toString();
         }
         if (collection_spinner.getId() == R.id.durations) {
@@ -446,7 +416,6 @@ public class ItemListActivity extends AppCompatActivity implements AdapterView.O
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        Toast.makeText(this, query, Toast.LENGTH_SHORT).show();
         Intent i = new Intent(getApplicationContext(), SearchActivity.class);
         i.putExtra(Constants.QUERY, query.trim());
         startActivity(i);

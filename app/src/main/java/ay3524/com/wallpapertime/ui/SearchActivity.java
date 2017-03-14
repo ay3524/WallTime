@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -34,6 +35,8 @@ import ay3524.com.wallpapertime.utils.Constants;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static ay3524.com.wallpapertime.utils.Constants.API_KEY;
+import static ay3524.com.wallpapertime.utils.Constants.PIXABAY_API_KEY;
 import static ay3524.com.wallpapertime.utils.Constants.STATE_WALLPAPERS;
 
 public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, WallpaperAdapter.ListItemClickListener {
@@ -52,8 +55,12 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     String search_base_url = "https://api.unsplash.com/search/photos?page=1&query=";
-    String client_id = "client_id=1d6adf7ef9a462a70dca375dd1f8faf911481ea8e2715bf2666984671dbc4d39";
+    String client_id = "client_id=".concat(API_KEY);
     String and = "&";
+    private String total_photos;
+    @BindView(R.id.empty_subtitle_text)
+    TextView subtitle_text;
+    private String pixabay_url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +73,9 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setLogo(R.drawable.coollogo);
         }
 
         recyclerView.setHasFixedSize(true);
@@ -76,6 +85,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         if (getIntent().getExtras() != null) {
             query = getIntent().getStringExtra(Constants.QUERY);
             url = search_base_url + query + and + client_id;
+            pixabay_url = "https://pixabay.com/api/?key="+PIXABAY_API_KEY+"&q="+query+"&image_type=photo&pretty=true&per_page=30";
         }
 
         if (savedInstanceState != null) {
@@ -88,12 +98,14 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                 getListOfWallpapers(url);
                 emptyView.setVisibility(View.GONE);
             } else {
+                subtitle_text.setText(R.string.there_might_be_some_problem_with_internet_connection);
                 emptyView.setVisibility(View.VISIBLE);
             }
         }
     }
 
     private void getListOfWallpapers(final String url) {
+        emptyView.setVisibility(View.GONE);
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 url, null,
@@ -103,7 +115,66 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                     public void onResponse(JSONObject response) {
 
                         try {
+                            total_photos = response.getString("total");
+                            //Toast.makeText(SearchActivity.this, total_photos, Toast.LENGTH_SHORT).show();
                             JSONArray jsonArray = response.getJSONArray(Constants.RESULTS);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                WallpaperUnsplash wallpaperUnsplash = new WallpaperUnsplash();
+
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                wallpaperUnsplash.setId(jsonObject.getString(Constants.ID));
+                                wallpaperUnsplash.setLikes(jsonObject.getString(Constants.LIKES));
+
+                                JSONObject jsonObject4 = jsonObject.getJSONObject(Constants.URLS);
+                                String buildSingleListImageUrl = Constants.buildUrl(jsonObject4.getString(Constants.REGULAR), Constants.PHOTO_SIZE_300);
+                                wallpaperUnsplash.setUrls_regular(buildSingleListImageUrl);
+
+                                wallpapersList.add(wallpaperUnsplash);
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        pb.setVisibility(View.GONE);
+                        if(total_photos.equals("0")){
+                            emptyView.setVisibility(View.VISIBLE);
+                        }else{
+                            adapter = new WallpaperAdapter(wallpapersList, SearchActivity.this);
+                            recyclerView.setAdapter(adapter);
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                emptyView.setVisibility(View.VISIBLE);
+                pb.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(), getString(R.string.query_wrong), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        MyApplication.getInstance().addToRequestQueue(jsonObjReq,
+                Constants.TAG_JSON_OBJECT);
+    }
+
+    private void getListOfPixabayWallpapers(final String url) {
+        emptyView.setVisibility(View.GONE);
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                url, null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+                            total_photos = response.getString("total");
+                            //Toast.makeText(SearchActivity.this, total_photos, Toast.LENGTH_SHORT).show();
+                            JSONArray jsonArray = response.getJSONArray("hits");
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 WallpaperUnsplash wallpaperUnsplash = new WallpaperUnsplash();
 
@@ -122,15 +193,21 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                             e.printStackTrace();
                         }
 
-                        adapter = new WallpaperAdapter(wallpapersList, SearchActivity.this);
-                        recyclerView.setAdapter(adapter);
+
                         pb.setVisibility(View.GONE);
+                        if(total_photos.equals("0")){
+                            emptyView.setVisibility(View.VISIBLE);
+                        }else{
+                            adapter = new WallpaperAdapter(wallpapersList, SearchActivity.this);
+                            recyclerView.setAdapter(adapter);
+                        }
 
                     }
                 }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                emptyView.setVisibility(View.VISIBLE);
                 pb.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(), getString(R.string.query_wrong), Toast.LENGTH_SHORT).show();
             }
@@ -169,6 +246,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                 emptyView.setVisibility(View.GONE);
                 query = newQuery;
             } else {
+                subtitle_text.setText(R.string.there_might_be_some_problem_with_internet_connection);
                 emptyView.setVisibility(View.VISIBLE);
             }
         } else {

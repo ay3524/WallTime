@@ -49,6 +49,7 @@ public class FragmentCollections extends Fragment implements WallpaperCategoryAd
 
     WallpaperCategoryAdapter adapter;
     ArrayList<WallpaperCollection> wallpapersList = new ArrayList<>();
+    private float density;
 
     @Override
     public void onResume() {
@@ -62,11 +63,14 @@ public class FragmentCollections extends Fragment implements WallpaperCategoryAd
 
         View rootView = inflater.inflate(R.layout.single_tab_layout, container, false);
 
-        ButterKnife.bind(this,rootView);
+        ButterKnife.bind(this, rootView);
 
         recyclerView.setHasFixedSize(true);
 
         Constants.setGridLayoutManager(getActivity(), recyclerView);
+
+        //density = getResources().getDisplayMetrics().density;
+        //Toast.makeText(getActivity(), String.valueOf(density), Toast.LENGTH_SHORT).show();
 
         if (savedInstanceState != null) {
             wallpapersList = savedInstanceState.getParcelableArrayList(STATE_WALLPAPERS);
@@ -88,7 +92,7 @@ public class FragmentCollections extends Fragment implements WallpaperCategoryAd
 
     private void getListOfCollections() {
 
-        JsonArrayRequest req = new JsonArrayRequest(Constants.UNSPLASH_BASE_COLLECTION_CURATED + CLIENT_ID+API_KEY,
+        JsonArrayRequest req = new JsonArrayRequest(Constants.UNSPLASH_BASE_COLLECTION_CURATED + CLIENT_ID + API_KEY,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {

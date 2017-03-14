@@ -50,8 +50,8 @@ public class WallpaperDownloadsAdapter extends RecyclerView.Adapter<WallpaperDow
     public void onBindViewHolder(WallpaperViewHolder holder, int position) {
         Glide.with(context)
                 .load(wallpaperDownloads.get(position))
-                .placeholder(R.mipmap.ic_launcher)
-                .error(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.image_loading)
+                .error(R.drawable.sorry_no_image)
                 .into(holder.collection_cover);
     }
 

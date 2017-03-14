@@ -1,9 +1,12 @@
 package ay3524.com.wallpapertime.utils;
 
 import android.app.ProgressDialog;
+import android.app.WallpaperManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -33,11 +36,13 @@ public class ImageDownloadTask extends AsyncTask<String, Integer, String> {
     private PowerManager.WakeLock mWakeLock;
     private ProgressDialog pDialog;
     private String fileName;
+    private boolean setAsWallpaper;
 
-    public ImageDownloadTask(Context cxt, String file_name) {
+    public ImageDownloadTask(Context cxt, String file_name,boolean setWallpaper) {
         context = cxt;
         fileName = file_name;
         pDialog = new ProgressDialog(context);
+        setAsWallpaper = setWallpaper;
     }
 
     @Override
@@ -162,12 +167,31 @@ public class ImageDownloadTask extends AsyncTask<String, Integer, String> {
             Toast.makeText(context, context.getString(R.string.dwnld_error) + result, Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(context, context.getString(R.string.dwnld_success), Toast.LENGTH_SHORT).show();
+            if(setAsWallpaper){
+               setThisImageWallpaper();
+            }
             addThisDownloadedFileInfoToLog(fileName);
             File folder = new File(Environment.getExternalStorageDirectory() + Constants.WALLTIME_PATH);
             File allFiles[] = folder.listFiles();
             for (File allFile : allFiles) {
                 new SingleMediaScanner(context, allFile);
             }
+        }
+    }
+
+    private void setThisImageWallpaper() {
+        String dir_path = Environment.getExternalStorageDirectory() + Constants.WALLTIME_PATH + "/" + fileName;
+        try {
+            File image_file = new File(dir_path);
+            Bitmap bitmap = BitmapFactory.decodeFile(image_file.getAbsolutePath());
+            WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
+            try {
+                wallpaperManager.setBitmap(bitmap);
+            } catch (IOException e) {
+                //Toast.makeText(ItemDetailActivity.this, getString(R.string.error_set_image), Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+        } catch (NullPointerException ignored) {
         }
     }
 
@@ -179,9 +203,6 @@ public class ImageDownloadTask extends AsyncTask<String, Integer, String> {
 
         Uri uri = context.getContentResolver().insert(LogDbContract.LogDbContractEntry.CONTENT_URI, contentValues);
 
-        if (uri != null) {
-            Toast.makeText(context, uri.toString(), Toast.LENGTH_LONG).show();
-        }
     }
 
     private boolean dir_exists(String dir_path) {
