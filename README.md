@@ -2,7 +2,7 @@
 
 [![Crates.io](https://img.shields.io/crates/l/rustc-serialize.svg?maxAge=2592000)]()
 
-<a href='https://play.google.com/store/apps/details?id=ay3524.com.wallpapertime&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img width="150" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+<a href='https://apkpure.com/walltime/ay3524.com.wallpapertime'><img width="150" alt='Get it on APK Pure' src='https://static.apkpure.com/www/static/imgs/logo_new.png'/></a>
 
 A wallpaper automation app which automatically downloads and sets the wallpaper.This FREE App provides Unique & Supreme collection of Images for your screen.You can Enjoy our Awesome Contents with Simple UI and Great performance.Daily updates of Wallpapers selected by unsplash users. Guarantee the most stunning Wallpapers you've ever seen.
 # Features
